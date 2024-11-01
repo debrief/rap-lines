@@ -1,0 +1,17 @@
+.sidebar {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+.history-section {
+  flex-grow: 1;
+  background-color: #ffdddd;
+  padding: 10px;
+}
+
+.outline-section {
+  background-color: #ddeeff;
+  padding: 10px;
+}
