@@ -1,4 +1,4 @@
-import { FeatureCollection, GeoJSON } from 'geojson';
+import { FeatureCollection } from 'geojson';
 
 interface Action {
   type: string;
