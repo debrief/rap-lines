@@ -1,0 +1,18 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.01621,
+          39.57422
+        ]
+      },
+      "properties": {
+        "name": "Dinagat Islands"
+      }
+    }
+  ]
+}
