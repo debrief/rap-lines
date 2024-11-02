@@ -1,6 +1,6 @@
 import { FeatureCollection } from 'geojson';
 
-interface Action {
+export interface Action {
   type: string;
   payload: any;
   label: string;
