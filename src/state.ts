@@ -7,18 +7,29 @@ export interface Action {
   version: string;
 }
 
+export interface ActionHandler {
+  type: string
+  handle(state: FeatureCollection, action: Action): FeatureCollection;
+}
+
 class State {
   private actions: Action[];
   private currentState: FeatureCollection;
+  private handlers: ActionHandler[];
 
   constructor(initialState: FeatureCollection) {
     this.actions = [];
     this.currentState = initialState;
+    this.handlers = []
   }
 
   addAction(action: Action) {
     this.actions.push(action);
     this.updateState();
+  }
+
+  addHandler(handler: ActionHandler) {
+    this.handlers.push(handler);
   }
 
   modifyAction(index: number, newAction: Action) {
@@ -30,9 +41,14 @@ class State {
 
   private updateState() {
     this.currentState = this.actions.reduce((state, action) => {
-      // Apply each action to the state
-      // This is a placeholder implementation, you should replace it with your own logic
-      return state;
+      // see if we have an handler
+      const handler = this.handlers.find(handler => handler.type === action.type);
+      if (handler) {
+        return handler.handle(state, action);
+      } else {
+        console.warn('No handler found for action', action);
+        return state
+      }
     }, this.currentState);
   }
 

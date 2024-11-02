@@ -2,7 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import MapArea from './components/MapArea';
 import './App.css';
-import State from './state';
+import State, { ActionHandler } from './state';
+import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
+
+const registerHandlers = ():ActionHandler[] => {
+  const res: ActionHandler[] = [];
+  res.push(MoveNorthHandler);
+  res.push(MoveSouthHandler);
+  res.push(MoveEastHandler);
+  res.push(MoveWestHandler);
+  return res;
+}
 
 const App: React.FC = () => {
   const [state, setState] = useState<State | null>(null);
@@ -13,6 +23,8 @@ const App: React.FC = () => {
       .then(data => {
         const initialState = data;
         const state = new State(initialState);
+        const handlers = registerHandlers()
+        handlers.forEach(handler => state.addHandler(handler));
         setState(state);
       });
   }, []);
