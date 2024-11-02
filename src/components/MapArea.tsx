@@ -11,6 +11,7 @@ interface MapAreaProps {
 }
 
 const MapArea: React.FC<MapAreaProps> = ({ state }) => {
+  console.log('state', state, state.getState());
   const currentState: FeatureCollection = state.getState();
   const mapRef = useRef<L.Map>(null);
 

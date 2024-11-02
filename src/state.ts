@@ -46,7 +46,7 @@ class State {
       if (handler) {
         return handler.handle(state, action);
       } else {
-        console.warn('No handler found for action', action);
+        console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
         return state
       }
     }, this.currentState);

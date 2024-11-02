@@ -2,12 +2,18 @@ import React from 'react';
 import HistorySection from './HistorySection';
 import OutlineSection from './OutlineSection';
 import './Sidebar.css';
+import State from '../state';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  state: State;
+  setState: React.Dispatch<React.SetStateAction<State | null>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ state, setState }) => {
   return (
     <aside className="sidebar">
       <HistorySection />
-      <OutlineSection />
+      <OutlineSection state={state} setState={setState} />
     </aside>
   );
 }

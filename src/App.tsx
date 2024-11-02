@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import MapArea from './components/MapArea';
+import OutlineSection from './components/OutlineSection';
+import HistorySection from './components/HistorySection';
 import './App.css';
 import State, { ActionHandler } from './state';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
@@ -35,7 +37,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar />
+      <Sidebar state={state} setState={setState} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
