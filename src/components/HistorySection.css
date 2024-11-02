@@ -2,4 +2,5 @@
   flex-grow: 1;
   background-color: #ffdddd;
   padding: 10px;
+  height: 300px; /* Added fixed height */
 }

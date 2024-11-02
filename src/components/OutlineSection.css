@@ -1,4 +1,5 @@
 .outline-section {
   background-color: #ddeeff;
   padding: 10px;
+  height: 300px; /* Added fixed height */
 }
