@@ -1,5 +1,5 @@
 import React from 'react';
-import { AttributionControl, MapContainer, TileLayer } from 'react-leaflet';
+import { AttributionControl, MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection } from 'geojson';
@@ -18,6 +18,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
+        <GeoJSON data={currentState} />
         <AttributionControl position="bottomright" />
       </MapContainer>
     </div>
