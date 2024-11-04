@@ -57,7 +57,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
           <TileLayer
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          <GeoJSON data={state} />
+          <GeoJSON key={JSON.stringify(state)} data={state} />
           <AttributionControl position="bottomright" />
         </MapContainer>
         {mousePosition && (
