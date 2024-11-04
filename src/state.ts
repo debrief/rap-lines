@@ -5,6 +5,7 @@ export interface Action {
   payload: any;
   label: string;
   version: string;
+  active: boolean; // Added active property
 }
 
 export interface ActionHandler {
@@ -65,13 +66,15 @@ class Store {
 
   private updateState() {
     this.currentState = this.actions.reduce((state, action) => {
-      // see if we have an handler
+      if (!action.active) {
+        return state;
+      }
       const handler = this.handlers.find(handler => handler.type === action.type);
       if (handler) {
         return handler.handle(state, action);
       } else {
         console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
-        return state
+        return state;
       }
     }, this.initialState);
     this.stateListeners.forEach(listener => listener(this.currentState));
