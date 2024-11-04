@@ -12,24 +12,38 @@ export interface ActionHandler {
   handle(state: FeatureCollection, action: Action): FeatureCollection;
 }
 
-class State {
+class Store {
   private actions: Action[];
   private currentState: FeatureCollection;
   private handlers: ActionHandler[];
+  private stateListeners: ((state: FeatureCollection) => void)[];
+  private actionsListeners: ((actions: Action[]) => void)[];
 
   constructor(initialState: FeatureCollection) {
+    console.log('store constructor', initialState);
     this.actions = [];
     this.currentState = initialState;
     this.handlers = []
+    this.stateListeners = [];
+    this.actionsListeners = [];
   }
 
   addAction(action: Action) {
     this.actions.push(action);
+    this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();
   }
 
   addHandler(handler: ActionHandler) {
     this.handlers.push(handler);
+  }
+
+  addStateListener(listener: (state: FeatureCollection) => void) {
+    this.stateListeners.push(listener)
+  }
+
+  addActionsListener(listener: (actions: Action[]) => void) {
+    this.actionsListeners.push(listener)
   }
 
   modifyAction(index: number, newAction: Action) {
@@ -50,6 +64,7 @@ class State {
         return state
       }
     }, this.currentState);
+    this.stateListeners.forEach(listener => listener(this.currentState));
   }
 
   getState(): FeatureCollection {
@@ -57,4 +72,4 @@ class State {
   }
 }
 
-export default State;
+export default Store;

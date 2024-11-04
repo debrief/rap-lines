@@ -1,27 +1,30 @@
 import React from 'react';
 import './OutlineSection.css';
-import State from '../state';
+import { Action } from '../state';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 
-const OutlineSection: React.FC<{ state: State, setState: (state: State) => void }> = ({ state, setState }) => {
+type OutlineProps = {
+  addAction: (action: Action) => void
+}
+
+const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
   const handleAction = (actionType: string) => {
     switch (actionType) {
       case MoveNorth.type:
-        state.addAction(MoveNorth);
+        addAction(MoveNorth);
         break;
       case MoveEast.type:
-        state.addAction(MoveEast);
+        addAction(MoveEast);
         break;
       case MoveWest.type:
-        state.addAction(MoveWest);
+        addAction(MoveWest);
         break;
       case MoveSouth.type:
-        state.addAction(MoveSouth);
+        addAction(MoveSouth);
         break;
       default:
         console.warn('Unknown action type', actionType);
     }
-    console.log('new state', state);
   };
 
   return (

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import MapArea from './components/MapArea';
-import OutlineSection from './components/OutlineSection';
-import HistorySection from './components/HistorySection';
 import './App.css';
-import State, { ActionHandler } from './state';
+import Store, { Action, ActionHandler } from './state';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
+import { FeatureCollection } from 'geojson';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -17,27 +16,48 @@ const registerHandlers = ():ActionHandler[] => {
 }
 
 const App: React.FC = () => {
-  const [state, setState] = useState<State | null>(null);
+  const [store, setStore] = useState<Store | null>(null);
+
+  const [state, setState] = useState<FeatureCollection | null>(null);
+  const [actions, setActions] = useState<Action[]>([]);
+
+  const stateListener = (state: FeatureCollection) => {
+    setState(state)
+  }
+
+  const actionsListener  = (actions: Action[]) => {
+    setActions(actions)
+  }
+
+  const addAction = useCallback((action: Action) => {
+    if (store){
+      store?.addAction(action);
+    }
+  }, [store])
 
   useEffect(() => {
     fetch('/sample.json')
       .then(response => response.json())
       .then(data => {
+        console.clear()
         const initialState = data;
-        const state = new State(initialState);
+        const newStore = new Store(initialState);
+        console.log('newStore', newStore, data);
         const handlers = registerHandlers()
-        handlers.forEach(handler => state.addHandler(handler));
-        setState(state);
+        handlers.forEach(handler => newStore.addHandler(handler));
+        newStore.addStateListener(stateListener);
+        newStore.addActionsListener(actionsListener)
+        setStore(newStore);
       });
   }, []);
 
-  if (!state) {
+  if (!store) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="app">
-      <Sidebar state={state} setState={setState} />
+      <Sidebar actions={actions} addAction={addAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
