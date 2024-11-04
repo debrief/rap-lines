@@ -1,5 +1,9 @@
 import React from 'react';
 import { Action } from '../state';
+import { Card, CardContent, CardActions } from '@mui/material';
+import CheckIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ActionItemProps {
   action: Action;
@@ -9,13 +13,15 @@ interface ActionItemProps {
 
 const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAction }) => {
   return (
-    <div className="action-item">
-      <span>{action.type}</span>
-      <button onClick={() => toggleActive(action)}>
-        {action.active ? 'Deactivate' : 'Activate'}
-      </button>
-      <button onClick={() => deleteAction(action)}>Delete</button>
-    </div>
+    <Card style={{margin: '5px'}} className="action-item">
+      <CardContent>
+        <span>{action.type} {action.id}</span>
+      </CardContent>
+      <CardActions>
+        { action.active ? <CheckIcon onClick={() => toggleActive(action)} />: <CheckBoxOutlineBlankIcon onClick={() => toggleActive(action)} />}
+        <DeleteIcon onClick={() => deleteAction(action)} />
+      </CardActions>
+    </Card>
   );
 }
 

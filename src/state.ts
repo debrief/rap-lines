@@ -44,7 +44,8 @@ class Store {
   addAction(action: Action) {
     const newAction = { ...action };
     // initialise the id of the action
-    newAction.id = new Date().getTime().toString();
+    const timeStamp = new Date().getTime();
+    newAction.id = '' + timeStamp % 1000000;
     this.actions.push(newAction);
     this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();
@@ -77,7 +78,6 @@ class Store {
 
   toggleActionActive(action: Action) {
     const index = this.actions.indexOf(action);
-    console.log('toggle active', index, action);
     if (index !== -1) {
       this.actions[index].active = !this.actions[index].active;
       this.updateState();
