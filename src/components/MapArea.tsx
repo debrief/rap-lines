@@ -6,6 +6,7 @@ import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
 import { printFeature } from '../state';
 import { buffer, lineString, featureCollection } from '@turf/turf';
+import { render } from '@testing-library/react';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
@@ -27,6 +28,8 @@ const convertPointsToLine = (points: FeatureCollection) => {
   return points;
 };
 
+const defaultInitialCenter: L.LatLngExpression = [43, -71];
+
 const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   const mapRef = useRef<L.Map>(null);
   const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
@@ -46,8 +49,6 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   
   useEffect(() => {
     if (state) {
-      printFeature('map update', state);
-      
       setRenderedState(convertPointsToLine(state));
     }
   }, [state]);
@@ -67,38 +68,35 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
     }
   }, [mapRef]);
   
-  if (renderedState === null) {
-    return <div>Loading...</div>;
-  } else {
-    return (
-      <div className="map-area" style={{ position: 'relative' }}>
-      <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }}>
+  return (
+    <div className="map-area" style={{ position: 'relative' }}>
+    <MapContainer center={defaultInitialCenter} zoom={6} ref={mapRef} style={{ height: "100%", width: "100%" }}>
       <TileLayer
       url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
-      <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
+      { renderedState && 
+        <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
+      }
       <AttributionControl position="bottomright" />
-      </MapContainer>
-      {mousePosition && (
-        <div
-        className="mouse-tracker"
-        style={{
-          position: 'absolute',
-          bottom: 10,
-          left: 10,
-          background: 'rgba(255, 255, 255, 0.8)',
-          padding: '5px',
-          borderRadius: '4px',
-          zIndex: 1000,
-        }}
-        >
-        Lat: {mousePosition.lat.toFixed(2)}, Lng: {mousePosition.lng.toFixed(2)}
-        </div>
-      )}
+    </MapContainer>
+    {mousePosition && (
+      <div
+      className="mouse-tracker"
+      style={{
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        background: 'rgba(255, 255, 255, 0.8)',
+        padding: '5px',
+        borderRadius: '4px',
+        zIndex: 1000,
+      }}
+      >
+      Lat: {mousePosition.lat.toFixed(2)}, Lng: {mousePosition.lng.toFixed(2)}
       </div>
-    );
-  }
-  
+    )}
+    </div>
+  );
 }
 
 export default MapArea;
