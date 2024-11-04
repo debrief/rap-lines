@@ -36,7 +36,8 @@ const App: React.FC = () => {
   }, [store])
 
   useEffect(() => {
-    fetch('/sample.json')
+//    fetch('/sample.json')
+    fetch('/waypoints.geojson')
       .then(response => response.json())
       .then(data => {
         console.clear()
