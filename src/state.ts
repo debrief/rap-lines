@@ -23,6 +23,7 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
 class Store {
   private actions: Action[];
   private currentState: FeatureCollection;
+  private initialState: FeatureCollection;
   private handlers: ActionHandler[];
   private stateListeners: ((state: FeatureCollection) => void)[];
   private actionsListeners: ((actions: Action[]) => void)[];
@@ -31,6 +32,7 @@ class Store {
     console.log('store constructor', initialState);
     this.actions = [];
     this.currentState = initialState;
+    this.initialState = initialState;
     this.handlers = []
     this.stateListeners = [];
     this.actionsListeners = [];
@@ -62,7 +64,6 @@ class Store {
   }
 
   private updateState() {
-    printFeature('updateState', this.currentState);
     this.currentState = this.actions.reduce((state, action) => {
       // see if we have an handler
       const handler = this.handlers.find(handler => handler.type === action.type);
@@ -72,8 +73,7 @@ class Store {
         console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
         return state
       }
-    }, this.currentState);
-    printFeature('new state generated', this.currentState);
+    }, this.initialState);
     this.stateListeners.forEach(listener => listener(this.currentState));
   }
 
