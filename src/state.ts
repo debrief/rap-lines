@@ -44,8 +44,7 @@ class Store {
   addAction(action: Action) {
     const newAction = { ...action };
     // initialise the id of the action
-    const timeStamp = new Date().getTime();
-    newAction.id = '' + timeStamp % 1000000;
+    newAction.id =new Date().getTime().toString();
     this.actions.push(newAction);
     this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();

@@ -5,6 +5,7 @@ import './App.css';
 import Store, { Action, ActionHandler } from './state';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
+import { ScaleUpHandler } from './actions/scaleTrack';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -12,6 +13,7 @@ const registerHandlers = ():ActionHandler[] => {
   res.push(MoveSouthHandler);
   res.push(MoveEastHandler);
   res.push(MoveWestHandler);
+  res.push(ScaleUpHandler)
   return res;
 }
 
