@@ -35,6 +35,18 @@ const App: React.FC = () => {
     }
   }, [store])
 
+  const toggleActionActive = useCallback((action: Action) => {
+    if (store) {
+      store.toggleActionActive(action);
+    }
+  }, [store]);
+
+  const removeAction = useCallback((action: Action) => {
+    if (store) {
+      store.removeAction(action);
+    }
+  }, [store]);
+
   useEffect(() => {
 //    fetch('/sample.json')
     fetch('/waypoints.geojson')
@@ -58,7 +70,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} />
+      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActionActive} deleteAction={removeAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>

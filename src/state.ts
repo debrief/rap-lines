@@ -64,6 +64,20 @@ class Store {
     }
   }
 
+  removeAction(action: Action) {
+    this.actions = this.actions.filter(a => a !== action);
+    this.actionsListeners.forEach(listener => listener(this.actions));
+    this.updateState();
+  }
+
+  toggleActionActive(action: Action) {
+    const index = this.actions.indexOf(action);
+    if (index !== -1) {
+      this.actions[index].active = !this.actions[index].active;
+      this.updateState();
+    }
+  }
+
   private updateState() {
     this.currentState = this.actions.reduce((state, action) => {
       if (!action.active) {
