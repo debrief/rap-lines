@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AttributionControl, MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
@@ -8,6 +8,27 @@ import { buffer, lineString, featureCollection } from '@turf/turf';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
+}
+
+type MouseProps = {
+  position: { lat: number; lng: number } | null  }
+
+
+const MousePosition: React.FC<MouseProps> = ({ position }) => {
+  return <div
+  className="mouse-tracker"
+  style={{
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    background: 'rgba(255, 255, 255, 0.8)',
+    padding: '5px',
+    borderRadius: '4px',
+    zIndex: 1000,
+  }}
+  >
+    { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending</span> }
+  </div>
 }
 
 const convertPointsToLine = (points: FeatureCollection) => {
@@ -64,27 +85,6 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
       };
     }
   }, [mapRef]);
-
-
-  type MouseProps = {
-    position: { lat: number; lng: number } | null  }
-  
-  const MousePosition: React.FC<MouseProps> = ({ position }) => {
-    return       <div
-    className="mouse-tracker"
-    style={{
-      position: 'absolute',
-      bottom: 10,
-      left: 10,
-      background: 'rgba(255, 255, 255, 0.8)',
-      padding: '5px',
-      borderRadius: '4px',
-      zIndex: 1000,
-    }}
-    >
-      { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending</span> }
-    </div>
-  }
   
   return (
     <div className="map-area" style={{ position: 'relative' }}>
