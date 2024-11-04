@@ -1,6 +1,6 @@
 .history-section {
   flex-grow: 1;
-  background-color: #ffdddd;
+  background-color: #ddd;
   padding: 10px;
   height: 300px; /* Added fixed height */
 }
@@ -8,4 +8,5 @@
 .history-section ul {
   height: 250px; /* Set desired fixed height */
   overflow-y: scroll;
+  padding-inline-start: 0px;
 }

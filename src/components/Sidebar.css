@@ -7,11 +7,12 @@
 
 .history-section {
   flex-grow: 1;
-  background-color: #ffdddd;
+  background-color: #eee;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
 .outline-section {
-  background-color: #ddeeff;
+  background-color: #eee;
   padding: 10px;
 }
