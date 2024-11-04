@@ -1,6 +1,8 @@
 import { FeatureCollection } from 'geojson';
 
 export interface Action {
+  // this will be unique for each action, initialised when the action is created
+  id: string
   type: string;
   payload: any;
   label: string;
@@ -40,7 +42,10 @@ class Store {
   }
 
   addAction(action: Action) {
-    this.actions.push(action);
+    const newAction = { ...action };
+    // initialise the id of the action
+    newAction.id = new Date().getTime().toString();
+    this.actions.push(newAction);
     this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();
   }
@@ -72,6 +77,7 @@ class Store {
 
   toggleActionActive(action: Action) {
     const index = this.actions.indexOf(action);
+    console.log('toggle active', index, action);
     if (index !== -1) {
       this.actions[index].active = !this.actions[index].active;
       this.updateState();

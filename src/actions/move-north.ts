@@ -6,6 +6,7 @@ const myTypeWest = 'move-west';
 const myTypeSouth = 'move-south';
 
 export const MoveNorth: Action = {
+  id: 'pending',
   type: myType,
   payload: {
     direction: 'north',
@@ -17,6 +18,7 @@ export const MoveNorth: Action = {
 }
 
 export const MoveEast: Action = {
+  id: 'pending',
   type: myTypeEast,
   payload: {
     direction: 'east',
@@ -28,6 +30,7 @@ export const MoveEast: Action = {
 }
 
 export const MoveWest: Action = {
+  id: 'pending',
   type: myTypeWest,
   payload: {
     direction: 'west',
@@ -39,6 +42,7 @@ export const MoveWest: Action = {
 }
 
 export const MoveSouth: Action = {
+  id: 'pending',
   type: myTypeSouth,
   payload: {
     direction: 'south',
