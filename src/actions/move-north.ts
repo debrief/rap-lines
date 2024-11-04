@@ -1,13 +1,13 @@
 import { Action, ActionHandler } from '../state';
 
-const myType = 'move-north';
-const myTypeEast = 'move-east';
-const myTypeWest = 'move-west';
-const myTypeSouth = 'move-south';
+export const TypeNorth = 'move-north';
+export const TypeEast = 'move-east';
+export const TypeWest = 'move-west';
+export const TypeSouth = 'move-south';
 
 export const MoveNorth: Action = {
   id: 'pending',
-  type: myType,
+  type: TypeNorth,
   payload: {
     direction: 'north',
     distance: 0.1
@@ -19,7 +19,7 @@ export const MoveNorth: Action = {
 
 export const MoveEast: Action = {
   id: 'pending',
-  type: myTypeEast,
+  type: TypeEast,
   payload: {
     direction: 'east',
     distance: 0.1
@@ -31,7 +31,7 @@ export const MoveEast: Action = {
 
 export const MoveWest: Action = {
   id: 'pending',
-  type: myTypeWest,
+  type: TypeWest,
   payload: {
     direction: 'west',
     distance: 0.1
@@ -43,7 +43,7 @@ export const MoveWest: Action = {
 
 export const MoveSouth: Action = {
   id: 'pending',
-  type: myTypeSouth,
+  type: TypeSouth,
   payload: {
     direction: 'south',
     distance: 0.1
@@ -54,7 +54,7 @@ export const MoveSouth: Action = {
 }
 
 export const MoveNorthHandler: ActionHandler = {
-  type: myType,
+  type: TypeNorth,
   handle: (state, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(state));
@@ -72,7 +72,7 @@ export const MoveNorthHandler: ActionHandler = {
 }
 
 export const MoveEastHandler: ActionHandler = {
-  type: myTypeEast,
+  type: TypeEast,
   handle: (state, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(state));
@@ -90,7 +90,7 @@ export const MoveEastHandler: ActionHandler = {
 }
 
 export const MoveWestHandler: ActionHandler = {
-  type: myTypeWest,
+  type: TypeWest,
   handle: (state, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(state));
@@ -108,7 +108,7 @@ export const MoveWestHandler: ActionHandler = {
 }
 
 export const MoveSouthHandler: ActionHandler = {
-  type: myTypeSouth,
+  type: TypeSouth,
   handle: (state, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(state));
