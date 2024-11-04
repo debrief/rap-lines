@@ -12,9 +12,18 @@ export interface ActionHandler {
   handle(state: FeatureCollection, action: Action): FeatureCollection;
 }
 
+export const printFeature = (msg: string, feature: FeatureCollection) => {
+  const firstFeature = feature.features[0];
+  if (firstFeature.geometry.type === 'Point') {
+    const firstCoord = firstFeature.geometry.coordinates;
+    console.log(msg + ` [${firstCoord[0]}, ${firstCoord[1]}]`)
+  }
+}
+
 class Store {
   private actions: Action[];
   private currentState: FeatureCollection;
+  private initialState: FeatureCollection;
   private handlers: ActionHandler[];
   private stateListeners: ((state: FeatureCollection) => void)[];
   private actionsListeners: ((actions: Action[]) => void)[];
@@ -23,6 +32,7 @@ class Store {
     console.log('store constructor', initialState);
     this.actions = [];
     this.currentState = initialState;
+    this.initialState = initialState;
     this.handlers = []
     this.stateListeners = [];
     this.actionsListeners = [];
@@ -63,7 +73,7 @@ class Store {
         console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
         return state
       }
-    }, this.currentState);
+    }, this.initialState);
     this.stateListeners.forEach(listener => listener(this.currentState));
   }
 
