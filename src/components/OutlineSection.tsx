@@ -4,7 +4,7 @@ import { Action } from '../state';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';
-import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 
 type OutlineProps = {
   addAction: (action: Action) => void
