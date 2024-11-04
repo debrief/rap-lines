@@ -6,6 +6,7 @@ import Store, { Action, ActionHandler } from './state';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scaleTrack';
+import FlexLayout from 'flexlayout-react';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -70,12 +71,52 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const layoutModel = {
+    global: {},
+    layout: {
+      type: "row",
+      children: [
+        {
+          type: "tabset",
+          weight: 20,
+          children: [
+            {
+              type: "tab",
+              name: "Sidebar",
+              component: "sidebar"
+            }
+          ]
+        },
+        {
+          type: "tabset",
+          weight: 80,
+          children: [
+            {
+              type: "tab",
+              name: "MapArea",
+              component: "maparea"
+            }
+          ]
+        }
+      ]
+    }
+  };
+
+  const factory = (node: any) => {
+    const component = node.getComponent();
+    switch (component) {
+      case "sidebar":
+        return <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActionActive} deleteAction={removeAction} />;
+      case "maparea":
+        return <MapArea state={state} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActionActive} deleteAction={removeAction} />
-      <div className="main-content">
-        <MapArea state={state} />
-      </div>
+      <FlexLayout.Layout model={FlexLayout.Model.fromJson(layoutModel)} factory={factory} />
     </div>
   );
 }
