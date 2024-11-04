@@ -12,6 +12,14 @@ export interface ActionHandler {
   handle(state: FeatureCollection, action: Action): FeatureCollection;
 }
 
+export const printFeature = (msg: string, feature: FeatureCollection) => {
+  const firstFeature = feature.features[0];
+  if (firstFeature.geometry.type === 'Point') {
+    const firstCoord = firstFeature.geometry.coordinates;
+    console.log(msg + ` [${firstCoord[0]}, ${firstCoord[1]}]`)
+  }
+}
+
 class Store {
   private actions: Action[];
   private currentState: FeatureCollection;
@@ -54,6 +62,7 @@ class Store {
   }
 
   private updateState() {
+    printFeature('updateState', this.currentState);
     this.currentState = this.actions.reduce((state, action) => {
       // see if we have an handler
       const handler = this.handlers.find(handler => handler.type === action.type);
@@ -64,6 +73,7 @@ class Store {
         return state
       }
     }, this.currentState);
+    printFeature('new state generated', this.currentState);
     this.stateListeners.forEach(listener => listener(this.currentState));
   }
 

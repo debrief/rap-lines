@@ -9,7 +9,7 @@ export const MoveNorth: Action = {
   type: myType,
   payload: {
     direction: 'north',
-    distance: 1
+    distance: 0.1
   },
   label: 'Move North',
   version: '1.0'
@@ -19,7 +19,7 @@ export const MoveEast: Action = {
   type: myTypeEast,
   payload: {
     direction: 'east',
-    distance: 1
+    distance: 0.1
   },
   label: 'Move East',
   version: '1.0'
@@ -29,7 +29,7 @@ export const MoveWest: Action = {
   type: myTypeWest,
   payload: {
     direction: 'west',
-    distance: 1
+    distance: 0.1
   },
   label: 'Move West',
   version: '1.0'
@@ -39,7 +39,7 @@ export const MoveSouth: Action = {
   type: myTypeSouth,
   payload: {
     direction: 'south',
-    distance: 1
+    distance: 0.1
   },
   label: 'Move South',
   version: '1.0'
