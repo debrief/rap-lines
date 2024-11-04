@@ -6,7 +6,7 @@
 }
 
 .history-section ul {
-  height: 250px; /* Set desired fixed height */
+  height: 450px; /* Set desired fixed height */
   overflow-y: scroll;
   padding-inline-start: 0px;
 }

@@ -59,11 +59,12 @@ const App: React.FC = () => {
         console.clear()
         const initialState = data;
         const newStore = new Store(initialState);
-        console.log('newStore', newStore, data);
         const handlers = registerHandlers()
         handlers.forEach(handler => newStore.addHandler(handler));
         newStore.addStateListener(stateListener);
         newStore.addActionsListener(actionsListener)
+        // fire empty add action, to force update
+        newStore.addAction(null)
         setStore(newStore);
       });
   }, []);

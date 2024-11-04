@@ -47,7 +47,7 @@ const convertPointsToLine = (points: FeatureCollection) => {
   return points;
 };
 
-const defaultInitialCenter: L.LatLngExpression = [43, -71];
+const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
 const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   const mapRef = useRef<L.Map>(null);
@@ -88,7 +88,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   
   return (
     <div className="map-area" style={{ position: 'relative' }}>
-      <MapContainer center={defaultInitialCenter} zoom={6} ref={mapRef} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={defaultInitialCenter} zoom={10} ref={mapRef} style={{ height: "100%", width: "100%" }}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />

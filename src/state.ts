@@ -42,12 +42,16 @@ class Store {
     this.actionsListeners = [];
   }
 
-  addAction(action: Action) {
-    const newAction = { ...action };
-    // initialise the id of the action
-    newAction.id =new Date().getTime().toString();
-    this.actions.push(newAction);
-    this.actionsListeners.forEach(listener => listener(this.actions));
+  addAction(action: Action | null) {
+    // note: we allow empty action to be added as a way
+    // of forcing update
+    if (action) {
+      const newAction = { ...action };
+      // initialise the id of the action
+      newAction.id =new Date().getTime().toString();
+      this.actions.push(newAction);
+      this.actionsListeners.forEach(listener => listener(this.actions));  
+    }
     this.updateState();
   }
 
