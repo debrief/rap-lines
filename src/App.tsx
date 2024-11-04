@@ -18,6 +18,37 @@ const registerHandlers = ():ActionHandler[] => {
   return res;
 }
 
+const layoutModel: FlexLayout.IJsonModel = {
+  global: {},
+  layout: {
+    type: "row",
+    children: [
+      {
+        type: "tabset",
+        weight: 20,
+        children: [
+          {
+            type: "tab",
+            name: "Sidebar",
+            component: "sidebar"
+          }
+        ]
+      },
+      {
+        type: "tabset",
+        weight: 80,
+        children: [
+          {
+            type: "tab",
+            name: "MapArea",
+            component: "maparea"
+          }
+        ]
+      }
+    ]
+  }
+};
+
 const App: React.FC = () => {
   const [store, setStore] = useState<Store | null>(null);
 
@@ -71,36 +102,7 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const layoutModel = {
-    global: {},
-    layout: {
-      type: "row",
-      children: [
-        {
-          type: "tabset",
-          weight: 20,
-          children: [
-            {
-              type: "tab",
-              name: "Sidebar",
-              component: "sidebar"
-            }
-          ]
-        },
-        {
-          type: "tabset",
-          weight: 80,
-          children: [
-            {
-              type: "tab",
-              name: "MapArea",
-              component: "maparea"
-            }
-          ]
-        }
-      ]
-    }
-  };
+
 
   const factory = (node: any) => {
     const component = node.getComponent();

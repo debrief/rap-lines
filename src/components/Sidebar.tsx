@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction }) => {
-  const layoutModel = {
+  const layoutModel: FlexLayout.IJsonModel = {
     global: {},
     layout: {
       type: "row",
