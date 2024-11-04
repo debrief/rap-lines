@@ -12,7 +12,8 @@ export const MoveNorth: Action = {
     distance: 0.1
   },
   label: 'Move North',
-  version: '1.0'
+  version: '1.0',
+  active: true // Added active property
 }
 
 export const MoveEast: Action = {
@@ -22,7 +23,8 @@ export const MoveEast: Action = {
     distance: 0.1
   },
   label: 'Move East',
-  version: '1.0'
+  version: '1.0',
+  active: true // Added active property
 }
 
 export const MoveWest: Action = {
@@ -32,7 +34,8 @@ export const MoveWest: Action = {
     distance: 0.1
   },
   label: 'Move West',
-  version: '1.0'
+  version: '1.0',
+  active: true // Added active property
 }
 
 export const MoveSouth: Action = {
@@ -42,7 +45,8 @@ export const MoveSouth: Action = {
     distance: 0.1
   },
   label: 'Move South',
-  version: '1.0'
+  version: '1.0',
+  active: true // Added active property
 }
 
 export const MoveNorthHandler: ActionHandler = {
