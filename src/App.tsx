@@ -6,7 +6,7 @@ import Store, { Action, ActionHandler } from './state';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scaleTrack';
-import FlexLayout from 'flexlayout-react';
+import { Layout, IJsonModel, Model } from 'flexlayout-react';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -18,7 +18,7 @@ const registerHandlers = ():ActionHandler[] => {
   return res;
 }
 
-const layoutModel: FlexLayout.IJsonModel = {
+const layoutModel: IJsonModel = {
   global: {},
   layout: {
     type: "row",
@@ -118,7 +118,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <FlexLayout.Layout model={FlexLayout.Model.fromJson(layoutModel)} factory={factory} />
+      <Layout model={Model.fromJson(layoutModel)} factory={factory} />
     </div>
   );
 }

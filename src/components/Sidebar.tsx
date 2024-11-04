@@ -3,7 +3,7 @@ import HistorySection from './HistorySection';
 import OutlineSection from './OutlineSection';
 import './Sidebar.css';
 import { Action } from '../state';
-import FlexLayout from 'flexlayout-react';
+import {Layout, Model, IJsonModel } from 'flexlayout-react';
 
 interface SidebarProps {
   actions: Action[];
@@ -13,14 +13,14 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction }) => {
-  const layoutModel: FlexLayout.IJsonModel = {
+  const layoutModel: IJsonModel = {
     global: {},
     layout: {
       type: "row",
       children: [
         {
           type: "tabset",
-          weight: 50,
+          weight: 40,
           children: [
             {
               type: "tab",
@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, del
         },
         {
           type: "tabset",
-          weight: 50,
+          weight: 60,
           children: [
             {
               type: "tab",
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, del
 
   return (
     <aside className="sidebar">
-      <FlexLayout.Layout model={FlexLayout.Model.fromJson(layoutModel)} factory={factory} />
+      <Layout model={Model.fromJson(layoutModel)} factory={factory} />
     </aside>
   );
 }
