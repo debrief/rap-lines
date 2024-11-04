@@ -4,9 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
-import { printFeature } from '../state';
 import { buffer, lineString, featureCollection } from '@turf/turf';
-import { render } from '@testing-library/react';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
