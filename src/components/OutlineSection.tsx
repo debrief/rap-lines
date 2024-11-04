@@ -17,6 +17,7 @@ const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
       <button onClick={() => addAction(MoveEast)}>Move East</button>
       <button onClick={() => addAction(MoveWest)}>Move West</button>
       <button onClick={() => addAction(MoveSouth)}>Move South</button>
+      <br/>
       <button onClick={() => addAction(ScaleUp)}>Scale Up</button>
       <button onClick={() => addAction(ScaleDown)}>Scale Down</button>
     </div>

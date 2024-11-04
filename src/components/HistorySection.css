@@ -4,3 +4,8 @@
   padding: 10px;
   height: 300px; /* Added fixed height */
 }
+
+.history-section ul {
+  height: 250px; /* Set desired fixed height */
+  overflow-y: scroll;
+}
