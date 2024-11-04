@@ -5,11 +5,17 @@ import './MapArea.css';
 import { FeatureCollection } from 'geojson';
 import * as L from 'leaflet'
 import { printFeature } from '../state';
-import { buffer } from '@turf/turf';
+import { buffer, lineString, featureCollection } from '@turf/turf';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
 }
+
+const convertPointsToLine = (points: FeatureCollection) => {
+  const coordinates = points.features.map(feature => feature.geometry.coordinates);
+  const line = lineString(coordinates);
+  return featureCollection([line]);
+};
 
 const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   const mapRef = useRef<L.Map>(null);
@@ -51,13 +57,22 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   if (state === null) {
     return <div>Loading...</div>;
   } else {
+    const customRenderer = (featureCollection: FeatureCollection) => {
+      if (featureCollection.name === 'Route') {
+        return convertPointsToLine(featureCollection);
+      }
+      return featureCollection;
+    };
+
+    const renderedState = customRenderer(state);
+
     return (
       <div className="map-area" style={{ position: 'relative' }}>
         <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }}>
           <TileLayer
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          <GeoJSON key={JSON.stringify(state)} data={state} />
+          <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
           <AttributionControl position="bottomright" />
         </MapContainer>
         {mousePosition && (
