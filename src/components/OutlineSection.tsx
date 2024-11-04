@@ -2,7 +2,8 @@ import React from 'react';
 import './OutlineSection.css';
 import { Action } from '../state';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
-import { ScaleUp, ScaleDown } from '../actions/scaleTrack';
+import { ScaleUp, ScaleDown } from '../actions/scale-track';
+import { SummariseTrack } from '../actions/summarise-track';
 
 type OutlineProps = {
   addAction: (action: Action) => void
@@ -20,6 +21,8 @@ const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
       <br/>
       <button onClick={() => addAction(ScaleUp)}>Scale Up</button>
       <button onClick={() => addAction(ScaleDown)}>Scale Down</button>
+      <br/>
+      <button onClick={() => addAction(SummariseTrack)}>Centre Point</button>
     </div>
   );
 }

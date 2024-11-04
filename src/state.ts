@@ -8,6 +8,7 @@ export interface Action {
   label: string;
   version: string;
   active: boolean; // Added active property
+  results?: string // optional cached results
 }
 
 export interface ActionHandler {

@@ -10,8 +10,10 @@ import NorthIcon from '@mui/icons-material/North';
 import SouthIcon from '@mui/icons-material/South';
 import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
+import InfoIcon from '@mui/icons-material/Info';
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
-import { TypeScale } from '../actions/scaleTrack';
+import { TypeScale } from '../actions/scale-track';
+import { TypeSummarise } from '../actions/summarise-track';
 
 interface ActionItemProps {
   action: Action;
@@ -31,7 +33,9 @@ const iconFor = (action: Action): React.ReactElement => {
       return <WestIcon />;
     case TypeScale:
       return <TextIncreaseIcon />;
-    default: return <Settings />;
+      case TypeSummarise:
+        return <InfoIcon />;
+      default: return <Settings />;
   }
 }
 
@@ -45,6 +49,9 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAct
     { action.active ? <CheckIcon onClick={() => toggleActive(action)} />: <CheckBoxOutlineBlankIcon onClick={() => toggleActive(action)} />}
     <DeleteIcon onClick={() => deleteAction(action)} />
     </CardActions>
+    { action.results && <CardContent>
+      <span>{action.results}</span>
+    </CardContent> }
     </Card>
   );
 }

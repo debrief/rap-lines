@@ -55,7 +55,6 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
-      console.log('adding mousemove listener');
       const handleMouseMove = (e: L.LeafletMouseEvent) => {
         setMousePosition({ lat: e.latlng.lat, lng: e.latlng.lng });
       };
@@ -65,34 +64,37 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
       };
     }
   }, [mapRef]);
+
+
+  type MouseProps = {
+    position: { lat: number; lng: number } | null  }
+  
+  const MousePosition: React.FC<MouseProps> = ({ position }) => {
+    return       <div
+    className="mouse-tracker"
+    style={{
+      position: 'absolute',
+      bottom: 10,
+      left: 10,
+      background: 'rgba(255, 255, 255, 0.8)',
+      padding: '5px',
+      borderRadius: '4px',
+      zIndex: 1000,
+    }}
+    >
+      { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending</span> }
+    </div>
+  }
   
   return (
     <div className="map-area" style={{ position: 'relative' }}>
-    <MapContainer center={defaultInitialCenter} zoom={6} ref={mapRef} style={{ height: "100%", width: "100%" }}>
-      <TileLayer
-      url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
-      { renderedState && 
-        <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
-      }
-      <AttributionControl position="bottomright" />
-    </MapContainer>
-    {mousePosition && (
-      <div
-      className="mouse-tracker"
-      style={{
-        position: 'absolute',
-        bottom: 10,
-        left: 10,
-        background: 'rgba(255, 255, 255, 0.8)',
-        padding: '5px',
-        borderRadius: '4px',
-        zIndex: 1000,
-      }}
-      >
-      Lat: {mousePosition.lat.toFixed(2)}, Lng: {mousePosition.lng.toFixed(2)}
-      </div>
-    )}
+      <MapContainer center={defaultInitialCenter} zoom={6} ref={mapRef} style={{ height: "100%", width: "100%" }}>
+        <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+        { renderedState && 
+          <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
+        }
+      </MapContainer>
+      <MousePosition position={mousePosition} />
     </div>
   );
 }
