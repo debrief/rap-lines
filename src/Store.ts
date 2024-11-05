@@ -64,7 +64,6 @@ class Store {
         const handler = this.handlers.find(handler => handler.type === action.type);
         if (handler) {
           const newState = JSON.parse(JSON.stringify(state));
-          console.log('about to handle in reducer', action.label)
           return handler.handle(newState, action);
         } else {
           console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
