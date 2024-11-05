@@ -1,4 +1,4 @@
-import { Action, ActionHandler } from '../state';
+import { Action, ActionHandler } from '../Store';
 
 export const TypeNorth = 'move-north';
 export const TypeEast = 'move-east';

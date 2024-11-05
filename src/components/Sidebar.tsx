@@ -2,7 +2,7 @@ import React from 'react';
 import Pipeline from './Pipeline';
 import OutlineSection from './OutlineSection';
 import './Sidebar.css';
-import { Action, BaseAction } from '../state';
+import { Action, BaseAction } from '../Store';
 
 interface SidebarProps {
   actions: BaseAction[];

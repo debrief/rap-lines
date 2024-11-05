@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Action, ActionHandler, BaseAction } from './state';
+import Store, { Action, ActionHandler, BaseAction } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';

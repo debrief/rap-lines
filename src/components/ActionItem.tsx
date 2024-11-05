@@ -1,5 +1,5 @@
 import React from 'react';
-import { Action, BaseAction, TypeComposite } from '../state';
+import { Action, BaseAction, TypeComposite } from '../Store';
 import { Card, CardContent, CardActions } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';

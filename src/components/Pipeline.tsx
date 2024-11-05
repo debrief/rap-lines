@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Pipeline.css';
-import { BaseAction } from '../state';
+import { BaseAction } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
