@@ -12,7 +12,7 @@ export interface Action extends BaseAction {
   payload: any;
 }
 
-interface CompositeAction extends BaseAction {
+export interface CompositeAction extends BaseAction {
   items: Action[];
 }
 
@@ -57,20 +57,21 @@ class Store {
     handle: (state, action) => {
       const compAction = action as unknown as CompositeAction;
       const items = compAction.items;
-      items.reduce((state, action) => {
+      const newState = items.reduce((state, action) => {
         if (!action.active) {
           return state;
         }
         const handler = this.handlers.find(handler => handler.type === action.type);
         if (handler) {
-          return handler.handle(state, action);
+          const newState = JSON.parse(JSON.stringify(state));
+          console.log('about to handle in reducer', action.label)
+          return handler.handle(newState, action);
         } else {
           console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
           return state;
         }
     }, state);
       // take a copy of the state object
-      const newState = JSON.parse(JSON.stringify(state));
       return newState;
     }
   }
@@ -97,6 +98,18 @@ class Store {
   }
 
   removeAction(action: BaseAction) {
+    // check it's in the top level actions
+    if (this.actions.includes(action as CompositeAction | Action)) {
+      this.actions = this.actions.filter(a => a !== action);
+    } else {
+      // check inside composite actions
+      const compositeActions = this.actions.filter(a => a.type === TypeComposite) as CompositeAction[];
+      const parent = compositeActions.find(comp => comp.items.includes(action as Action));
+      if (parent) {
+        parent.items = parent?.items.filter(a => a !== action);
+      }
+    }
+
     this.actions = this.actions.filter(a => a !== action);
     this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();

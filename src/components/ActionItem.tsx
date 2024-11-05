@@ -1,6 +1,6 @@
 import React from 'react';
-import { BaseAction, TypeComposite } from '../Store';
-import { Card, CardContent, CardActions } from '@mui/material';
+import { BaseAction, CompositeAction, TypeComposite } from '../Store';
+import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,6 +12,7 @@ import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import InfoIcon from '@mui/icons-material/Info';
 import LayersIcon from '@mui/icons-material/Layers';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
@@ -22,6 +23,7 @@ interface ActionItemProps {
   deleteAction: (action: BaseAction) => void;
   selected: boolean;
   setSelected: (id: string, selected: boolean) => void;
+  child?: boolean
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -44,10 +46,48 @@ const iconFor = (action: BaseAction): React.ReactElement => {
   }
 }
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAction, selected, setSelected }) => {
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme }) => ({
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+  variants: [
+    {
+      props: ({ expand }) => !expand,
+      style: {
+        transform: 'rotate(90deg)',
+      },
+    },
+    {
+      props: ({ expand }) => !!expand,
+      style: {
+        transform: 'rotate(0deg)',
+      },
+    },
+  ],
+}));
+
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected }) => {
+
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = (e: any) => {
+    setExpanded(!expanded);
+    e.stopPropagation();
+  };
+
   const handleSelection = () => {
     setSelected(action.id, !selected);
   };
+
+  const isComposite = action.type === TypeComposite;
 
   return (
     <Card
@@ -55,7 +95,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAct
       style={{
         margin: '5px',
         borderWidth: selected ? '2px' : '1px',
-        backgroundColor: selected ? '#d3d3d3' : 'white'
+        backgroundColor: selected ? '#d3d3d3' : 'white',
+        marginLeft: child ? '20px' : '0px'
       }}
       className="action-item"
       onClick={handleSelection}
@@ -65,8 +106,19 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAct
       </CardContent>
       <CardActions style={{display: 'inline'}}>
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
-        <DeleteIcon onClick={() => deleteAction(action)} />
+        <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
+        {isComposite && <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+        <ExpandMoreIcon />
+          </ExpandMore>}
       </CardActions>
+      {isComposite && expanded && action.type === TypeComposite && (action as CompositeAction).items.map((item) => {
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} selected={selected} setSelected={setSelected} />
+      })}
     </Card>
   );
 }

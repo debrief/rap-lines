@@ -81,6 +81,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         deleteAction(action);
       }
     });
+    setSelectedIds([]);
   };
 
   const unGroupSelected = () => {
@@ -197,9 +198,9 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         </Tooltip>
       </ButtonGroup>
       <ul>
-        {actions.map((action, index) => (
+        {actions.map((action) => (
           <ActionItem
-            key={index}
+            key={action.id}
             action={action}
             toggleActive={toggleActive}
             deleteAction={deleteAction}
