@@ -9,7 +9,7 @@ interface SidebarProps {
   addAction: (action: Action) => void
   toggleActive: (action: BaseAction) => void
   deleteAction: (action: BaseAction) => void
-  groupAction: (actions: BaseAction[]) => void;
+  groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
 
 }

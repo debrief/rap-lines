@@ -110,14 +110,12 @@ class Store {
     }
     else {
       const comp = action as CompositeAction; 
-      console.log('actions before', this.actions)
       // find the index of the composite action
       const index = this.actions.findIndex(a => a === action);
       // remove the composite action
       this.actions.splice(index, 1);
       // add the items back to the action list at the correct index
       this.actions.splice(index, 0, ...comp.items);
-      console.log('actions after', this.actions)
       // inform the action listeners
       this.actionsListeners.forEach(listener => listener(this.actions));
       // update the state
@@ -125,11 +123,11 @@ class Store {
     }  
   }
 
-  groupActions(selectedItems: BaseAction[]) {
+  groupActions(selectedItems: BaseAction[], name: string) {
     const compositeAction: CompositeAction = {
       id: new Date().getTime().toString(),
       type: TypeComposite,
-      label: 'Group',
+      label: name,
       version: '1.0',
       active: true,
       items: selectedItems as Action[]

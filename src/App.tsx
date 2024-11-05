@@ -39,9 +39,9 @@ const App: React.FC = () => {
     }
   }, [store])
 
-  const groupAction = useCallback((actions: BaseAction[]) => {
+  const groupAction = useCallback((actions: BaseAction[], name: string) => {
     if (store){
-      store?.groupActions(actions);
+      store?.groupActions(actions, name);
     }
   }, [store])
 

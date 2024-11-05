@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './Pipeline.css';
 import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,24 +14,36 @@ type PipelineProps = {
   actions: BaseAction[];
   toggleActive: (action: BaseAction) => void;
   deleteAction: (action: BaseAction) => void;
-  groupAction: (actions: BaseAction[]) => void;
+  groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
+}
+
+type DialogProps = {
+  title: string
+  label: string
+  setValue: (value: string | null) => void
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
   groupAction, unGroupAction
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
+  const [dialogText, setDialogText] = useState<string>('');
 
-  const getValidIds = useCallback((actions: BaseAction[]): string[] => {
-    const validIds = selectedIds.filter(id => actions.find(action => action.id === id));
-    return validIds
-  }, [selectedIds])
-
-  useEffect(() => {
-  //  const validIds = getValidIds(actions);
-//    setSelectedIds(validIds);
-  },[actions, getValidIds])
+  const setValue = (value: string | null) => {
+    if (value !== null) {
+      // determine if the selected items are consecutive
+      const selectedIndices = selectedIds.map(id => actions.findIndex(action => action.id === id));
+      const sorted = selectedIndices.slice().sort();
+      const sortedItems = sorted.map(index => actions[index]);
+      // now clear the selection
+      setSelectedIds([]);
+      // and create the group
+      groupAction(sortedItems, value)
+    }
+    setShowDialog(null);
+  }
 
   const setSelected = (id: string, selected: boolean) => {
     setSelectedIds(prevSelectedIds => {
@@ -83,14 +95,10 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
 
 
   const groupSelected = () => {
-    // determine if the selected items are consecutive
-    const selectedIndices = selectedIds.map(id => actions.findIndex(action => action.id === id));
-    const sorted = selectedIndices.slice().sort();
-    const sortedItems = sorted.map(index => actions[index]);
-    // now clear the selection
-    setSelectedIds([]);
-
-    groupAction(sortedItems)
+    // popup a dialog, for the user to enter a name for the group
+    // then group the selected items
+    const dialog: DialogProps = {title: 'Group', label: 'Group Name', setValue: setValue}
+    setShowDialog(dialog)
   };
 
   const groupIsSelected = (): boolean => {
@@ -135,6 +143,14 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
 
   return (
     <div className="pipeline-section">
+      {showDialog && <Dialog open={true}> 
+        <h2>{showDialog.title}</h2>
+        <input type="text" onChange={e => setDialogText(e.target.value)} />
+        <ButtonGroup  >
+          <button onClick={() => setValue(null)}>Cancel</button>
+          <button onClick={() => setValue(dialogText)}>OK</button>
+        </ButtonGroup>
+      </Dialog>}
       <h2>Pipeline</h2>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
