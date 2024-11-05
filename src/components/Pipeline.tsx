@@ -23,7 +23,6 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           />
         ))}
       </ul>
-      {/* Additional pipeline items go here */}
     </div>
   );
 }
