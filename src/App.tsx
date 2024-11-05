@@ -89,9 +89,11 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
-        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
-      <OutlineSection addAction={addAction} />
+      <div className="sidebar">
+        <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
+          groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
+        <OutlineSection addAction={addAction} />
+      </div>
       <div className="main-content">
         <MapArea state={state} />
       </div>
