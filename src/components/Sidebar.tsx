@@ -2,13 +2,13 @@ import React from 'react';
 import Pipeline from './Pipeline';
 import OutlineSection from './OutlineSection';
 import './Sidebar.css';
-import { Action } from '../state';
+import { Action, BaseAction } from '../state';
 
 interface SidebarProps {
-  actions: Action[];
+  actions: BaseAction[];
   addAction: (action: Action) => void
-  toggleActive: (action: Action) => void
-  deleteAction: (action: Action) => void
+  toggleActive: (action: BaseAction) => void
+  deleteAction: (action: BaseAction) => void
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction }) => {
