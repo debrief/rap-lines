@@ -39,6 +39,19 @@ const App: React.FC = () => {
     }
   }, [store])
 
+  const groupAction = useCallback((actions: BaseAction[], name: string) => {
+    if (store){
+      store?.groupActions(actions, name);
+    }
+  }, [store])
+
+  const unGroupAction = useCallback((action: BaseAction) => {
+    if (store){
+      store?.ungroupAction(action);
+    }
+  }, [store])
+
+
   const toggleActive = useCallback((action: BaseAction) => {
     if (store) {
       store.toggleActionActive(action);
@@ -75,7 +88,8 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActive} deleteAction={removeAction} />
+      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActive}
+        deleteAction={removeAction} groupAction={groupAction} unGroupAction={unGroupAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
