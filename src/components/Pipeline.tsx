@@ -71,23 +71,17 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           onClick={activateSelected}
           disabled={!allSelectedInactive}
           startIcon={<CheckBoxOutlineBlankIcon />}
-        >
-          Activate
-        </Button>
+        />
         <Button
           onClick={deactivateSelected}
           disabled={!allSelectedActive}
           startIcon={<CheckIcon />}
-        >
-          Deactivate
-        </Button>
+        />
         <Button
           onClick={deleteSelected}
           disabled={selectedIds.length === 0}
           startIcon={<DeleteIcon />}
-        >
-          Delete
-        </Button>
+        />
       </ButtonGroup>
       <ul>
         {actions.map((action, index) => (
