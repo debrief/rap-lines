@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Action, ActionHandler } from './state';
+import Store, { Action, ActionHandler, BaseAction } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
@@ -23,13 +23,13 @@ const App: React.FC = () => {
   const [store, setStore] = useState<Store | null>(null);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
-  const [actions, setActions] = useState<Action[]>([]);
+  const [actions, setActions] = useState<BaseAction[]>([]);
 
   const stateListener = (state: FeatureCollection) => {
     setState(state)
   }
 
-  const actionsListener  = (actions: Action[]) => {
+  const actionsListener  = (actions: BaseAction[]) => {
     setActions(actions)
   }
 
@@ -39,13 +39,13 @@ const App: React.FC = () => {
     }
   }, [store])
 
-  const toggleActive = useCallback((action: Action) => {
+  const toggleActive = useCallback((action: BaseAction) => {
     if (store) {
       store.toggleActionActive(action);
     }
   }, [store]);
 
-  const removeAction = useCallback((action: Action) => {
+  const removeAction = useCallback((action: BaseAction) => {
     if (store) {
       store.removeAction(action);
     }

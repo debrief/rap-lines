@@ -1,6 +1,6 @@
 import React from 'react';
 import './OutlineSection.css';
-import { Action } from '../state';
+import { Action } from '../Store';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';

@@ -1,4 +1,4 @@
-import { Action, ActionHandler } from "../state";
+import { Action, ActionHandler } from "../Store";
 import * as turf from '@turf/turf';
 
 export const TypeScale = 'scale'
@@ -38,7 +38,7 @@ export const ScaleUpHandler: ActionHandler = {
         if (feature.geometry.type === 'Point') {
           const bearing = turf.bearing(origin, feature.geometry.coordinates);
           const distance = turf.distance(origin, feature.geometry.coordinates);
-          const newDist = distance * action.payload.factor;
+          const newDist = distance * (action as Action).payload.factor;
           const newCoords = turf.destination(origin, newDist, bearing);
           feature.geometry.coordinates = newCoords.geometry.coordinates;
         }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Action } from '../state';
+import { BaseAction, TypeComposite } from '../Store';
 import { Card, CardContent, CardActions } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -11,19 +11,20 @@ import SouthIcon from '@mui/icons-material/South';
 import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import InfoIcon from '@mui/icons-material/Info';
+import LayersIcon from '@mui/icons-material/Layers';
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
 
 interface ActionItemProps {
-  action: Action;
-  toggleActive: (action: Action) => void;
-  deleteAction: (action: Action) => void;
+  action: BaseAction;
+  toggleActive: (action: BaseAction) => void;
+  deleteAction: (action: BaseAction) => void;
   selected: boolean;
   setSelected: (id: string, selected: boolean) => void;
 }
 
-const iconFor = (action: Action): React.ReactElement => {
+const iconFor = (action: BaseAction): React.ReactElement => {
   switch(action.type) {
     case TypeNorth:
       return <NorthIcon />;
@@ -35,9 +36,11 @@ const iconFor = (action: Action): React.ReactElement => {
       return <WestIcon />;
     case TypeScale:
       return <TextIncreaseIcon />;
-      case TypeSummarise:
+    case TypeSummarise:
         return <InfoIcon />;
-      default: return <Settings />;
+    case TypeComposite:
+      return <LayersIcon />;
+    default: return <Settings />;
   }
 }
 
@@ -64,9 +67,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAct
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={() => deleteAction(action)} />
       </CardActions>
-      { action.results && <CardContent>
-        <span>{action.results}</span>
-      </CardContent> }
     </Card>
   );
 }

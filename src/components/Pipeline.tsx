@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Pipeline.css';
-import { Action } from '../state';
+import { BaseAction } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -9,9 +9,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 type PipelineProps = {
-  actions: Action[];
-  toggleActive: (action: Action) => void;
-  deleteAction: (action: Action) => void;
+  actions: BaseAction[];
+  toggleActive: (action: BaseAction) => void;
+  deleteAction: (action: BaseAction) => void;
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction }) => {

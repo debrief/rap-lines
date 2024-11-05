@@ -1,4 +1,4 @@
-import { Action, ActionHandler } from '../state';
+import { Action, ActionHandler } from '../Store';
 
 export const TypeNorth = 'move-north';
 export const TypeEast = 'move-east';
@@ -64,7 +64,7 @@ export const MoveNorthHandler: ActionHandler = {
       // if the feature is a point
       if (feature.geometry.type === 'Point') {
         // update the point's coordinates
-        feature.geometry.coordinates[1] += action.payload.distance;
+        feature.geometry.coordinates[1] += (action as Action).payload.distance;
       }
     });
     return newState;
@@ -82,7 +82,7 @@ export const MoveEastHandler: ActionHandler = {
       // if the feature is a point
       if (feature.geometry.type === 'Point') {
         // update the point's coordinates
-        feature.geometry.coordinates[0] += action.payload.distance;
+        feature.geometry.coordinates[0] += (action as Action).payload.distance;
       }
     });
     return newState;
@@ -100,7 +100,7 @@ export const MoveWestHandler: ActionHandler = {
       // if the feature is a point
       if (feature.geometry.type === 'Point') {
         // update the point's coordinates
-        feature.geometry.coordinates[0] -= action.payload.distance;
+        feature.geometry.coordinates[0] -= (action as Action).payload.distance;
       }
     });
     return newState;
@@ -118,7 +118,7 @@ export const MoveSouthHandler: ActionHandler = {
       // if the feature is a point
       if (feature.geometry.type === 'Point') {
         // update the point's coordinates
-        feature.geometry.coordinates[1] -= action.payload.distance;
+        feature.geometry.coordinates[1] -= (action as Action).payload.distance;
       }
     });
     return newState;
