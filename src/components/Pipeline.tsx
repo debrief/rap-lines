@@ -55,8 +55,14 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   };
 
   const selectAll = () => {
-    const allIds = actions.map(action => action.id);
-    setSelectedIds(allIds);
+    // special case. If all items are currently selected, deselect all
+    if (selectedIds.length === actions.length) {
+      setSelectedIds([]);
+      return
+    } else {
+      const allIds = actions.map(action => action.id);
+      setSelectedIds(allIds);  
+    }
   };
 
   const allSelectedInactive = selectedIds.every(id => {
@@ -73,7 +79,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     <div className="pipeline-section">
       <h2>Pipeline</h2>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
-        <Tooltip title="Select All">
+        <Tooltip title="Select/Deselect All">
           <Button
             onClick={selectAll}
             startIcon={<DoneAllIcon />}
