@@ -39,7 +39,7 @@ const App: React.FC = () => {
     }
   }, [store])
 
-  const toggleActionActive = useCallback((action: Action) => {
+  const toggleActive = useCallback((action: Action) => {
     if (store) {
       store.toggleActionActive(action);
     }
@@ -75,7 +75,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActionActive} deleteAction={removeAction} />
+      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActive} deleteAction={removeAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
