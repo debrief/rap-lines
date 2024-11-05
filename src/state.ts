@@ -1,20 +1,27 @@
 import { FeatureCollection } from 'geojson';
 
-export interface Action {
-  // this will be unique for each action, initialised when the action is created
+export interface BaseAction {
   id: string
   type: string;
-  payload: any;
   label: string;
   version: string;
-  active: boolean; // Added active property
-  results?: string // optional cached results
+  active: boolean
+}
+
+export interface Action extends BaseAction {
+  payload: any;
+}
+
+interface CompositeAction extends BaseAction {
+  items: Action[];
 }
 
 export interface ActionHandler {
   type: string
-  handle(state: FeatureCollection, action: Action): FeatureCollection;
+  handle(state: FeatureCollection, action: BaseAction): FeatureCollection;
 }
+
+export const TypeComposite = 'composite';
 
 export const printFeature = (msg: string, feature: FeatureCollection) => {
   const firstFeature = feature.features[0];
@@ -25,12 +32,12 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
 }
 
 class Store {
-  private actions: Action[];
+  private actions: Array<Action | CompositeAction>;
   private currentState: FeatureCollection;
   private initialState: FeatureCollection;
   private handlers: ActionHandler[];
   private stateListeners: ((state: FeatureCollection) => void)[];
-  private actionsListeners: ((actions: Action[]) => void)[];
+  private actionsListeners: ((actions: BaseAction[]) => void)[];
 
   constructor(initialState: FeatureCollection) {
     console.log('store constructor', initialState);
@@ -40,9 +47,35 @@ class Store {
     this.handlers = []
     this.stateListeners = [];
     this.actionsListeners = [];
+
+    // register the composite handler
+    this.addHandler(this.CompositeHandler);
   }
 
-  addAction(action: Action) {
+  private CompositeHandler: ActionHandler = {
+    type: TypeComposite,
+    handle: (state, action) => {
+      const compAction = action as unknown as CompositeAction;
+      const items = compAction.items;
+      items.reduce((state, action) => {
+        if (!action.active) {
+          return state;
+        }
+        const handler = this.handlers.find(handler => handler.type === action.type);
+        if (handler) {
+          return handler.handle(state, action);
+        } else {
+          console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
+          return state;
+        }
+    }, state);
+      // take a copy of the state object
+      const newState = JSON.parse(JSON.stringify(state));
+      return newState;
+    }
+  }
+
+  addAction(action: Action | CompositeAction) {
     const newAction = { ...action };
     // initialise the id of the action
     newAction.id =new Date().getTime().toString();
@@ -59,17 +92,17 @@ class Store {
     this.stateListeners.push(listener)
   }
 
-  addActionsListener(listener: (actions: Action[]) => void) {
+  addActionsListener(listener: (actions: BaseAction[]) => void) {
     this.actionsListeners.push(listener)
   }
 
-  removeAction(action: Action) {
+  removeAction(action: BaseAction) {
     this.actions = this.actions.filter(a => a !== action);
     this.actionsListeners.forEach(listener => listener(this.actions));
     this.updateState();
   }
 
-  toggleActionActive(action: Action) {
+  toggleActionActive(action: BaseAction) {
     action.active = !action.active;
     this.updateState();
   }
