@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './Pipeline.css';
 import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton, Dialog } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,6 +22,7 @@ type DialogProps = {
   title: string
   label: string
   setValue: (value: string | null) => void
+  icon? : React.ReactElement
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
@@ -97,7 +98,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   const groupSelected = () => {
     // popup a dialog, for the user to enter a name for the group
     // then group the selected items
-    const dialog: DialogProps = {title: 'Group', label: 'Group Name', setValue: setValue}
+    const dialog: DialogProps = {title: 'Group Items', label: 'Name', 
+      setValue: setValue, icon: <CallMergeIcon/>}
     setShowDialog(dialog)
   };
 
@@ -143,12 +145,12 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
 
   return (
     <div className="pipeline-section">
-      {showDialog && <Dialog open={true}> 
-        <h2>{showDialog.title}</h2>
-        <input type="text" onChange={e => setDialogText(e.target.value)} />
+      {showDialog && <Dialog style={{}} open={true}> 
+        <h4>{showDialog.icon}{showDialog.title}</h4>
+        <TextField label={showDialog.label} onChange={e => setDialogText(e.target.value)} />
         <ButtonGroup  >
-          <button onClick={() => setValue(null)}>Cancel</button>
-          <button onClick={() => setValue(dialogText)}>OK</button>
+          <Button onClick={() => setValue(null)}>Cancel</Button>
+          <Button onClick={() => setValue(dialogText)}>OK</Button>
         </ButtonGroup>
       </Dialog>}
       <h2>Pipeline</h2>
