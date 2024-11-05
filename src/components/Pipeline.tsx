@@ -6,6 +6,7 @@ import { ButtonGroup, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 type PipelineProps = {
   actions: Action[];
@@ -53,6 +54,11 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     });
   };
 
+  const selectAll = () => {
+    const allIds = actions.map(action => action.id);
+    setSelectedIds(allIds);
+  };
+
   const allSelectedInactive = selectedIds.every(id => {
     const action = actions.find(action => action.id === id);
     return action && !action.active;
@@ -67,6 +73,10 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     <div className="pipeline-section">
       <h2>Pipeline</h2>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
+        <Button
+          onClick={selectAll}
+          startIcon={<DoneAllIcon />}
+        />
         <Button
           onClick={activateSelected}
           disabled={!allSelectedInactive}
