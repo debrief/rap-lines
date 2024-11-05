@@ -8,6 +8,7 @@ import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } 
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
+import { Layout, Model } from 'flexlayout-react'; // P9936
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -87,16 +88,59 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const json = {
+    global: {},
+    layout: {
+      type: "row",
+      children: [
+        {
+          type: "tabset",
+          weight: 20,
+          children: [
+            {
+              type: "tab",
+              name: "Pipeline",
+              component: "pipeline"
+            },
+            {
+              type: "tab",
+              name: "Outline",
+              component: "outline"
+            }
+          ]
+        },
+        {
+          type: "tabset",
+          weight: 80,
+          children: [
+            {
+              type: "tab",
+              name: "Map",
+              component: "map"
+            }
+          ]
+        }
+      ]
+    }
+  };
+
+  const model = Model.fromJson(json);
+
+  const factory = (node: any) => {
+    const component = node.getComponent();
+    if (component === "pipeline") {
+      return <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
+        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />;
+    } else if (component === "outline") {
+      return <OutlineSection addAction={addAction} />;
+    } else if (component === "map") {
+      return <MapArea state={state} />;
+    }
+  };
+
   return (
     <div className="app">
-      <div className="sidebar">
-        <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
-          groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
-        <OutlineSection addAction={addAction} />
-      </div>
-      <div className="main-content">
-        <MapArea state={state} />
-      </div>
+      <Layout model={model} factory={factory} />
     </div>
   );
 }
