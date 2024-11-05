@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Pipeline.css';
 import { Action } from '../state';
 import ActionItem from './ActionItem';
@@ -10,6 +10,18 @@ type PipelineProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction }) => {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const setSelected = (id: string, selected: boolean) => {
+    setSelectedIds(prevSelectedIds => {
+      if (selected) {
+        return [...prevSelectedIds, id];
+      } else {
+        return prevSelectedIds.filter(selectedId => selectedId !== id);
+      }
+    });
+  };
+
   return (
     <div className="pipeline-section">
       <h2>Pipeline</h2>
@@ -20,6 +32,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
             action={action}
             toggleActive={toggleActive}
             deleteAction={deleteAction}
+            selected={selectedIds.includes(action.id)}
+            setSelected={setSelected}
           />
         ))}
       </ul>

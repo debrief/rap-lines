@@ -19,6 +19,8 @@ interface ActionItemProps {
   action: Action;
   toggleActive: (action: Action) => void;
   deleteAction: (action: Action) => void;
+  selected: boolean;
+  setSelected: (id: string, selected: boolean) => void;
 }
 
 const iconFor = (action: Action): React.ReactElement => {
@@ -39,19 +41,32 @@ const iconFor = (action: Action): React.ReactElement => {
   }
 }
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAction }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAction, selected, setSelected }) => {
+  const handleSelection = () => {
+    setSelected(action.id, !selected);
+  };
+
   return (
-    <Card variant='outlined' style={{margin: '5px'}} className="action-item">
-    <CardContent style={{padding: '2px', display: 'inline'}}>
-    <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
-    </CardContent>
-    <CardActions style={{display: 'inline'}}>
-    { action.active ? <CheckIcon onClick={() => toggleActive(action)} />: <CheckBoxOutlineBlankIcon onClick={() => toggleActive(action)} />}
-    <DeleteIcon onClick={() => deleteAction(action)} />
-    </CardActions>
-    { action.results && <CardContent>
-      <span>{action.results}</span>
-    </CardContent> }
+    <Card
+      variant='outlined'
+      style={{
+        margin: '5px',
+        borderWidth: selected ? '2px' : '1px',
+        backgroundColor: selected ? '#d3d3d3' : 'white'
+      }}
+      className="action-item"
+      onClick={handleSelection}
+    >
+      <CardContent style={{padding: '2px', display: 'inline'}}>
+        <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
+      </CardContent>
+      <CardActions style={{display: 'inline'}}>
+        { action.active ? <CheckIcon onClick={() => toggleActive(action)} />: <CheckBoxOutlineBlankIcon onClick={() => toggleActive(action)} />}
+        <DeleteIcon onClick={() => deleteAction(action)} />
+      </CardActions>
+      { action.results && <CardContent>
+        <span>{action.results}</span>
+      </CardContent> }
     </Card>
   );
 }
