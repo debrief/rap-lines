@@ -144,9 +144,15 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     return action && action.active;
   });
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      setValue(dialogText);
+    }
+  };
+
   return (
     <div className="pipeline-section">
-      {showDialog && <Dialog style={{}} open={true}> 
+      {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
         <h4>{showDialog.icon}{showDialog.title}</h4>
         <TextField label={showDialog.label} onChange={e => setDialogText(e.target.value)} />
         <ButtonGroup  >
