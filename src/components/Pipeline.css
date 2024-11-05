@@ -1,11 +1,11 @@
-.history-section {
+.pipeline-section {
   flex-grow: 1;
   background-color: #ddd;
   padding: 10px;
   height: 300px; /* Added fixed height */
 }
 
-.history-section ul {
+.pipeline-section ul {
   height: 450px; /* Set desired fixed height */
   overflow-y: scroll;
   padding-inline-start: 0px;

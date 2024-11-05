@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Pipeline.css';
 import { Action } from '../state';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Button, Tooltip, IconButton } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
