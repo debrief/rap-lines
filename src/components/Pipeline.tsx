@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Pipeline.css';
 import { Action } from '../state';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Button } from '@mui/material';
+import { ButtonGroup, Button, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -73,25 +73,33 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     <div className="pipeline-section">
       <h2>Pipeline</h2>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
-        <Button
-          onClick={selectAll}
-          startIcon={<DoneAllIcon />}
-        />
-        <Button
-          onClick={activateSelected}
-          disabled={selectedIds.length === 0 || !allSelectedInactive}
-          startIcon={<CheckBoxOutlineBlankIcon />}
-        />
-        <Button
-          onClick={deactivateSelected}
-          disabled={selectedIds.length === 0 || !allSelectedActive}
-          startIcon={<CheckIcon />}
-        />
-        <Button
-          onClick={deleteSelected}
-          disabled={selectedIds.length === 0}
-          startIcon={<DeleteIcon />}
-        />
+        <Tooltip title="Select All">
+          <Button
+            onClick={selectAll}
+            startIcon={<DoneAllIcon />}
+          />
+        </Tooltip>
+        <Tooltip title="Activate Selected">
+          <Button
+            onClick={activateSelected}
+            disabled={selectedIds.length === 0 || !allSelectedInactive}
+            startIcon={<CheckIcon />}
+          />
+        </Tooltip>
+        <Tooltip title="Deactivate Selected">
+          <Button
+            onClick={deactivateSelected}
+            disabled={selectedIds.length === 0 || !allSelectedActive}
+            startIcon={<CheckBoxOutlineBlankIcon />}
+          />
+        </Tooltip>
+        <Tooltip title="Delete Selected">
+          <Button
+            onClick={deleteSelected}
+            disabled={selectedIds.length === 0}
+            startIcon={<DeleteIcon />}
+          />
+        </Tooltip>
       </ButtonGroup>
       <ul>
         {actions.map((action, index) => (
