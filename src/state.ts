@@ -63,13 +63,6 @@ class Store {
     this.actionsListeners.push(listener)
   }
 
-  modifyAction(index: number, newAction: Action) {
-    if (index >= 0 && index < this.actions.length) {
-      this.actions[index] = newAction;
-      this.updateState();
-    }
-  }
-
   removeAction(action: Action) {
     this.actions = this.actions.filter(a => a !== action);
     this.actionsListeners.forEach(listener => listener(this.actions));
@@ -77,11 +70,8 @@ class Store {
   }
 
   toggleActionActive(action: Action) {
-    const index = this.actions.indexOf(action);
-    if (index !== -1) {
-      this.actions[index].active = !this.actions[index].active;
-      this.updateState();
-    }
+    action.active = !action.active;
+    this.updateState();
   }
 
   private updateState() {
