@@ -1,5 +1,5 @@
 import React from 'react';
-import HistorySection from './HistorySection';
+import Pipeline from './Pipeline';
 import OutlineSection from './OutlineSection';
 import './Sidebar.css';
 import { Action } from '../state';
@@ -14,7 +14,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction }) => {
   return (
     <aside className="sidebar">
-      <HistorySection toggleActive={toggleActive} deleteAction={deleteAction} actions={actions} />
+      <Pipeline toggleActive={toggleActive} deleteAction={deleteAction} actions={actions} />
       <OutlineSection addAction={addAction} />
     </aside>
   );
