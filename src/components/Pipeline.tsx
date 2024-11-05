@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Pipeline.css';
 import { Action } from '../state';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Button, Tooltip } from '@mui/material';
+import { ButtonGroup, Button, Tooltip, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -80,31 +80,30 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
       <h2>Pipeline</h2>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
-          <Button
-            onClick={selectAll}
-            startIcon={<DoneAllIcon />}
-          />
+          <IconButton onClick={selectAll}>
+            <DoneAllIcon/>
+          </IconButton>
         </Tooltip>
         <Tooltip title="Activate Selected">
-          <Button
+          <IconButton
             onClick={activateSelected}
-            disabled={selectedIds.length === 0 || !allSelectedInactive}
-            startIcon={<CheckIcon />}
-          />
+            disabled={selectedIds.length === 0 || !allSelectedInactive}>
+            <CheckIcon />
+          </IconButton>
         </Tooltip>
         <Tooltip title="Deactivate Selected">
-          <Button
+          <IconButton
             onClick={deactivateSelected}
             disabled={selectedIds.length === 0 || !allSelectedActive}
-            startIcon={<CheckBoxOutlineBlankIcon />}
-          />
+            ><CheckBoxOutlineBlankIcon />
+           </IconButton>
         </Tooltip>
         <Tooltip title="Delete Selected">
-          <Button
+          <IconButton
             onClick={deleteSelected}
-            disabled={selectedIds.length === 0}
-            startIcon={<DeleteIcon />}
-          />
+            disabled={selectedIds.length === 0}>
+            <DeleteIcon />
+          </IconButton>
         </Tooltip>
       </ButtonGroup>
       <ul>
