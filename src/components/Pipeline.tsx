@@ -18,8 +18,8 @@ type PipelineProps = {
   unGroupAction: (action: BaseAction) => void;
 }
 
-const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, groupAction,
-  unGroupAction
+const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
+  groupAction, unGroupAction
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -154,23 +154,22 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
             onClick={deactivateSelected}
             disabled={selectedIds.length === 0 || !allSelectedActive}
             ><CheckBoxOutlineBlankIcon />
-           </IconButton>
+          </IconButton>
         </Tooltip>
         <Tooltip title="Group Selected">
           <IconButton
             onClick={groupSelected}
             disabled={!consecutiveSelected()}
             ><CallMergeIcon />
-           </IconButton>
+          </IconButton>
         </Tooltip>
         <Tooltip title="Ungroup Selected">
           <IconButton
             onClick={unGroupSelected}
             disabled={!groupIsSelected()}
             ><CallSplitIcon />
-           </IconButton>
+          </IconButton>
         </Tooltip>
-
         <Tooltip title="Delete Selected">
           <IconButton
             onClick={deleteSelected}
