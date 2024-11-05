@@ -79,12 +79,12 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         />
         <Button
           onClick={activateSelected}
-          disabled={!allSelectedInactive}
+          disabled={selectedIds.length === 0 || !allSelectedInactive}
           startIcon={<CheckBoxOutlineBlankIcon />}
         />
         <Button
           onClick={deactivateSelected}
-          disabled={!allSelectedActive}
+          disabled={selectedIds.length === 0 || !allSelectedActive}
           startIcon={<CheckIcon />}
         />
         <Button

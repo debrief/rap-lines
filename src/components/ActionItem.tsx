@@ -61,7 +61,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, toggleActive, deleteAct
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
       </CardContent>
       <CardActions style={{display: 'inline'}}>
-        { action.active ? <CheckIcon onClick={() => toggleActive(action)} />: <CheckBoxOutlineBlankIcon onClick={() => toggleActive(action)} />}
+        { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={() => deleteAction(action)} />
       </CardActions>
       { action.results && <CardContent>
