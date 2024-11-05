@@ -102,6 +102,54 @@ class Store {
     this.updateState();
   }
 
+  ungroupAction(action: BaseAction) {
+    // check it's a composite action
+    if (action.type !== TypeComposite) {
+      console.warn('Action is not a composite action', action);
+      return;
+    }
+    else {
+      const comp = action as CompositeAction; 
+      console.log('actions before', this.actions)
+      // find the index of the composite action
+      const index = this.actions.findIndex(a => a === action);
+      // remove the composite action
+      this.actions.splice(index, 1);
+      // add the items back to the action list at the correct index
+      this.actions.splice(index, 0, ...comp.items);
+      console.log('actions after', this.actions)
+      // inform the action listeners
+      this.actionsListeners.forEach(listener => listener(this.actions));
+      // update the state
+      this.updateState();
+    }  
+  }
+
+  groupActions(selectedItems: BaseAction[]) {
+    const compositeAction: CompositeAction = {
+      id: new Date().getTime().toString(),
+      type: TypeComposite,
+      label: 'Group',
+      version: '1.0',
+      active: true,
+      items: selectedItems as Action[]
+    }
+    // find the index of the first action in the selected items
+    const firstIndex = this.actions.findIndex(action => action === selectedItems[0]);
+
+    // insert the composite action before the first action
+    this.actions.splice(firstIndex, 0, compositeAction);
+
+    // filter out the selected items
+    this.actions = this.actions.filter(action => !selectedItems.includes(action));
+
+    // fire updates to action list listeners
+    this.actionsListeners.forEach(listener => listener(this.actions));
+
+    // update the state
+    this.updateState();
+  }
+
   toggleActionActive(action: BaseAction) {
     action.active = !action.active;
     this.updateState();

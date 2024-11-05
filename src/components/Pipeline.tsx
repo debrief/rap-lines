@@ -1,21 +1,37 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Pipeline.css';
-import { BaseAction } from '../Store';
+import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import CallMergeIcon from '@mui/icons-material/CallMerge';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
 
 type PipelineProps = {
   actions: BaseAction[];
   toggleActive: (action: BaseAction) => void;
   deleteAction: (action: BaseAction) => void;
+  groupAction: (actions: BaseAction[]) => void;
+  unGroupAction: (action: BaseAction) => void;
 }
 
-const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction }) => {
+const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, groupAction,
+  unGroupAction
+ }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const getValidIds = useCallback((actions: BaseAction[]): string[] => {
+    const validIds = selectedIds.filter(id => actions.find(action => action.id === id));
+    return validIds
+  }, [selectedIds])
+
+  useEffect(() => {
+  //  const validIds = getValidIds(actions);
+//    setSelectedIds(validIds);
+  },[actions, getValidIds])
 
   const setSelected = (id: string, selected: boolean) => {
     setSelectedIds(prevSelectedIds => {
@@ -53,6 +69,48 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
       }
     });
   };
+
+  const unGroupSelected = () => {
+    const selectedAction = actions.find(action => action.id === selectedIds[0]);
+    if (!selectedAction) {
+      console.warn('No action found for id', selectedIds[0]);
+      return
+    }
+    // clear the selection, since things are about to change
+    setSelectedIds([]);
+    unGroupAction(selectedAction as BaseAction)
+  };
+
+
+  const groupSelected = () => {
+    // determine if the selected items are consecutive
+    const selectedIndices = selectedIds.map(id => actions.findIndex(action => action.id === id));
+    const sorted = selectedIndices.slice().sort();
+    const sortedItems = sorted.map(index => actions[index]);
+    // now clear the selection
+    setSelectedIds([]);
+
+    groupAction(sortedItems)
+  };
+
+  const groupIsSelected = (): boolean => {
+    if (selectedIds.length !== 1) {
+      return false
+    }
+    const action = actions.find(action => action.id === selectedIds[0]);
+    return action?.type === TypeComposite
+  }
+
+  const consecutiveSelected = (): boolean => {
+    if (selectedIds.length <= 1) {
+      return false
+    }
+    // determine if the selected items are consecutive
+    const selectedIndices = selectedIds.map(id => actions.findIndex(action => action.id === id));
+    const sorted = selectedIndices.slice().sort();
+    const matching = sorted.every((num, i) => i === sorted.length - 1 || num === sorted[i + 1] - 1)
+    return matching
+  }
 
   const selectAll = () => {
     // special case. If all items are currently selected, deselect all
@@ -98,6 +156,21 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
             ><CheckBoxOutlineBlankIcon />
            </IconButton>
         </Tooltip>
+        <Tooltip title="Group Selected">
+          <IconButton
+            onClick={groupSelected}
+            disabled={!consecutiveSelected()}
+            ><CallMergeIcon />
+           </IconButton>
+        </Tooltip>
+        <Tooltip title="Ungroup Selected">
+          <IconButton
+            onClick={unGroupSelected}
+            disabled={!groupIsSelected()}
+            ><CallSplitIcon />
+           </IconButton>
+        </Tooltip>
+
         <Tooltip title="Delete Selected">
           <IconButton
             onClick={deleteSelected}

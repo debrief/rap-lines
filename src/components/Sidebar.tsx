@@ -9,12 +9,17 @@ interface SidebarProps {
   addAction: (action: Action) => void
   toggleActive: (action: BaseAction) => void
   deleteAction: (action: BaseAction) => void
+  groupAction: (actions: BaseAction[]) => void;
+  unGroupAction: (action: BaseAction) => void;
+
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction }) => {
+const Sidebar: React.FC<SidebarProps> = ({ actions, addAction, toggleActive, deleteAction, 
+  groupAction, unGroupAction }) => {
   return (
     <aside className="sidebar">
-      <Pipeline toggleActive={toggleActive} deleteAction={deleteAction} actions={actions} />
+      <Pipeline toggleActive={toggleActive} deleteAction={deleteAction}
+        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
       <OutlineSection addAction={addAction} />
     </aside>
   );
