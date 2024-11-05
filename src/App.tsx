@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Sidebar from './components/Sidebar';
+import Pipeline from './components/Pipeline';
+import OutlineSection from './components/OutlineSection';
 import MapArea from './components/MapArea';
 import './App.css';
 import Store, { Action, ActionHandler, BaseAction } from './Store';
@@ -88,8 +89,9 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActive}
-        deleteAction={removeAction} groupAction={groupAction} unGroupAction={unGroupAction} />
+      <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
+        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
+      <OutlineSection addAction={addAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
