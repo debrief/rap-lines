@@ -42,16 +42,12 @@ class Store {
     this.actionsListeners = [];
   }
 
-  addAction(action: Action | null) {
-    // note: we allow empty action to be added as a way
-    // of forcing update
-    if (action) {
-      const newAction = { ...action };
-      // initialise the id of the action
-      newAction.id =new Date().getTime().toString();
-      this.actions.push(newAction);
-      this.actionsListeners.forEach(listener => listener(this.actions));  
-    }
+  addAction(action: Action) {
+    const newAction = { ...action };
+    // initialise the id of the action
+    newAction.id =new Date().getTime().toString();
+    this.actions.push(newAction);
+    this.actionsListeners.forEach(listener => listener(this.actions));  
     this.updateState();
   }
 
@@ -67,13 +63,6 @@ class Store {
     this.actionsListeners.push(listener)
   }
 
-  modifyAction(index: number, newAction: Action) {
-    if (index >= 0 && index < this.actions.length) {
-      this.actions[index] = newAction;
-      this.updateState();
-    }
-  }
-
   removeAction(action: Action) {
     this.actions = this.actions.filter(a => a !== action);
     this.actionsListeners.forEach(listener => listener(this.actions));
@@ -81,11 +70,8 @@ class Store {
   }
 
   toggleActionActive(action: Action) {
-    const index = this.actions.indexOf(action);
-    if (index !== -1) {
-      this.actions[index].active = !this.actions[index].active;
-      this.updateState();
-    }
+    action.active = !action.active;
+    this.updateState();
   }
 
   private updateState() {

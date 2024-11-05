@@ -39,7 +39,7 @@ const App: React.FC = () => {
     }
   }, [store])
 
-  const toggleActionActive = useCallback((action: Action) => {
+  const toggleActive = useCallback((action: Action) => {
     if (store) {
       store.toggleActionActive(action);
     }
@@ -58,13 +58,13 @@ const App: React.FC = () => {
       .then(data => {
         console.clear()
         const initialState = data;
+        // store this initial state
         const newStore = new Store(initialState);
         const handlers = registerHandlers()
         handlers.forEach(handler => newStore.addHandler(handler));
         newStore.addStateListener(stateListener);
         newStore.addActionsListener(actionsListener)
-        // fire empty add action, to force update
-        newStore.addAction(null)
+        setState(initialState)
         setStore(newStore);
       });
   }, []);
@@ -75,7 +75,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActionActive} deleteAction={removeAction} />
+      <Sidebar actions={actions} addAction={addAction} toggleActive={toggleActive} deleteAction={removeAction} />
       <div className="main-content">
         <MapArea state={state} />
       </div>
