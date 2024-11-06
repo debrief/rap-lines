@@ -1,4 +1,5 @@
 import { FeatureCollection } from 'geojson';
+import { AccOutcomes, Outcomes } from './Store';
 
 export interface BaseAction {
   id: string
@@ -18,7 +19,7 @@ export interface CompositeAction extends BaseAction {
 
 export interface ActionHandler {
   type: string
-  handle(state: FeatureCollection, action: BaseAction): FeatureCollection;
+  handle(acc: AccOutcomes, action: BaseAction): AccOutcomes;
 }
 
 export const TypeComposite = 'composite';
@@ -42,24 +43,25 @@ class Pipeline {
 
   private CompositeHandler: ActionHandler = {
     type: TypeComposite,
-    handle: (state, action) => {
+    handle: (acc, action) => {
       const compAction = action as unknown as CompositeAction;
       const items = compAction.items;
-      const newState = items.reduce((state, action) => {
+      const newAcc = items.reduce((acc, action) => {
         if (!action.active) {
-          return state;
+          return acc;
         }
         const handler = this.handlers.find(handler => handler.type === action.type);
         if (handler) {
-          const newState = JSON.parse(JSON.stringify(state));
-          return handler.handle(newState, action);
+          const newState = JSON.parse(JSON.stringify(acc.state));
+          const newAcc = {state: newState, outcomes: acc.outcomes}
+          return handler.handle(newAcc, action);
         } else {
           console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
-          return state;
+          return acc;
         }
-    }, state);
+    }, acc);
       // take a copy of the state object
-      return newState;
+      return newAcc;
     }
   }
 

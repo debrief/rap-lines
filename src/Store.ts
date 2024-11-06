@@ -11,9 +11,16 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
   }
 }
 
-interface Outcome {
+export interface Outcome {
   actionId: string;
   description: string;
+}
+
+export type Outcomes =   { [key: string]: Outcome }
+
+export interface AccOutcomes {
+  state: FeatureCollection
+  outcomes: Outcomes
 }
 
 class Store {
@@ -22,7 +29,7 @@ class Store {
   private handlers: ActionHandler[];
   private stateListeners: ((state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void)[];
   private index: number;
-  private outcomes: { [key: string]: Outcome };
+  private outcomes: Outcomes;
 
   constructor() {
     console.log('store constructor');
@@ -43,25 +50,23 @@ class Store {
 
   private CompositeHandler: ActionHandler = {
     type: TypeComposite,
-    handle: (state, action) => {
+    handle: (acc: AccOutcomes, action) => {
       const compAction = action as unknown as CompositeAction;
       const items = compAction.items;
-      const result = items.reduce((acc, action) => {
+      const result = items.reduce((acc: AccOutcomes, action) => {
         if (!action.active) {
           return acc;
         }
         const handler = this.handlers.find(handler => handler.type === action.type);
         if (handler) {
-          const newState = JSON.parse(JSON.stringify(acc.state));
-          const { newState: updatedState, summary } = handler.handle(newState, action);
-          acc.state = updatedState;
-          acc.outcomes[action.id] = summary;
-          return acc;
+          const newState = JSON.parse(JSON.stringify(acc));
+          const newAcc = handler.handle(newState, action);
+          return newAcc;
         } else {
           console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
           return acc;
         }
-      }, { state, outcomes: {} });
+      }, { acc, outcomes: {} });
       return result;
     }
   }

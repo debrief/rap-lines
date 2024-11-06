@@ -55,9 +55,9 @@ export const MoveSouth: Action = {
 
 export const MoveNorthHandler: ActionHandler = {
   type: TypeNorth,
-  handle: (state, action) => {
+  handle: (acc, action) => {
     // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
+    const newState = JSON.parse(JSON.stringify(acc.state));
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -67,69 +67,21 @@ export const MoveNorthHandler: ActionHandler = {
         feature.geometry.coordinates[1] += (action as Action).payload.distance;
       }
     });
-
-    const summary = {
+    acc.outcomes[action.id] = {
       actionId: action.id,
       description: `Moved north by ${(action as Action).payload.distance}`
     };
-
-    return { newState, summary };
-  }
-}
-
-export const MoveEastHandler: ActionHandler = {
-  type: TypeEast,
-  handle: (state, action) => {
-    // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
-
-    // iterate through all geometries in the newState object
-    newState.features.forEach((feature: any) => {
-      // if the feature is a point
-      if (feature.geometry.type === 'Point') {
-        // update the point's coordinates
-        feature.geometry.coordinates[0] += (action as Action).payload.distance;
-      }
-    });
-
-    const summary = {
-      actionId: action.id,
-      description: `Moved east by ${(action as Action).payload.distance}`
+    return {
+      state: newState,
+      outcomes: acc.outcomes
     };
-
-    return { newState, summary };
   }
 }
-
-export const MoveWestHandler: ActionHandler = {
-  type: TypeWest,
-  handle: (state, action) => {
-    // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
-
-    // iterate through all geometries in the newState object
-    newState.features.forEach((feature: any) => {
-      // if the feature is a point
-      if (feature.geometry.type === 'Point') {
-        // update the point's coordinates
-        feature.geometry.coordinates[0] -= (action as Action).payload.distance;
-      }
-    });
-
-    const summary = {
-      actionId: action.id,
-      description: `Moved west by ${(action as Action).payload.distance}`
-    };
-
-    return { newState, summary };
-  }
-}
-
 export const MoveSouthHandler: ActionHandler = {
   type: TypeSouth,
-  handle: (state, action) => {
+  handle: (acc, action) => {
     // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
+    const newState = JSON.parse(JSON.stringify(acc.state));
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -139,12 +91,63 @@ export const MoveSouthHandler: ActionHandler = {
         feature.geometry.coordinates[1] -= (action as Action).payload.distance;
       }
     });
-
-    const summary = {
+    acc.outcomes[action.id] = {
       actionId: action.id,
       description: `Moved south by ${(action as Action).payload.distance}`
     };
-
-    return { newState, summary };
+    return {
+      state: newState,
+      outcomes: acc.outcomes
+    };
   }
 }
+export const MoveEastHandler: ActionHandler = {
+  type: TypeEast,
+  handle: (acc, action) => {
+    // take a copy of the state object
+    const newState = JSON.parse(JSON.stringify(acc.state));
+
+    // iterate through all geometries in the newState object
+    newState.features.forEach((feature: any) => {
+      // if the feature is a point
+      if (feature.geometry.type === 'Point') {
+        // update the point's coordinates
+        feature.geometry.coordinates[0] += (action as Action).payload.distance;
+      }
+    });
+    acc.outcomes[action.id] = {
+      actionId: action.id,
+      description: `Moved east by ${(action as Action).payload.distance}`
+    };
+    return {
+      state: newState,
+      outcomes: acc.outcomes
+    };
+  }
+}
+export const MoveWestHandler: ActionHandler = {
+  type: TypeWest,
+  handle: (acc, action) => {
+    // take a copy of the state object
+    const newState = JSON.parse(JSON.stringify(acc.state));
+
+    // iterate through all geometries in the newState object
+    newState.features.forEach((feature: any) => {
+      // if the feature is a point
+      if (feature.geometry.type === 'Point') {
+        // update the point's coordinates
+        feature.geometry.coordinates[0] -= (action as Action).payload.distance;
+      }
+    });
+    acc.outcomes[action.id] = {
+      actionId: action.id,
+      description: `Moved west by ${(action as Action).payload.distance}`
+    };
+    return {
+      state: newState,
+      outcomes: acc.outcomes
+    };
+  }
+}
+
+
