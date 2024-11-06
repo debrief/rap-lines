@@ -12,7 +12,6 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
 }
 
 export interface Outcome {
-  actionId: string;
   description: string;
 }
 

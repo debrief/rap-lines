@@ -68,7 +68,6 @@ export const MoveNorthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      actionId: action.id,
       description: `Moved north by ${(action as Action).payload.distance}`
     };
     return {
@@ -92,7 +91,6 @@ export const MoveSouthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      actionId: action.id,
       description: `Moved south by ${(action as Action).payload.distance}`
     };
     return {
@@ -116,7 +114,6 @@ export const MoveEastHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      actionId: action.id,
       description: `Moved east by ${(action as Action).payload.distance}`
     };
     return {
@@ -140,7 +137,6 @@ export const MoveWestHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      actionId: action.id,
       description: `Moved west by ${(action as Action).payload.distance}`
     };
     return {
