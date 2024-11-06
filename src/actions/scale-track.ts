@@ -46,7 +46,6 @@ export const ScaleUpHandler: ActionHandler = {
     }
     
     acc.outcomes[action.id] = {
-      actionId: action.id,
       description: `Scaled up by a factor of ${(action as Action).payload.factor}`
     };
     

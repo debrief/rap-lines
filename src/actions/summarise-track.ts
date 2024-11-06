@@ -24,7 +24,6 @@ export const SummariseTrackHandler: ActionHandler = {
       const bounds = new L.GeoJSON(newState).getBounds();
       const centre = bounds.getCenter();
       acc.outcomes[action.id] = {
-        actionId: action.id,
         description: `Centre Point: [${centre.lat.toFixed(3)}, ${centre.lng.toFixed(3)}]`
       };
       return {
