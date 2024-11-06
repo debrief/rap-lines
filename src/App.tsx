@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Pipeline from './components/Pipeline';
+import Pipeline from './Pipeline';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
@@ -22,6 +22,7 @@ const registerHandlers = ():ActionHandler[] => {
 
 const App: React.FC = () => {
   const [store, setStore] = useState<Store | null>(null);
+  const [pipeline, setPipeline] = useState<Pipeline | null>(null);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [actions, setActions] = useState<BaseAction[]>([]);
@@ -35,35 +36,35 @@ const App: React.FC = () => {
   }
 
   const addAction = useCallback((action: Action) => {
-    if (store){
-      store?.addAction(action);
+    if (pipeline){
+      pipeline?.addAction(action);
     }
-  }, [store])
+  }, [pipeline])
 
   const groupAction = useCallback((actions: BaseAction[], name: string) => {
-    if (store){
-      store?.groupActions(actions, name);
+    if (pipeline){
+      pipeline?.groupActions(actions, name);
     }
-  }, [store])
+  }, [pipeline])
 
   const unGroupAction = useCallback((action: BaseAction) => {
-    if (store){
-      store?.ungroupAction(action);
+    if (pipeline){
+      pipeline?.ungroupAction(action);
     }
-  }, [store])
+  }, [pipeline])
 
 
   const toggleActive = useCallback((action: BaseAction) => {
-    if (store) {
-      store.toggleActionActive(action);
+    if (pipeline) {
+      pipeline.toggleActionActive(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   const removeAction = useCallback((action: BaseAction) => {
-    if (store) {
-      store.removeAction(action);
+    if (pipeline) {
+      pipeline.removeAction(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   useEffect(() => {
 //    fetch('/sample.json')
@@ -74,16 +75,20 @@ const App: React.FC = () => {
         const initialState = data;
         // store this initial state
         const newStore = new Store(initialState);
+        const newPipeline = new Pipeline(initialState);
         const handlers = registerHandlers()
-        handlers.forEach(handler => newStore.addHandler(handler));
+        handlers.forEach(handler => newPipeline.addHandler(handler));
+        newPipeline.addStateListener(stateListener);
+        newPipeline.addActionsListener(actionsListener)
         newStore.addStateListener(stateListener);
-        newStore.addActionsListener(actionsListener)
+        newPipeline.addActionsListener(newStore.updateState.bind(newStore));
         setState(initialState)
         setStore(newStore);
+        setPipeline(newPipeline);
       });
   }, []);
 
-  if (!store) {
+  if (!store || !pipeline) {
     return <div>Loading...</div>;
   }
 
