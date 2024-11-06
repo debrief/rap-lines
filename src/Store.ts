@@ -95,10 +95,7 @@ class Store {
       }
       const handler = this.handlers.find(handler => handler.type === action.type);
       if (handler) {
-        const { newState, summary } = handler.handle(acc.state, action);
-        acc.state = newState;
-        acc.outcomes[action.id] = summary;
-        return acc;
+        return handler.handle(acc, action);
       } else {
         console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
         return acc;
