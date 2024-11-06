@@ -11,13 +11,18 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
   }
 }
 
+interface Outcome {
+  actionId: string;
+  description: string;
+}
+
 class Store {
   private currentState: FeatureCollection | null;
   private initialState: FeatureCollection | null;
   private handlers: ActionHandler[];
-  private stateListeners: ((state: FeatureCollection | null, outcomes: { [key: string]: any }) => void)[];
+  private stateListeners: ((state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void)[];
   private index: number;
-  private outcomes: { [key: string]: any };
+  private outcomes: { [key: string]: Outcome };
 
   constructor() {
     console.log('store constructor');
@@ -65,7 +70,7 @@ class Store {
     this.handlers.push(handler);
   }
 
-  addStateListener(listener: (state: FeatureCollection | null, outcomes: { [key: string]: any }) => void) {
+  addStateListener(listener: (state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void) {
     this.stateListeners.push(listener);
   }
 
