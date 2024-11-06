@@ -45,6 +45,11 @@ export const ScaleUpHandler: ActionHandler = {
       });
     }
 
-    return newState;
+    const summary = {
+      actionId: action.id,
+      description: `Scaled up by a factor of ${(action as Action).payload.factor}`
+    };
+
+    return { newState, summary };
   }
 }

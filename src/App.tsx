@@ -27,10 +27,12 @@ const App: React.FC = () => {
   const pipeline = useMemo(() => new Pipeline(), []);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
+  const [outcomes, setOutcomes] = useState<{ [key: string]: any }>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
 
   const stateListener = (state: FeatureCollection | null) => {
-    setState(state)
+    setState(state);
+    setOutcomes(store.getOutcomes());
   }
 
   const actionsListener = useCallback((actions: BaseAction[]) => {
@@ -87,6 +89,7 @@ const App: React.FC = () => {
         pipeline.addActionsListener(actionsListener);
         store.setInitialState(initialState)
         setState(initialState)
+        setOutcomes({});
       });
   }, [actionsListener, pipeline, store]);
 

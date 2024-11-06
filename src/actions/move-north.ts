@@ -67,7 +67,13 @@ export const MoveNorthHandler: ActionHandler = {
         feature.geometry.coordinates[1] += (action as Action).payload.distance;
       }
     });
-    return newState;
+
+    const summary = {
+      actionId: action.id,
+      description: `Moved north by ${(action as Action).payload.distance}`
+    };
+
+    return { newState, summary };
   }
 }
 
@@ -85,7 +91,13 @@ export const MoveEastHandler: ActionHandler = {
         feature.geometry.coordinates[0] += (action as Action).payload.distance;
       }
     });
-    return newState;
+
+    const summary = {
+      actionId: action.id,
+      description: `Moved east by ${(action as Action).payload.distance}`
+    };
+
+    return { newState, summary };
   }
 }
 
@@ -103,7 +115,13 @@ export const MoveWestHandler: ActionHandler = {
         feature.geometry.coordinates[0] -= (action as Action).payload.distance;
       }
     });
-    return newState;
+
+    const summary = {
+      actionId: action.id,
+      description: `Moved west by ${(action as Action).payload.distance}`
+    };
+
+    return { newState, summary };
   }
 }
 
@@ -121,6 +139,12 @@ export const MoveSouthHandler: ActionHandler = {
         feature.geometry.coordinates[1] -= (action as Action).payload.distance;
       }
     });
-    return newState;
+
+    const summary = {
+      actionId: action.id,
+      description: `Moved south by ${(action as Action).payload.distance}`
+    };
+
+    return { newState, summary };
   }
 }
