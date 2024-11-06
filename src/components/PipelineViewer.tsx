@@ -34,8 +34,6 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   const [dialogText, setDialogText] = useState<string>('');
   const textFieldRef = useRef<HTMLInputElement>(null);
 
-  console.log('Pipeline', actions.length)
-
   useEffect(() => {
     if (showDialog) {
       if (!textFieldRef.current) {

@@ -64,11 +64,10 @@ class Pipeline {
   }
 
   addAction(action: Action | CompositeAction) {
-    console.log('adding action', action);
     const newAction = { ...action };
     // initialise the id of the action
     newAction.id = '' + ++this.index
-    this.actions.push(newAction);
+    this.actions = [...this.actions, newAction];
     this.actionsListeners.forEach(listener => listener(this.actions));  
   }
 

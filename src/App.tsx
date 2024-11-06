@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
@@ -22,25 +22,26 @@ const registerHandlers = ():ActionHandler[] => {
 }
 
 const App: React.FC = () => {
-  const [store, setStore] = useState<Store | null>(null);
-  const [pipeline, setPipeline] = useState<Pipeline  | null>(null);
+  const store = useMemo(() => new Store(), []);
+  const pipeline = useMemo(() => new Pipeline(), []);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [actions, setActions] = useState<BaseAction[]>([]);
 
-  const stateListener = (state: FeatureCollection) => {
+  const stateListener = (state: FeatureCollection | null) => {
     setState(state)
   }
 
-  const actionsListener  = (actions: BaseAction[]) => {
-    console.log('actions updated', actions)
-    setActions(actions)
-  }
-
-  console.log('App', actions.length)
+  const actionsListener = useCallback((actions: BaseAction[]) => {
+    if (store){
+      setActions(actions)
+      store.actionsListener(actions)
+    } else {
+      console.error('No store to listen to actions')
+    }
+  }, [store])
 
   const addAction = useCallback((action: Action | CompositeAction) => {
-    console.log('adding action', action, pipeline)
     if (pipeline){
       pipeline?.addAction(action);
     }
@@ -79,17 +80,14 @@ const App: React.FC = () => {
         console.clear()
         const initialState = data;
         // store this initial state
-        const newStore = new Store(initialState);
-        const newPipeline = new Pipeline();
         const handlers = registerHandlers()
-        handlers.forEach(handler => newStore.addHandler(handler));
-        newStore.addStateListener(stateListener);
-        newPipeline.addActionsListener(actionsListener)
-        setPipeline(newPipeline);
+        handlers.forEach(handler => store.addHandler(handler));
+        store.addStateListener(stateListener);
+        pipeline.addActionsListener(actionsListener);
+        store.setInitialState(initialState)
         setState(initialState)
-        setStore(newStore);
       });
-  }, []);
+  }, [actionsListener, pipeline, store]);
 
   if (!store) {
     return <div>Loading...</div>;

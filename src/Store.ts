@@ -13,22 +13,26 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
 }
 
 class Store {
-  private currentState: FeatureCollection;
-  private initialState: FeatureCollection;
+  private currentState: FeatureCollection | null;
+  private initialState: FeatureCollection | null;
   private handlers: ActionHandler[];
-  private stateListeners: ((state: FeatureCollection) => void)[];
+  private stateListeners: ((state: FeatureCollection  | null) => void)[];
   private index: number
 
-  constructor(initialState: FeatureCollection) {
-    console.log('store constructor', initialState);
-    this.currentState = initialState;
-    this.initialState = initialState;
+  constructor() {
+    console.log('store constructor');
+    this.currentState = null;
+    this.initialState = null;
     this.handlers = []
     this.stateListeners = [];
     this.index = 0;
 
     // register the composite handler
     this.addHandler(this.CompositeHandler);
+  }
+
+  setInitialState(initialState: FeatureCollection) {
+    this.initialState = initialState
   }
 
   private CompositeHandler: ActionHandler = {
@@ -58,11 +62,19 @@ class Store {
     this.handlers.push(handler);
   }
 
-  addStateListener(listener: (state: FeatureCollection) => void) {
+  addStateListener(listener: (state: FeatureCollection | null) => void) {
     this.stateListeners.push(listener)
   }
 
+  actionsListener(actions: BaseAction[]) {
+    this.updateState(actions);
+  }
+
   private updateState(actions: BaseAction[]) {
+    if (!this.initialState) {
+      console.error('No initial state set');
+      return;
+    }
     this.currentState = actions.reduce((state, action) => {
       if (!action.active) {
         return state;
@@ -76,10 +88,6 @@ class Store {
       }
     }, this.initialState);
     this.stateListeners.forEach(listener => listener(this.currentState));
-  }
-
-  getState(): FeatureCollection {
-    return this.currentState;
   }
 }
 
