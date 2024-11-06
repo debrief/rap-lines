@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Pipeline.css';
 import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
@@ -31,6 +31,21 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
   const [dialogText, setDialogText] = useState<string>('');
+  const textFieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showDialog) {
+      if (!textFieldRef.current) {
+        setTimeout(() => {
+          if (textFieldRef.current) {
+            textFieldRef.current.focus();
+          }
+        }, 100)
+      } else {
+        textFieldRef.current.focus();
+      }
+    }
+  }, [showDialog, textFieldRef]);
 
   const setValue = (value: string | null) => {
     if (value !== null) {
@@ -154,7 +169,11 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     <div className="pipeline-section">
       {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
         <h4>{showDialog.icon}{showDialog.title}</h4>
-        <TextField label={showDialog.label} onChange={e => setDialogText(e.target.value)} />
+        <TextField 
+          label={showDialog.label} 
+          onChange={e => setDialogText(e.target.value)} 
+          inputRef={textFieldRef}
+        />
         <ButtonGroup  >
           <Button onClick={() => setValue(null)}>Cancel</Button>
           <Button onClick={() => setValue(dialogText)}>OK</Button>
