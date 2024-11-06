@@ -38,6 +38,7 @@ class Store {
   private handlers: ActionHandler[];
   private stateListeners: ((state: FeatureCollection) => void)[];
   private actionsListeners: ((actions: BaseAction[]) => void)[];
+  private index: number
 
   constructor(initialState: FeatureCollection) {
     console.log('store constructor', initialState);
@@ -47,6 +48,7 @@ class Store {
     this.handlers = []
     this.stateListeners = [];
     this.actionsListeners = [];
+    this.index = 0;
 
     // register the composite handler
     this.addHandler(this.CompositeHandler);
@@ -78,7 +80,7 @@ class Store {
   addAction(action: Action | CompositeAction) {
     const newAction = { ...action };
     // initialise the id of the action
-    newAction.id =new Date().getTime().toString();
+    newAction.id = '' + ++this.index
     this.actions.push(newAction);
     this.actionsListeners.forEach(listener => listener(this.actions));  
     this.updateState();
@@ -137,7 +139,7 @@ class Store {
 
   groupActions(selectedItems: BaseAction[], name: string) {
     const compositeAction: CompositeAction = {
-      id: new Date().getTime().toString(),
+      id: '' + ++this.index,
       type: TypeComposite,
       label: name,
       version: '1.0',
