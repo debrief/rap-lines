@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Pipeline.css';
 import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -180,7 +180,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         </ButtonGroup>
       </Dialog>}
       <h2>Pipeline</h2>
-      <ButtonGroup variant="contained" aria-label="outlined primary button group">
+      <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
           <IconButton onClick={selectAll}>
             <DoneAllIcon/>
@@ -222,18 +222,19 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           </IconButton>
         </Tooltip>
       </ButtonGroup>
-      <ul>
+      <List sx={{ width: '100%', maxWidth: 360 }}>
         {actions.map((action) => (
-          <ActionItem
-            key={action.id}
-            action={action}
-            toggleActive={toggleActive}
-            deleteAction={deleteAction}
-            selected={selectedIds.includes(action.id)}
-            setSelected={setSelected}
-          />
-        ))}
-      </ul>
+            <ActionItem
+              key={action.id}
+              action={action}
+              toggleActive={toggleActive}
+              deleteAction={deleteAction}
+              selected={selectedIds.includes(action.id)}
+              setSelected={setSelected}
+            />
+          ))}
+
+      </List>
     </div>
   );
 }
