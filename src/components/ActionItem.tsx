@@ -96,7 +96,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         margin: '5px',
         borderWidth: selected ? '2px' : '1px',
         backgroundColor: selected ? '#d3d3d3' : 'white',
-        marginLeft: child ? '20px' : '0px'
+        marginLeft: child ? '20px' : '0px',
+        width: '90%'
       }}
       className="action-item"
       onClick={handleSelection}
@@ -104,10 +105,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
       <CardContent style={{padding: '2px', display: 'inline'}}>
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
       </CardContent>
-      <CardActions style={{display: 'inline'}}>
-        { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
-        <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
-        {isComposite && <ExpandMore
+      <CardActions style={{display: 'inline', float: 'right'}}>
+      {isComposite && <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
@@ -115,6 +114,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         >
         <ExpandMoreIcon />
           </ExpandMore>}
+        { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
+        <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {isComposite && expanded && action.type === TypeComposite && (action as CompositeAction).items.map((item) => {
         return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} selected={selected} setSelected={setSelected} />
