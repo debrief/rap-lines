@@ -87,8 +87,8 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   }, [mapRef]);
   
   return (
-    <div className="map-area" style={{ position: 'relative' }}>
-      <MapContainer center={defaultInitialCenter} zoom={10} ref={mapRef} style={{ height: "100%", width: "100%" }}>
+    <div className="map-area">
+      <MapContainer className='map-container' center={defaultInitialCenter} zoom={10} ref={mapRef}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
