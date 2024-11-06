@@ -8,7 +8,7 @@ import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } 
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
-import { Layout, Model } from 'flexlayout-react'; // P9936
+import { IJsonModel, Layout, Model } from 'flexlayout-react'; // P9936
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -88,8 +88,13 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const json = {
-    global: {},
+  const json: IJsonModel = {
+    global: {
+      tabSetTabStripHeight: 45,
+      tabEnableClose: false,
+      tabEnableRenderOnDemand: false,
+      tabSetEnableMaximize: false
+    },
     layout: {
       type: "row",
       children: [
