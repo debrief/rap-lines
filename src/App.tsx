@@ -103,7 +103,7 @@ const App: React.FC = () => {
     <div className="app">
       <div className="sidebar">
         <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
-          groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
+          groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes} />
         <div><h2>Detail View</h2></div>  
       </div>
       <div className="main-content">

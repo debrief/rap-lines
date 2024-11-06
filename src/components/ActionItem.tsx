@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypeComposite } from '../Store';
-import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton } from '@mui/material';
+import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -25,7 +25,8 @@ interface ActionItemProps {
   deleteAction: (action: BaseAction) => void;
   selected: boolean;
   setSelected: (id: string, selected: boolean) => void;
-  child?: boolean
+  child?: boolean;
+  outcome?: { description: string }; // P1ced
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -76,7 +77,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcome }) => { // P1ced
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -106,6 +107,11 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     >
       <CardContent style={{padding: '2px', display: 'inline'}}>
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
+        {outcome && ( // P9a32
+          <Tooltip title={outcome.description}> // P126a
+            <InfoIcon />
+          </Tooltip>
+        )}
       </CardContent>
       <CardActions style={{display: 'inline', float: 'right'}}>
       {isComposite && <ExpandMore
