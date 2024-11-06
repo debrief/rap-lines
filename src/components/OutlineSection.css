@@ -1,6 +1,9 @@
 .outline-section {
-  background-color: #dfd;
+  background-color: #ddd;
   padding: 10px;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
 }
 
 .outline-section h2 {
