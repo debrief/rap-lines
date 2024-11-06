@@ -1,5 +1,5 @@
 import React from 'react';
-import './OutlineSection.css';
+import './Tools.css';
 import { Action } from '../Store';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
@@ -10,7 +10,7 @@ type OutlineProps = {
   addAction: (action: Action) => void
 }
 
-const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
+const Tools: React.FC<OutlineProps> = ({ addAction }) => {
 
   return (
     <div className="outline-section">
@@ -41,4 +41,4 @@ const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
   );
 }
 
-export default OutlineSection;
+export default Tools;

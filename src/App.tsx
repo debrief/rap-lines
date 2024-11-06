@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Pipeline from './components/Pipeline';
-import OutlineSection from './components/OutlineSection';
+import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
 import Store, { Action, ActionHandler, BaseAction } from './Store';
@@ -92,7 +92,7 @@ const App: React.FC = () => {
       <div className="sidebar">
         <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
-        <OutlineSection addAction={addAction} />
+        <Tools addAction={addAction} />
       </div>
       <div className="main-content">
         <MapArea state={state} />
