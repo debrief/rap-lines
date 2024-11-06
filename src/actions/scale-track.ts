@@ -27,9 +27,9 @@ export const ScaleDown: Action = {
 
 export const ScaleUpHandler: ActionHandler = {
   type: TypeScale,
-  handle: (state, action) => {
+  handle: (acc, action) => {
     // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
+    const newState = JSON.parse(JSON.stringify(acc.state));
     if (newState.features.length > 0) {
       const origin = newState.features[0].geometry.coordinates;
       // iterate through all geometries in the newState object
@@ -44,7 +44,16 @@ export const ScaleUpHandler: ActionHandler = {
         }
       });
     }
+    
+    acc.outcomes[action.id] = {
+      actionId: action.id,
+      description: `Scaled up by a factor of ${(action as Action).payload.factor}`
+    };
+    
 
-    return newState;
+    return { 
+      state: newState,
+      outcomes: acc.outcomes
+    };
   }
 }

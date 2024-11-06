@@ -3,7 +3,7 @@ import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store from './Store';
+import Store, { Outcomes } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
@@ -27,11 +27,15 @@ const App: React.FC = () => {
   const pipeline = useMemo(() => new Pipeline(), []);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
+  const [outcomes, setOutcomes] = useState<{ [key: string]: any }>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
 
-  const stateListener = (state: FeatureCollection | null) => {
-    setState(state)
+  const stateListener = (state: FeatureCollection | null, outcomes: Outcomes) => {
+    setState(state);
+    setOutcomes(outcomes);
   }
+
+  console.log('outcomes', outcomes)
 
   const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
@@ -87,6 +91,7 @@ const App: React.FC = () => {
         pipeline.addActionsListener(actionsListener);
         store.setInitialState(initialState)
         setState(initialState)
+        setOutcomes({});
       });
   }, [actionsListener, pipeline, store]);
 
