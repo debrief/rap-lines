@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
+import './ActionItem.css';
 
 interface ActionItemProps {
   action: BaseAction;
@@ -112,12 +113,12 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
           aria-expanded={expanded}
           aria-label="show more"
         >
-        <ExpandMoreIcon />
-          </ExpandMore>}
+          <ExpandMoreIcon />
+        </ExpandMore>}
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
-      {isComposite && expanded && action.type === TypeComposite && (action as CompositeAction).items.map((item) => {
+      {expanded && (action as CompositeAction).items.map((item) => {
         return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} selected={selected} setSelected={setSelected} />
       })}
     </Card>
