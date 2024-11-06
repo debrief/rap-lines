@@ -1,7 +1,8 @@
 .outline-section {
   background-color: #ddd;
   padding: 10px;
-  height: 300px; /* Added fixed height */
+  height: 50%; /* Added fixed height */
+  border: 1px solid #000;
 }
 
 .outline-section h2 {

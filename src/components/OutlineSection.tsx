@@ -14,7 +14,7 @@ const OutlineSection: React.FC<OutlineProps> = ({ addAction }) => {
 
   return (
     <div className="outline-section">
-      <h2>Operations</h2>
+      <h2>Tools</h2>
       <Card>
         <CardHeader title="Move" />
         <CardContent>

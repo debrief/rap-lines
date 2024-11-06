@@ -2,11 +2,12 @@
   flex-grow: 1;
   background-color: #ddd;
   padding: 10px;
-  height: 520px; /* Added fixed height */
+  height: 50%; /* Added fixed height */
+  border: 1px solid #000;
 }
 
 .pipeline-section ul {
-  height: 400px; /* Set desired fixed height */
+  height: 60%; /* Set desired fixed height */
   overflow-y: scroll;
   padding-inline-start: 0px;
 }
