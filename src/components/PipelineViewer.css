@@ -1,9 +1,10 @@
 .pipeline-section {
   flex-grow: 1;
-  background-color: #ddd;
   padding: 10px;
   height: 50%; /* Added fixed height */
   border: 1px solid #000;
+  width: 100%;
+  min-width: 20px;
 }
 
 .pipeline-section ul {

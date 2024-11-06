@@ -99,7 +99,7 @@ const App: React.FC = () => {
       <div className="sidebar">
         <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
-        <div>Lower section</div>  
+        <div><h2>Detail View</h2></div>  
       </div>
       <div className="main-content">
         <Box><Tools addAction={addAction} /></Box>
