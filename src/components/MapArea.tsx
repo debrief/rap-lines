@@ -27,7 +27,7 @@ const MousePosition: React.FC<MouseProps> = ({ position }) => {
     zIndex: 1000,
   }}
   >
-    { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending</span> }
+    { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending 2</span> }
   </div>
 }
 

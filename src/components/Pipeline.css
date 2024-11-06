@@ -1,8 +1,8 @@
 .pipeline-section {
   flex-grow: 1;
-  background-color: #ddd;
+  background-color: #ddf;
   padding: 10px;
-  height: 300px; /* Added fixed height */
+  height: 300px;
 }
 
 .pipeline-section ul {

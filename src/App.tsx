@@ -9,6 +9,7 @@ import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import { IJsonModel, Layout, Model } from 'flexlayout-react'; // P9936
+import 'flexlayout-react/style/light.css';  
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -90,36 +91,56 @@ const App: React.FC = () => {
 
   const json: IJsonModel = {
     global: {
-      tabSetTabStripHeight: 45,
       tabEnableClose: false,
       tabEnableRenderOnDemand: false,
       tabSetEnableMaximize: false
     },
     layout: {
       type: "row",
+      id: "1",
       children: [
         {
-          type: "tabset",
-          weight: 20,
+          type: "row",
+          id: "#40d1ca12-0ac9-4a2a-96a1-3cec31330d7a",
+          weight: 40,
           children: [
             {
-              type: "tab",
-              name: "Pipeline",
-              component: "pipeline"
+              type: "tabset",
+              id: "#fbf64c0a-0b21-46fa-a7dc-61a3118356cc",
+              weight: 50,
+              children: [
+                {
+                  type: "tab",
+                  id: "#4afdf74d-1ccf-46b3-b2b9-9f1d92aa162e",
+                  name: "Pipeline",
+                  component: "pipeline"
+                }
+              ]
             },
             {
-              type: "tab",
-              name: "Outline",
-              component: "outline"
+              type: "tabset",
+              id: "#9ee8d2ff-713f-4f92-862d-a39fe73aeea3",
+              weight: 50,
+              children: [
+                {
+                  type: "tab",
+                  id: "3",
+                  name: "Tools",
+                  component: "outline"
+                }
+              ],
+              active: true
             }
           ]
         },
         {
           type: "tabset",
-          weight: 80,
+          id: "#7b567257-4908-4cdf-a336-f6d9814b470e",
+          weight: 60,
           children: [
             {
               type: "tab",
+              id: "5",
               name: "Map",
               component: "map"
             }
