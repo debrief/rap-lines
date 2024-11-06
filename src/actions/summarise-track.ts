@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { Action, ActionHandler } from "../Store";
+import { Action, ActionHandler } from "../Pipeline";
 
 export const TypeSummarise = 'summarise'
 

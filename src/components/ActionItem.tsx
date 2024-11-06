@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseAction, CompositeAction, TypeComposite } from '../Store';
+import { TypeComposite } from '../Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -17,6 +17,7 @@ import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
 import './ActionItem.css';
+import { BaseAction, CompositeAction } from '../Pipeline';
 
 interface ActionItemProps {
   action: BaseAction;

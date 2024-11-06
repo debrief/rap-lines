@@ -3,11 +3,12 @@ import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Action, ActionHandler, BaseAction } from './Store';
+import Store from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
+import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -22,6 +23,7 @@ const registerHandlers = ():ActionHandler[] => {
 
 const App: React.FC = () => {
   const [store, setStore] = useState<Store | null>(null);
+  const [pipeline, setPipeline] = useState<Pipeline  | null>(null);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [actions, setActions] = useState<BaseAction[]>([]);
@@ -31,53 +33,59 @@ const App: React.FC = () => {
   }
 
   const actionsListener  = (actions: BaseAction[]) => {
+    console.log('actions updated', actions)
     setActions(actions)
   }
 
-  const addAction = useCallback((action: Action) => {
-    if (store){
-      store?.addAction(action);
+  console.log('App', actions.length)
+
+  const addAction = useCallback((action: Action | CompositeAction) => {
+    console.log('adding action', action, pipeline)
+    if (pipeline){
+      pipeline?.addAction(action);
     }
-  }, [store])
+  }, [pipeline])
 
   const groupAction = useCallback((actions: BaseAction[], name: string) => {
-    if (store){
-      store?.groupActions(actions, name);
+    if (pipeline){
+      pipeline?.groupActions(actions, name);
     }
-  }, [store])
+  }, [pipeline])
 
   const unGroupAction = useCallback((action: BaseAction) => {
-    if (store){
-      store?.ungroupAction(action);
+    if (pipeline){
+      pipeline?.ungroupAction(action);
     }
-  }, [store])
+  }, [pipeline])
 
 
   const toggleActive = useCallback((action: BaseAction) => {
-    if (store) {
-      store.toggleActionActive(action);
+    if (pipeline) {
+      pipeline.toggleActionActive(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   const removeAction = useCallback((action: BaseAction) => {
-    if (store) {
-      store.removeAction(action);
+    if (pipeline) {
+      pipeline.removeAction(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   useEffect(() => {
-//    fetch('/sample.json')
-    fetch('/waypoints.geojson')
+      //    fetch('/sample.json')
+      fetch('/waypoints.geojson')
       .then(response => response.json())
       .then(data => {
         console.clear()
         const initialState = data;
         // store this initial state
         const newStore = new Store(initialState);
+        const newPipeline = new Pipeline();
         const handlers = registerHandlers()
         handlers.forEach(handler => newStore.addHandler(handler));
         newStore.addStateListener(stateListener);
-        newStore.addActionsListener(actionsListener)
+        newPipeline.addActionsListener(actionsListener)
+        setPipeline(newPipeline);
         setState(initialState)
         setStore(newStore);
       });

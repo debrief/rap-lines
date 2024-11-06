@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
-import { BaseAction, TypeComposite } from '../Store';
+import { TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
+import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
   actions: BaseAction[];
@@ -32,6 +33,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
   const [dialogText, setDialogText] = useState<string>('');
   const textFieldRef = useRef<HTMLInputElement>(null);
+
+  console.log('Pipeline', actions.length)
 
   useEffect(() => {
     if (showDialog) {
