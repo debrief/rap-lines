@@ -4,39 +4,38 @@ import { Action } from '../Pipeline';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';
-import { Card, CardContent, CardHeader } from '@mui/material';
+import { Button, ButtonGroup,  } from '@mui/material';
 
 type OutlineProps = {
   addAction: (action: Action) => void
 }
 
-const Tools: React.FC<OutlineProps> = ({ addAction }) => {
+const CustomGroup = (props: React.PropsWithChildren): React.ReactElement => {
+  return <ButtonGroup size="small" variant="contained">
+    { props.children }
+  </ButtonGroup>
+}
 
+const Tools: React.FC<OutlineProps> = ({ addAction }) => {
+  
   return (
-    <div className="outline-section">
-      <h2>Tools</h2>
-      <Card>
-        <CardHeader title="Move" />
-        <CardContent>
-        <button onClick={() => addAction(MoveNorth)}>Move North</button>
-        <button onClick={() => addAction(MoveEast)}>Move East</button>
-        <button onClick={() => addAction(MoveWest)}>Move West</button>
-        <button onClick={() => addAction(MoveSouth)}>Move South</button>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader title="Scale" />
-        <CardContent>
-        <button onClick={() => addAction(ScaleUp)}>Scale Up</button>
-        <button onClick={() => addAction(ScaleDown)}>Scale Down</button>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader title="Info" />
-        <CardContent>
-          <button onClick={() => addAction(SummariseTrack)}>Centre Point</button>
-        </CardContent>
-      </Card>
+    <div style={{backgroundColor: '#fff'}} className="outline-section">
+      Move:
+      <CustomGroup>
+        <Button onClick={() => addAction(MoveNorth)}>Move North</Button>
+        <Button onClick={() => addAction(MoveEast)}>Move East</Button>
+        <Button onClick={() => addAction(MoveWest)}>Move West</Button>
+        <Button onClick={() => addAction(MoveSouth)}>Move South</Button>
+      </CustomGroup>
+      Scale:
+      <CustomGroup>
+        <Button onClick={() => addAction(ScaleUp)}>Scale Up</Button>
+        <Button onClick={() => addAction(ScaleDown)}>Scale Down</Button>
+      </CustomGroup>
+      Info:
+      <CustomGroup>
+      <Button onClick={() => addAction(SummariseTrack)}>Centre Point</Button>
+      </CustomGroup>
     </div>
   );
 }

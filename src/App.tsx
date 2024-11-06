@@ -9,6 +9,7 @@ import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
+import { Box } from '@mui/material';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -98,9 +99,10 @@ const App: React.FC = () => {
       <div className="sidebar">
         <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
-        <Tools addAction={addAction} />
+        <div>Lower section</div>  
       </div>
       <div className="main-content">
+        <Box><Tools addAction={addAction} /></Box>
         <MapArea state={state} />
       </div>
     </div>
