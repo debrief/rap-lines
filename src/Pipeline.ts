@@ -26,43 +26,14 @@ export const TypeComposite = 'composite';
 
 class Pipeline {
   private actions: Array<Action | CompositeAction>;
-  private handlers: ActionHandler[];
   private actionsListeners: ((actions: BaseAction[]) => void)[];
   private index: number
 
   constructor() {
     console.log('pipeline constructor');
     this.actions = [];
-    this.handlers = []
     this.actionsListeners = [];
     this.index = 0;
-
-    // register the composite handler
-    this.addHandler(this.CompositeHandler);
-  }
-
-  private CompositeHandler: ActionHandler = {
-    type: TypeComposite,
-    handle: (acc, action) => {
-      const compAction = action as unknown as CompositeAction;
-      const items = compAction.items;
-      const newAcc = items.reduce((acc, action) => {
-        if (!action.active) {
-          return acc;
-        }
-        const handler = this.handlers.find(handler => handler.type === action.type);
-        if (handler) {
-          const newState = JSON.parse(JSON.stringify(acc.state));
-          const newAcc = {state: newState, outcomes: acc.outcomes}
-          return handler.handle(newAcc, action);
-        } else {
-          console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
-          return acc;
-        }
-    }, acc);
-      // take a copy of the state object
-      return newAcc;
-    }
   }
 
   addAction(action: Action | CompositeAction) {
@@ -71,10 +42,6 @@ class Pipeline {
     newAction.id = '' + ++this.index
     this.actions = [...this.actions, newAction];
     this.actionsListeners.forEach(listener => listener(this.actions));  
-  }
-
-  addHandler(handler: ActionHandler) {
-    this.handlers.push(handler);
   }
 
   addActionsListener(listener: (actions: BaseAction[]) => void) {

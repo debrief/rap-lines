@@ -1,5 +1,5 @@
 import { FeatureCollection } from 'geojson';
-import { ActionHandler, BaseAction, CompositeAction } from './Pipeline';
+import { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 
 export const TypeComposite = 'composite';
 
@@ -30,7 +30,7 @@ class Store {
   private stateListeners: ((state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void)[];
   private index: number;
   private outcomes: Outcomes;
-
+  
   constructor() {
     console.log('store constructor');
     this.currentState = null;
@@ -39,50 +39,51 @@ class Store {
     this.stateListeners = [];
     this.index = 0;
     this.outcomes = {};
-
+    
     // register the composite handler
     this.addHandler(this.CompositeHandler);
   }
-
-  setInitialState(initialState: FeatureCollection) {
-    this.initialState = initialState;
-  }
-
+  
   private CompositeHandler: ActionHandler = {
     type: TypeComposite,
-    handle: (acc: AccOutcomes, action) => {
+    handle: (acc, action) => {
       const compAction = action as unknown as CompositeAction;
       const items = compAction.items;
-      const result = items.reduce((acc: AccOutcomes, action) => {
+      const newAcc = items.reduce((acc, action) => {
         if (!action.active) {
           return acc;
         }
         const handler = this.handlers.find(handler => handler.type === action.type);
         if (handler) {
-          const newState = JSON.parse(JSON.stringify(acc));
-          const newAcc = handler.handle(newState, action);
-          return newAcc;
+          const newState = JSON.parse(JSON.stringify(acc.state));
+          const newAcc = {state: newState, outcomes: acc.outcomes}
+          return handler.handle(newAcc, action);
         } else {
           console.warn('No handler found for action', action, this.handlers.map(handler => handler.type));
           return acc;
         }
-      }, { acc, outcomes: {} });
-      return result;
+      }, acc);
+      // take a copy of the state object
+      return newAcc;
     }
   }
-
+  
+  setInitialState(initialState: FeatureCollection) {
+    this.initialState = initialState;
+  }
+  
   addHandler(handler: ActionHandler) {
     this.handlers.push(handler);
   }
-
-  addStateListener(listener: (state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void) {
+  
+  addStateListener(listener: (state: FeatureCollection | null, outcomes: Outcomes) => void) {
     this.stateListeners.push(listener);
   }
-
+  
   actionsListener(actions: BaseAction[]) {
     this.updateState(actions);
   }
-
+  
   private updateState(actions: BaseAction[]) {
     if (!this.initialState) {
       console.error('No initial state set');
