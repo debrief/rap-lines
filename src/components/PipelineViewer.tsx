@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Pipeline.css';
+import './PipelineViewer.css';
 import { BaseAction, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';

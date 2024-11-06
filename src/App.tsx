@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Pipeline from './components/Pipeline';
+import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
@@ -90,7 +90,7 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <div className="sidebar">
-        <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
+        <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
         <Tools addAction={addAction} />
       </div>
