@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Pipeline.css';
-import { BaseAction, TypeComposite } from '../Store';
+import './PipelineViewer.css';
+import { TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
+import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
   actions: BaseAction[];

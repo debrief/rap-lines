@@ -1,4 +1,4 @@
-import { Action, ActionHandler } from "../Store";
+import { Action, ActionHandler } from "../Pipeline";
 import * as turf from '@turf/turf';
 
 export const TypeScale = 'scale'

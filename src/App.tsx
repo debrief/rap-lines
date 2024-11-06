@@ -1,13 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Pipeline from './components/Pipeline';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Action, ActionHandler, BaseAction } from './Store';
+import Store from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
+import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -21,67 +22,72 @@ const registerHandlers = ():ActionHandler[] => {
 }
 
 const App: React.FC = () => {
-  const [store, setStore] = useState<Store | null>(null);
+  const store = useMemo(() => new Store(), []);
+  const pipeline = useMemo(() => new Pipeline(), []);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [actions, setActions] = useState<BaseAction[]>([]);
 
-  const stateListener = (state: FeatureCollection) => {
+  const stateListener = (state: FeatureCollection | null) => {
     setState(state)
   }
 
-  const actionsListener  = (actions: BaseAction[]) => {
-    setActions(actions)
-  }
-
-  const addAction = useCallback((action: Action) => {
+  const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
-      store?.addAction(action);
+      setActions(actions)
+      store.actionsListener(actions)
+    } else {
+      console.error('No store to listen to actions')
     }
   }, [store])
+
+  const addAction = useCallback((action: Action | CompositeAction) => {
+    if (pipeline){
+      pipeline?.addAction(action);
+    }
+  }, [pipeline])
 
   const groupAction = useCallback((actions: BaseAction[], name: string) => {
-    if (store){
-      store?.groupActions(actions, name);
+    if (pipeline){
+      pipeline?.groupActions(actions, name);
     }
-  }, [store])
+  }, [pipeline])
 
   const unGroupAction = useCallback((action: BaseAction) => {
-    if (store){
-      store?.ungroupAction(action);
+    if (pipeline){
+      pipeline?.ungroupAction(action);
     }
-  }, [store])
+  }, [pipeline])
 
 
   const toggleActive = useCallback((action: BaseAction) => {
-    if (store) {
-      store.toggleActionActive(action);
+    if (pipeline) {
+      pipeline.toggleActionActive(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   const removeAction = useCallback((action: BaseAction) => {
-    if (store) {
-      store.removeAction(action);
+    if (pipeline) {
+      pipeline.removeAction(action);
     }
-  }, [store]);
+  }, [pipeline]);
 
   useEffect(() => {
-//    fetch('/sample.json')
-    fetch('/waypoints.geojson')
+      //    fetch('/sample.json')
+      fetch('/waypoints.geojson')
       .then(response => response.json())
       .then(data => {
         console.clear()
         const initialState = data;
         // store this initial state
-        const newStore = new Store(initialState);
         const handlers = registerHandlers()
-        handlers.forEach(handler => newStore.addHandler(handler));
-        newStore.addStateListener(stateListener);
-        newStore.addActionsListener(actionsListener)
+        handlers.forEach(handler => store.addHandler(handler));
+        store.addStateListener(stateListener);
+        pipeline.addActionsListener(actionsListener);
+        store.setInitialState(initialState)
         setState(initialState)
-        setStore(newStore);
       });
-  }, []);
+  }, [actionsListener, pipeline, store]);
 
   if (!store) {
     return <div>Loading...</div>;
@@ -90,7 +96,7 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <div className="sidebar">
-        <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
+        <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />
         <Tools addAction={addAction} />
       </div>
