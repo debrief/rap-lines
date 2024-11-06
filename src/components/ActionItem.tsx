@@ -108,8 +108,10 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
       <CardContent style={{padding: '2px', display: 'inline'}}>
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
         {outcome && ( // P9a32
-          <Tooltip title={outcome.description}> // P126a
+          <Tooltip title={outcome.description}>
+            <IconButton>
             <InfoIcon />
+            </IconButton>
           </Tooltip>
         )}
       </CardContent>
