@@ -20,7 +20,6 @@ export const SummariseTrackHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
-    let summary = {};
     if (newState.features.length > 0) {
       const bounds = new L.GeoJSON(newState).getBounds();
       const centre = bounds.getCenter();

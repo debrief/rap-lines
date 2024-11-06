@@ -1,5 +1,4 @@
-import { FeatureCollection } from 'geojson';
-import { AccOutcomes, Outcomes } from './Store';
+import { AccOutcomes } from './Store';
 
 export interface BaseAction {
   id: string

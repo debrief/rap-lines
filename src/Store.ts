@@ -1,5 +1,5 @@
 import { FeatureCollection } from 'geojson';
-import { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
+import { ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 
 export const TypeComposite = 'composite';
 

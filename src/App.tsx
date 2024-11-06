@@ -35,6 +35,8 @@ const App: React.FC = () => {
     setOutcomes(outcomes);
   }
 
+  console.log('outcomes', outcomes)
+
   const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
       setActions(actions)
