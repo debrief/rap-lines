@@ -17,6 +17,7 @@ type PipelineProps = {
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
+  outcomes: { [key: string]: { description: string } }; // Pe8d9
 }
 
 type DialogProps = {
@@ -27,7 +28,7 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction
+  groupAction, unGroupAction, outcomes // Pe8d9
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -232,6 +233,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               deleteAction={deleteAction}
               selected={selectedIds.includes(action.id)}
               setSelected={setSelected}
+              outcome={outcomes[action.id]} // Pfe78
             />
           ))}
 
