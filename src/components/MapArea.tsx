@@ -94,11 +94,9 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes })
       const outcome = outcomes[id];
       if (outcome && outcome.type === TypeSpatialOutcome) {
         const spatialOutcome = outcome as SpatialOutcome;
-        const beforeLine = convertPointsToLine(spatialOutcome.before);
         const afterLine = convertPointsToLine(spatialOutcome.after);
         return (
           <React.Fragment key={id}>
-            <GeoJSON key={`${id}-before`} data={beforeLine} style={{ color: 'red' }} />
             <GeoJSON key={`${id}-after`} data={afterLine} style={{ color: 'green' }} />
           </React.Fragment>
         );
