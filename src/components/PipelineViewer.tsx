@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
@@ -153,6 +154,55 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     }
   };
 
+  const hideRevealSelected = () => {
+    if(selectedIds.length > 0) {
+      // see what the first is doing
+      const visible = visibleOutcomes.find(outcome => outcome.id === selectedIds[0]);
+      if (visible) {
+        // clear visible outcomes
+        setVisibleOutcomes([])
+      } else {
+        // ok, we have to reveal them all
+        // find outcomes for selected ids
+        const selectedOutcomes = selectedIds.filter(id => outcomes[id]);
+        // generate shades
+        const shadedOutcomes = selectedOutcomes.map(id => {
+          const color = intToRGB(hashCode(id));
+          return { id, color }
+        })
+        setVisibleOutcomes(shadedOutcomes)
+      }
+    }
+  }
+
+
+  const hashCode = (str: string): number => {
+    if (!Number.isNaN(str)) {
+      const val = parseInt(str);
+      const incr = val + 10
+      const scaled = incr ** 8
+      const cutOff = 16000000
+      return scaled % cutOff
+    } else {
+      throw new Error('Action id is expected to contain a number');
+    }
+  };
+  
+  const intToRGB = (i: number): string => {
+      return "#"+((i)>>>0).toString(16).slice(-6);
+  };
+
+  const toggleVisibleOutcome = (actionId: string) => {
+    if (visibleOutcomes.find((outcome) => outcome.id === actionId)) {
+      setVisibleOutcomes(visibleOutcomes.filter(outcome => outcome.id !== actionId));
+    } else {
+      // use reproducible method to generate color from id
+      const color = intToRGB(hashCode(actionId));
+      setVisibleOutcomes([...visibleOutcomes, { id: actionId, color }]);
+    }
+  }
+
+
   const allSelectedInactive = selectedIds.every(id => {
     const action = actions.find(action => action.id === id);
     return action && !action.active;
@@ -188,6 +238,13 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         <Tooltip title="Select/Deselect All">
           <IconButton onClick={selectAll}>
             <DoneAllIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Toggle outcome visibility for selected actions">
+          <IconButton
+            onClick={hideRevealSelected}
+            disabled={selectedIds.length === 0}>
+            <VisibilityIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Activate Selected">
@@ -237,7 +294,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               setSelected={setSelected}
               outcomes={outcomes}
               visibleOutcomes={visibleOutcomes}
-              setVisibleOutcomes={setVisibleOutcomes}
+              toggleVisibleOutcome={toggleVisibleOutcome}
             />
           ))}
 
