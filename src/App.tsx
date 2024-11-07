@@ -11,7 +11,6 @@ import { SummariseTrackHandler } from './actions/summarise-track';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
 import 'flexlayout-react/style/light.css';  
 import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
-import { Box } from '@mui/material';
 import DetailView from './components/DetailView';
 
 const registerHandlers = ():ActionHandler[] => {
@@ -182,10 +181,13 @@ const App: React.FC = () => {
       return <div>Unknown component {component}</div>;
     }
   };
-  
+
   return (
     <div className="app">
-    <Layout model={model} factory={factory} />
+      <Layout 
+        model={model} 
+        factory={factory} 
+      />
     </div>
   );
 }
