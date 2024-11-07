@@ -1,6 +1,6 @@
 import { Action, ActionHandler } from "../Pipeline";
 import * as turf from '@turf/turf';
-import { TypeSimpleOutcome } from "../Store";
+import { TypeSimpleOutcome, TypeSpatialOutcome } from "../Store";
 
 export const TypeScale = 'scale'
 
@@ -31,6 +31,7 @@ export const ScaleUpHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
+    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P33b7
     if (newState.features.length > 0) {
       const origin = newState.features[0].geometry.coordinates;
       // iterate through all geometries in the newState object
@@ -47,8 +48,9 @@ export const ScaleUpHandler: ActionHandler = {
     }
     
     acc.outcomes[action.id] = {
-      type: TypeSimpleOutcome,
-      description: `Scaled up by a factor of ${(action as Action).payload.factor}`
+      type: TypeSpatialOutcome, // P33b7
+      before: beforeState, // P33b7
+      after: newState // P33b7
     };
     
 

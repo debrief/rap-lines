@@ -1,5 +1,5 @@
 import { Action, ActionHandler } from "../Pipeline";
-import { TypeSimpleOutcome } from "../Store";
+import { TypeSimpleOutcome, TypeSpatialOutcome } from "../Store";
 
 export const TypeNorth = 'move-north';
 export const TypeEast = 'move-east';
@@ -59,6 +59,7 @@ export const MoveNorthHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
+    const beforeState = JSON.parse(JSON.stringify(acc.state)); // Pc424
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -69,8 +70,9 @@ export const MoveNorthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      type: TypeSimpleOutcome,
-      description: `Moved north by ${(action as Action).payload.distance}`
+      type: TypeSpatialOutcome, // Pc424
+      before: beforeState, // Pc424
+      after: newState // Pc424
     };
     return {
       state: newState,
@@ -83,6 +85,7 @@ export const MoveSouthHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
+    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P6865
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -93,8 +96,9 @@ export const MoveSouthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      type: TypeSimpleOutcome,
-      description: `Moved south by ${(action as Action).payload.distance}`
+      type: TypeSpatialOutcome, // P6865
+      before: beforeState, // P6865
+      after: newState // P6865
     };
     return {
       state: newState,
@@ -107,6 +111,7 @@ export const MoveEastHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
+    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P77f8
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -117,8 +122,9 @@ export const MoveEastHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      type: TypeSimpleOutcome,
-      description: `Moved east by ${(action as Action).payload.distance}`
+      type: TypeSpatialOutcome, // P77f8
+      before: beforeState, // P77f8
+      after: newState // P77f8
     };
     return {
       state: newState,
@@ -131,6 +137,7 @@ export const MoveWestHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
+    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P8a44
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -141,8 +148,9 @@ export const MoveWestHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
-      type: TypeSimpleOutcome,
-      description: `Moved west by ${(action as Action).payload.distance}`
+      type: TypeSpatialOutcome, // P8a44
+      before: beforeState, // P8a44
+      after: newState // P8a44
     };
     return {
       state: newState,
@@ -150,5 +158,3 @@ export const MoveWestHandler: ActionHandler = {
     };
   }
 }
-
-
