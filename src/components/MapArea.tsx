@@ -8,6 +8,7 @@ import { buffer, lineString, featureCollection } from '@turf/turf';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
+  visibleOutcomes: string[];
 }
 
 type MouseProps = {
@@ -49,7 +50,7 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes }) => {
   const mapRef = useRef<L.Map>(null);
   const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
