@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
 import { Outcomes, ShadedOutcome, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List, Card } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +14,7 @@ import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
   actions: BaseAction[];
+  sourceName: string
   toggleActive: (action: BaseAction) => void;
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
@@ -31,7 +32,7 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes
+  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -219,6 +220,14 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     }
   };
 
+  const SourceItem = (sourceName: string): React.ReactElement => {
+    return <Card className='source'>{sourceName}</Card>
+  }
+
+  const VerticalSeprator = (): React.ReactElement => {
+    return <div className='vertical-separator'></div>
+  }
+
   return (
     <div className="pipeline-section">
       {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
@@ -283,6 +292,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         </Tooltip>
       </ButtonGroup>
       <List sx={{ width: '100%', maxWidth: 360 }}>
+        {sourceName && SourceItem(sourceName)}
+        {actions.length > 0 && VerticalSeprator()}
         {actions.map((action) => (
             <ActionItem
               key={action.id}

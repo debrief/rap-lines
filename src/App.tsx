@@ -29,14 +29,18 @@ const App: React.FC = () => {
   const pipeline = useMemo(() => new Pipeline(), []);
   
   const [state, setState] = useState<FeatureCollection | null>(null);
+  const [sourceName, setSourceName] = useState<string>('');
   const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
   const [visibleOutcomes, setVisibleOutcomes] = useState<ShadedOutcome[]>([]);
   
-  const stateListener = (state: FeatureCollection | null, outcomes: Outcomes) => {
+  const stateListener =  useCallback((name: string, state: FeatureCollection | null, outcomes: Outcomes) => {
     setState(state);
     setOutcomes(outcomes);
-  }
+    if (name !== sourceName) {
+      setSourceName(name)
+    }
+  }, [sourceName])
   
   const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
@@ -69,8 +73,6 @@ const App: React.FC = () => {
   }, [pipeline]);
   
   useEffect(() => {
-    //    fetch('/sample.json')
-      // store this initial statei
     if (store && actions && actionsListener && pipeline) { 
       const handlers = registerHandlers()
       handlers.forEach(handler => store.addHandler(handler));
@@ -79,7 +81,7 @@ const App: React.FC = () => {
       setOutcomes({});
       store.setInitialState('/uk-waypoints.geojson', actions)
     }
-  }, [store, actions, actionsListener, pipeline]);
+  }, [store, actions, actionsListener, pipeline, stateListener]);
   
   if (!store) {
     return <div>Loading...</div>;
@@ -153,7 +155,7 @@ const App: React.FC = () => {
     const component = node.getComponent();
     switch(component) {
       case 'pipeline': 
-        return <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
+        return <PipelineViewer sourceName={sourceName} toggleActive={toggleActive} deleteAction={removeAction}
         groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
         visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
       case 'detail':

@@ -45,9 +45,9 @@ class Store {
   private currentState: FeatureCollection | null;
   private initialState: FeatureCollection | null;
   private handlers: ActionHandler[];
-  private stateListeners: ((state: FeatureCollection | null, outcomes: Outcomes) => void)[];
-  private index: number;
+  private stateListeners: ((name: string, state: FeatureCollection | null, outcomes: Outcomes) => void)[];
   private outcomes: Outcomes;
+  private name: string
   
   constructor() {
     console.log('store constructor');
@@ -55,8 +55,8 @@ class Store {
     this.initialState = null;
     this.handlers = [];
     this.stateListeners = [];
-    this.index = 0;
     this.outcomes = {};
+    this.name = 'pending'
     
     // register the composite handler
     this.addHandler(this.CompositeHandler);
@@ -92,6 +92,7 @@ class Store {
     .then(response => response.json())
     .then(data => {
       this.initialState = data;
+      this.name =(this.initialState as any).name || 'unknown';
       this.updateState(actions)
     })
   }
@@ -100,7 +101,7 @@ class Store {
     this.handlers.push(handler);
   }
   
-  addStateListener(listener: (state: FeatureCollection | null, outcomes: Outcomes) => void) {
+  addStateListener(listener: (name: string, state: FeatureCollection | null, outcomes: Outcomes) => void) {
     this.stateListeners.push(listener);
   }
   
@@ -127,7 +128,7 @@ class Store {
     }, { state: this.initialState, outcomes: {} });
     this.currentState = result.state;
     this.outcomes = result.outcomes;
-    this.stateListeners.forEach(listener => listener(this.currentState, this.outcomes));
+    this.stateListeners.forEach(listener => listener(this.name, this.currentState, this.outcomes));
   }
 }
 
