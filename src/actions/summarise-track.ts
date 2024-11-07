@@ -1,5 +1,6 @@
 import L from "leaflet";
-import { Action, ActionHandler } from "../Store";
+import { Action, ActionHandler } from "../Pipeline";
+import { TypeSimpleOutcome } from "../Store";
 
 export const TypeSummarise = 'summarise'
 
@@ -14,19 +15,23 @@ export const SummariseTrack: Action = {
   active: true // Added active property
 }
 
-
 export const SummariseTrackHandler: ActionHandler = {
   type: TypeSummarise,
-  handle: (state, action) => {
+  handle: (acc, action) => {
     // take a copy of the state object
-    const newState = JSON.parse(JSON.stringify(state));
-    if (newState.features.length > 0) {
-      const bounds = new L.GeoJSON(newState).getBounds();
+    if (acc.state.features.length > 0) {
+      const bounds = new L.GeoJSON(acc.state).getBounds();
       const centre = bounds.getCenter();
-      // TODO: store the results somewhere
-      console.warn(`Not storing: Centre Point: [${centre.lat.toFixed(3)}, ${centre.lng.toFixed(3)}]`);
+      acc.outcomes[action.id] = {
+        type: TypeSimpleOutcome,
+        description: `Centre Point: [${centre.lat.toFixed(3)}, ${centre.lng.toFixed(3)}]`
+      };
+      return {
+        state: acc.state,
+        outcomes: acc.outcomes
+      }
+    } else {
+      return acc;
     }
-
-    return newState;
   }
 }

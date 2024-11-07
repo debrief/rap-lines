@@ -1,13 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
 import { buffer, lineString, featureCollection } from '@turf/turf';
+import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../Store';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
+  visibleOutcomes: ShadedOutcome[];
+  outcomes: Outcomes;
 }
 
 type MouseProps = {
@@ -49,7 +52,7 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) => {
   const mapRef = useRef<L.Map>(null);
   const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
@@ -71,7 +74,22 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
       setRenderedState(convertPointsToLine(state));
     }
   }, [state]);
-  
+
+  const spatialOutcomes = useMemo(() => {
+    return visibleOutcomes.map(shaded => {
+      const outcome = outcomes[shaded.id];
+      if (outcome && outcome.type === TypeSpatialOutcome) {
+        const spatialOutcome = outcome as SpatialOutcome;
+        const afterLine = convertPointsToLine(spatialOutcome.after);
+        return (
+          <React.Fragment key={shaded.id}>
+            <GeoJSON key={`${shaded.id}-after`} data={afterLine} style={{ color: shaded.color }} />
+          </React.Fragment>
+        );
+      }
+      return null;
+    });
+}, [visibleOutcomes, outcomes]);  
   
   useEffect(() => {
     const map = mapRef.current;
@@ -96,6 +114,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
         }
+        {spatialOutcomes}
       </MapContainer>
       <MousePosition position={mousePosition} />
     </div>

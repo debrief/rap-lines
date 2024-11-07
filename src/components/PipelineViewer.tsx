@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import './Pipeline.css';
-import { BaseAction, TypeComposite } from '../Store';
+import React, { useState, useRef, useEffect } from 'react';
+import './PipelineViewer.css';
+import { Outcomes, ShadedOutcome, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
   actions: BaseAction[];
@@ -16,6 +18,9 @@ type PipelineProps = {
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
+  outcomes: Outcomes;
+  visibleOutcomes: ShadedOutcome[];
+  setVisibleOutcomes: (visibleOutcomeIds: ShadedOutcome[]) => void;
 }
 
 type DialogProps = {
@@ -26,11 +31,26 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction
+  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
   const [dialogText, setDialogText] = useState<string>('');
+  const textFieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showDialog) {
+      if (!textFieldRef.current) {
+        setTimeout(() => {
+          if (textFieldRef.current) {
+            textFieldRef.current.focus();
+          }
+        }, 100)
+      } else {
+        textFieldRef.current.focus();
+      }
+    }
+  }, [showDialog, textFieldRef]);
 
   const setValue = (value: string | null) => {
     if (value !== null) {
@@ -134,6 +154,55 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     }
   };
 
+  const hideRevealSelected = () => {
+    if(selectedIds.length > 0) {
+      // see what the first is doing
+      const visible = visibleOutcomes.find(outcome => outcome.id === selectedIds[0]);
+      if (visible) {
+        // clear visible outcomes
+        setVisibleOutcomes([])
+      } else {
+        // ok, we have to reveal them all
+        // find outcomes for selected ids
+        const selectedOutcomes = selectedIds.filter(id => outcomes[id]);
+        // generate shades
+        const shadedOutcomes = selectedOutcomes.map(id => {
+          const color = intToRGB(hashCode(id));
+          return { id, color }
+        })
+        setVisibleOutcomes(shadedOutcomes)
+      }
+    }
+  }
+
+
+  const hashCode = (str: string): number => {
+    if (!Number.isNaN(str)) {
+      const val = parseInt(str);
+      const incr = val + 10
+      const scaled = incr ** 8
+      const cutOff = 16000000
+      return scaled % cutOff
+    } else {
+      throw new Error('Action id is expected to contain a number');
+    }
+  };
+  
+  const intToRGB = (i: number): string => {
+      return "#"+((i)>>>0).toString(16).slice(-6);
+  };
+
+  const toggleVisibleOutcome = (actionId: string) => {
+    if (visibleOutcomes.find((outcome) => outcome.id === actionId)) {
+      setVisibleOutcomes(visibleOutcomes.filter(outcome => outcome.id !== actionId));
+    } else {
+      // use reproducible method to generate color from id
+      const color = intToRGB(hashCode(actionId));
+      setVisibleOutcomes([...visibleOutcomes, { id: actionId, color }]);
+    }
+  }
+
+
   const allSelectedInactive = selectedIds.every(id => {
     const action = actions.find(action => action.id === id);
     return action && !action.active;
@@ -154,16 +223,27 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     <div className="pipeline-section">
       {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
         <h4>{showDialog.icon}{showDialog.title}</h4>
-        <TextField label={showDialog.label} onChange={e => setDialogText(e.target.value)} />
+        <TextField 
+          label={showDialog.label} 
+          onChange={e => setDialogText(e.target.value)} 
+          inputRef={textFieldRef}
+        />
         <ButtonGroup  >
           <Button onClick={() => setValue(null)}>Cancel</Button>
           <Button onClick={() => setValue(dialogText)}>OK</Button>
         </ButtonGroup>
       </Dialog>}
-      <ButtonGroup variant="contained" aria-label="outlined primary button group">
+      <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
           <IconButton onClick={selectAll}>
             <DoneAllIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Toggle outcome visibility for selected actions">
+          <IconButton
+            onClick={hideRevealSelected}
+            disabled={selectedIds.length === 0}>
+            <VisibilityIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Activate Selected">
@@ -202,18 +282,22 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           </IconButton>
         </Tooltip>
       </ButtonGroup>
-      <ul>
+      <List sx={{ width: '100%', maxWidth: 360 }}>
         {actions.map((action) => (
-          <ActionItem
-            key={action.id}
-            action={action}
-            toggleActive={toggleActive}
-            deleteAction={deleteAction}
-            selected={selectedIds.includes(action.id)}
-            setSelected={setSelected}
-          />
-        ))}
-      </ul>
+            <ActionItem
+              key={action.id}
+              action={action}
+              toggleActive={toggleActive}
+              deleteAction={deleteAction}
+              selected={selectedIds.includes(action.id)}
+              setSelected={setSelected}
+              outcomes={outcomes}
+              visibleOutcomes={visibleOutcomes}
+              toggleVisibleOutcome={toggleVisibleOutcome}
+            />
+          ))}
+
+      </List>
     </div>
   );
 }

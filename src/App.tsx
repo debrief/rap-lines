@@ -1,15 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Pipeline from './components/Pipeline';
-import OutlineSection from './components/OutlineSection';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import PipelineViewer from './components/PipelineViewer';
+import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Action, ActionHandler, BaseAction } from './Store';
+import Store, { Outcomes, ShadedOutcome } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
-import { IJsonModel, Layout, Model } from 'flexlayout-react'; // P9936
+import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
 import 'flexlayout-react/style/light.css';  
+import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
+import { Box } from '@mui/material';
+import DetailView from './components/DetailView';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -23,72 +26,81 @@ const registerHandlers = ():ActionHandler[] => {
 }
 
 const App: React.FC = () => {
-  const [store, setStore] = useState<Store | null>(null);
-
+  const store = useMemo(() => new Store(), []);
+  const pipeline = useMemo(() => new Pipeline(), []);
+  
   const [state, setState] = useState<FeatureCollection | null>(null);
+  const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
-
-  const stateListener = (state: FeatureCollection) => {
-    setState(state)
+  const [visibleOutcomes, setVisibleOutcomes] = useState<ShadedOutcome[]>([]);
+  
+  const stateListener = (state: FeatureCollection | null, outcomes: Outcomes) => {
+    setState(state);
+    setOutcomes(outcomes);
   }
-
-  const actionsListener  = (actions: BaseAction[]) => {
-    setActions(actions)
-  }
-
-  const addAction = useCallback((action: Action) => {
+  
+  const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
-      store?.addAction(action);
+      setActions(actions)
+      store.actionsListener(actions)
+    } else {
+      console.error('No store to listen to actions')
     }
   }, [store])
-
+  
+  const addAction = useCallback((action: Action | CompositeAction) => {
+    if (pipeline){
+      pipeline?.addAction(action);
+    }
+  }, [pipeline])
+  
   const groupAction = useCallback((actions: BaseAction[], name: string) => {
-    if (store){
-      store?.groupActions(actions, name);
+    if (pipeline){
+      pipeline?.groupActions(actions, name);
     }
-  }, [store])
-
+  }, [pipeline])
+  
   const unGroupAction = useCallback((action: BaseAction) => {
-    if (store){
-      store?.ungroupAction(action);
+    if (pipeline){
+      pipeline?.ungroupAction(action);
     }
-  }, [store])
-
-
+  }, [pipeline])
+  
+  
   const toggleActive = useCallback((action: BaseAction) => {
-    if (store) {
-      store.toggleActionActive(action);
+    if (pipeline) {
+      pipeline.toggleActionActive(action);
     }
-  }, [store]);
-
+  }, [pipeline]);
+  
   const removeAction = useCallback((action: BaseAction) => {
-    if (store) {
-      store.removeAction(action);
+    if (pipeline) {
+      pipeline.removeAction(action);
     }
-  }, [store]);
-
+  }, [pipeline]);
+  
   useEffect(() => {
-//    fetch('/sample.json')
+    //    fetch('/sample.json')
     fetch('/waypoints.geojson')
-      .then(response => response.json())
-      .then(data => {
-        console.clear()
-        const initialState = data;
-        // store this initial state
-        const newStore = new Store(initialState);
-        const handlers = registerHandlers()
-        handlers.forEach(handler => newStore.addHandler(handler));
-        newStore.addStateListener(stateListener);
-        newStore.addActionsListener(actionsListener)
-        setState(initialState)
-        setStore(newStore);
-      });
-  }, []);
-
+    .then(response => response.json())
+    .then(data => {
+      console.clear()
+      const initialState = data;
+      // store this initial state
+      const handlers = registerHandlers()
+      handlers.forEach(handler => store.addHandler(handler));
+      store.addStateListener(stateListener);
+      pipeline.addActionsListener(actionsListener);
+      store.setInitialState(initialState)
+      setState(initialState)
+      setOutcomes({});
+    });
+  }, [actionsListener, pipeline, store]);
+  
   if (!store) {
     return <div>Loading...</div>;
   }
-
+  
   const json: IJsonModel = {
     global: {
       tabEnableClose: false,
@@ -125,8 +137,8 @@ const App: React.FC = () => {
                 {
                   type: "tab",
                   id: "3",
-                  name: "Tools",
-                  component: "outline"
+                  name: "Detail",
+                  component: "detail"
                 }
               ],
               active: true
@@ -149,24 +161,30 @@ const App: React.FC = () => {
       ]
     }
   };
-
+  
   const model = Model.fromJson(json);
-
-  const factory = (node: any) => {
+  
+  const factory = (node: TabNode): ReactNode => {
     const component = node.getComponent();
     if (component === "pipeline") {
-      return <Pipeline toggleActive={toggleActive} deleteAction={removeAction}
-        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} />;
-    } else if (component === "outline") {
-      return <OutlineSection addAction={addAction} />;
+      return <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
+      groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes} 
+      visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
+    } else if (component === "detail") {
+      return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
     } else if (component === "map") {
-      return <MapArea state={state} />;
+      return <div className="main-content">
+      <Box><Tools addAction={addAction} /></Box>
+      <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
+      </div>
+    } else {
+      return <div>Unknown component {component}</div>;
     }
   };
-
+  
   return (
     <div className="app">
-      <Layout model={model} factory={factory} />
+    <Layout model={model} factory={factory} />
     </div>
   );
 }
