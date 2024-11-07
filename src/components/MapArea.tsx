@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
 import { buffer, lineString, featureCollection } from '@turf/turf';
-import { Outcomes, SpatialOutcome, TypeSpatialOutcome } from '../Store';
+import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../Store';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
-  visibleOutcomeIds: string[];
+  visibleOutcomes: ShadedOutcome[];
   outcomes: Outcomes;
 }
 
@@ -52,7 +52,7 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) => {
   const mapRef = useRef<L.Map>(null);
   const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
@@ -74,7 +74,22 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes })
       setRenderedState(convertPointsToLine(state));
     }
   }, [state]);
-  
+
+  const spatialOutcomes = useMemo(() => {
+    return visibleOutcomes.map(shaded => {
+      const outcome = outcomes[shaded.id];
+      if (outcome && outcome.type === TypeSpatialOutcome) {
+        const spatialOutcome = outcome as SpatialOutcome;
+        const afterLine = convertPointsToLine(spatialOutcome.after);
+        return (
+          <React.Fragment key={shaded.id}>
+            <GeoJSON key={`${shaded.id}-after`} data={afterLine} style={{ color: shaded.color }} />
+          </React.Fragment>
+        );
+      }
+      return null;
+    });
+}, [visibleOutcomes, outcomes]);  
   
   useEffect(() => {
     const map = mapRef.current;
@@ -88,22 +103,6 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes })
       };
     }
   }, [mapRef]);
-
-  const renderSpatialOutcomes = () => {
-    return visibleOutcomeIds.map(id => {
-      const outcome = outcomes[id];
-      if (outcome && outcome.type === TypeSpatialOutcome) {
-        const spatialOutcome = outcome as SpatialOutcome;
-        const afterLine = convertPointsToLine(spatialOutcome.after);
-        return (
-          <React.Fragment key={id}>
-            <GeoJSON key={`${id}-after`} data={afterLine} style={{ color: 'green' }} />
-          </React.Fragment>
-        );
-      }
-      return null;
-    });
-  };
   
   return (
     <div className="map-area" style={{ position: 'relative' }}>
@@ -112,7 +111,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes })
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
         }
-        {renderSpatialOutcomes()}
+        {spatialOutcomes}
       </MapContainer>
       <MousePosition position={mousePosition} />
     </div>
