@@ -14,7 +14,7 @@ const DetailView: React.FC<DetailViewProps> = ({ outcomes, visibleOutcomes }) =>
   return (
     <div className='detail-view'>
       <h2>Detail View</h2>
-      <List>
+      <List style={{ maxHeight: '60%', overflowY: 'auto' }}>
         {visibleOutcomes.map((visibleOutcome) => {
           const outcome = outcomes[visibleOutcome.id];
           if (!outcome) return null;
