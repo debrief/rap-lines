@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outcomes, TypeComposite } from '../Store';
+import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome } from '../Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -92,6 +92,15 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
 
   const isComposite = action.type === TypeComposite;
 
+  const renderOutcome = (outcome: SimpleOutcome | SpatialOutcome) => {
+    if (outcome.type === TypeSimpleOutcome) {
+      return outcome.description;
+    } else if (outcome.type === TypeSpatialOutcome) {
+      return 'SPATIAL OUTCOME';
+    }
+    return null;
+  };
+
   return (
     <Card
       variant='outlined'
@@ -118,7 +127,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
           <ExpandMoreIcon />
         </ExpandMore>}
         {outcomes[action.id] && (
-          <Tooltip title={outcomes[action.id].description}>
+          <Tooltip title={renderOutcome(outcomes[action.id])}>
             <IconButton style={{padding: 0, display: 'inline-block'}}>
             <InfoIcon titleAccess='Dumbo' />
             </IconButton>

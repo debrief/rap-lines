@@ -1,5 +1,6 @@
 import L from "leaflet";
 import { Action, ActionHandler } from "../Pipeline";
+import { TypeSimpleOutcome } from "../Store";
 
 export const TypeSummarise = 'summarise'
 
@@ -24,6 +25,7 @@ export const SummariseTrackHandler: ActionHandler = {
       const bounds = new L.GeoJSON(newState).getBounds();
       const centre = bounds.getCenter();
       acc.outcomes[action.id] = {
+        type: TypeSimpleOutcome,
         description: `Centre Point: [${centre.lat.toFixed(3)}, ${centre.lng.toFixed(3)}]`
       };
       return {
