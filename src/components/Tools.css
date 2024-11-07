@@ -4,3 +4,7 @@
   height: 45px; /* Added fixed height */
   border: 1px solid #000;
 }
+
+.tools button {
+  margin-left: 2px;
+}
