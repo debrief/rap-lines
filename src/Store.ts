@@ -2,6 +2,8 @@ import { FeatureCollection } from 'geojson';
 import { ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 
 export const TypeComposite = 'composite';
+export const TypeSimpleOutcome = 'SimpleOutcome'; // P8c9a
+export const TypeSpatialOutcome = 'SpatialOutcome'; // P8c9a
 
 export const printFeature = (msg: string, feature: FeatureCollection) => {
   const firstFeature = feature.features[0];
@@ -11,11 +13,20 @@ export const printFeature = (msg: string, feature: FeatureCollection) => {
   }
 }
 
-export interface Outcome {
+export interface SimpleOutcome {
+  type: typeof TypeSimpleOutcome; // Pb793
   description: string;
 }
 
-export type Outcomes =   { [key: string]: Outcome }
+export interface SpatialOutcome {
+  type: typeof TypeSpatialOutcome; // P57f0
+  before: FeatureCollection;
+  after: FeatureCollection;
+}
+
+export type Outcome = SimpleOutcome | SpatialOutcome;
+
+export type Outcomes = { [key: string]: Outcome }
 
 export interface AccOutcomes {
   state: FeatureCollection
