@@ -1,14 +1,12 @@
 .pipeline-section {
   flex-grow: 1;
-  padding: 10px;
-  height: 50%; /* Added fixed height */
-  border: 1px solid #000;
+  height: 100%; /* Added fixed height */
   width: 100%;
   min-width: 20px;
 }
 
 .pipeline-section ul {
-  height: 60%; /* Set desired fixed height */
+  height: 80%; /* Set desired fixed height */
   overflow-y: scroll;
   padding-inline-start: 0px;
 }

@@ -1,29 +1,10 @@
-.outline-section {
+.tools {
   background-color: #ddd;
-  padding: 10px;
-  height: 50%; /* Added fixed height */
+  padding: 0;
+  height: 45px; /* Added fixed height */
   border: 1px solid #000;
 }
 
-.outline-section h2 {
-  margin: 0;
-}
-
-.outline-section .MuiCardHeader-root {
-  display: inline;
-  padding: 0px;
-}
-
-.outline-section .MuiPaper-root {
-  margin-bottom: 8px;
-}
-
-.outline-section .MuiCardContent-root {
-  display: inline;
-  padding: 2px;
-}
-
-.outline-section button {
-  padding-inline: 2px;
-  margin-right: 2px;
+.tools button {
+  margin-left: 2px;
 }

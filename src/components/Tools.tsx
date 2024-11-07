@@ -19,7 +19,7 @@ const CustomGroup = (props: React.PropsWithChildren): React.ReactElement => {
 const Tools: React.FC<OutlineProps> = ({ addAction }) => {
   
   return (
-    <div style={{backgroundColor: '#fff'}} className="outline-section">
+    <div style={{backgroundColor: '#fff'}} className="tools">
       Move:
       <CustomGroup>
         <Button onClick={() => addAction(MoveNorth)}>Move North</Button>

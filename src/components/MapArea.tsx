@@ -30,7 +30,7 @@ const MousePosition: React.FC<MouseProps> = ({ position }) => {
     zIndex: 1000,
   }}
   >
-    { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending</span> }
+    { position ?  <span>Lat: {position.lat.toFixed(2)}, Lng: {position.lng.toFixed(2)}</span> : <span>Pending 2</span> }
   </div>
 }
 
@@ -94,6 +94,9 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) =
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
+      setTimeout(function () {
+        window.dispatchEvent(new Event("resize"));
+     }, 500);
       const handleMouseMove = (e: L.LeafletMouseEvent) => {
         setMousePosition({ lat: e.latlng.lat, lng: e.latlng.lng });
       };
@@ -105,8 +108,8 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) =
   }, [mapRef]);
   
   return (
-    <div className="map-area" style={{ position: 'relative' }}>
-      <MapContainer center={defaultInitialCenter} zoom={10} ref={mapRef} style={{ height: "100%", width: "100%" }}>
+    <div className="map-area">
+      <MapContainer className='map-container' center={defaultInitialCenter} zoom={10} ref={mapRef}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />

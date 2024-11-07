@@ -233,7 +233,6 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           <Button onClick={() => setValue(dialogText)}>OK</Button>
         </ButtonGroup>
       </Dialog>}
-      <h2>Pipeline</h2>
       <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
           <IconButton onClick={selectAll}>
