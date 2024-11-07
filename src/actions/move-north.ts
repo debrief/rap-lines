@@ -59,7 +59,6 @@ export const MoveNorthHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
-    const beforeState = JSON.parse(JSON.stringify(acc.state)); // Pc424
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -71,7 +70,6 @@ export const MoveNorthHandler: ActionHandler = {
     });
     acc.outcomes[action.id] = {
       type: TypeSpatialOutcome, // Pc424
-      before: beforeState, // Pc424
       after: newState // Pc424
     };
     return {
@@ -85,7 +83,6 @@ export const MoveSouthHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
-    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P6865
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -97,7 +94,6 @@ export const MoveSouthHandler: ActionHandler = {
     });
     acc.outcomes[action.id] = {
       type: TypeSpatialOutcome, // P6865
-      before: beforeState, // P6865
       after: newState // P6865
     };
     return {
@@ -111,7 +107,6 @@ export const MoveEastHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
-    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P77f8
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -123,7 +118,6 @@ export const MoveEastHandler: ActionHandler = {
     });
     acc.outcomes[action.id] = {
       type: TypeSpatialOutcome, // P77f8
-      before: beforeState, // P77f8
       after: newState // P77f8
     };
     return {
@@ -137,7 +131,6 @@ export const MoveWestHandler: ActionHandler = {
   handle: (acc, action) => {
     // take a copy of the state object
     const newState = JSON.parse(JSON.stringify(acc.state));
-    const beforeState = JSON.parse(JSON.stringify(acc.state)); // P8a44
 
     // iterate through all geometries in the newState object
     newState.features.forEach((feature: any) => {
@@ -149,7 +142,6 @@ export const MoveWestHandler: ActionHandler = {
     });
     acc.outcomes[action.id] = {
       type: TypeSpatialOutcome, // P8a44
-      before: beforeState, // P8a44
       after: newState // P8a44
     };
     return {

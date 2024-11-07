@@ -20,7 +20,6 @@ export interface SimpleOutcome {
 
 export interface SpatialOutcome {
   type: typeof TypeSpatialOutcome; // P57f0
-  before: FeatureCollection;
   after: FeatureCollection;
 }
 
