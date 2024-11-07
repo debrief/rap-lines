@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemIcon, ListItemText, Card } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
 import { Outcomes, ShadedOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
@@ -17,15 +17,13 @@ const DetailView: React.FC<DetailViewProps> = ({ outcomes, visibleOutcomes }) =>
         {visibleOutcomes.map((visibleOutcome) => {
           const outcome = outcomes[visibleOutcome.id];
           if (!outcome) return null;
-
+          const style={ color: visibleOutcome.color }
           return (
             <ListItem key={visibleOutcome.id}>
-              <Card style={{ backgroundColor: visibleOutcome.color }}>
                 <ListItemIcon>
-                  {outcome.type === TypeSpatialOutcome ? <MapIcon /> : <TextIcon />}
+                  {outcome.type === TypeSpatialOutcome ? <MapIcon style={style} /> : <TextIcon style={style}/>}
                 </ListItemIcon>
                 <ListItemText primary={outcome.type === TypeSimpleOutcome ? outcome.description : 'Spatial Outcome'} />
-              </Card>
             </ListItem>
           );
         })}
