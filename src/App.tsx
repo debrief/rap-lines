@@ -24,6 +24,8 @@ const registerHandlers = ():ActionHandler[] => {
   return res;
 }
 
+const sources = ['./uk-waypoints.geojson', './us-waypoints.geojson']
+
 const App: React.FC = () => {
   const store = useMemo(() => new Store(), []);
   const pipeline = useMemo(() => new Pipeline(), []);
@@ -79,7 +81,7 @@ const App: React.FC = () => {
       store.addStateListener(stateListener);
       pipeline.addActionsListener(actionsListener);
       setOutcomes({});
-      store.setInitialState('/uk-waypoints.geojson', actions)
+      store.setInitialState(sources[0], actions)
     }
   }, [store, actions, actionsListener, pipeline, stateListener]);
   
