@@ -1,5 +1,6 @@
 import { Action, ActionHandler } from "../Pipeline";
 import * as turf from '@turf/turf';
+import { TypeSimpleOutcome } from "../Store";
 
 export const TypeScale = 'scale'
 
@@ -46,6 +47,7 @@ export const ScaleUpHandler: ActionHandler = {
     }
     
     acc.outcomes[action.id] = {
+      type: TypeSimpleOutcome,
       description: `Scaled up by a factor of ${(action as Action).payload.factor}`
     };
     

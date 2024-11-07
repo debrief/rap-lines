@@ -1,4 +1,5 @@
 import { Action, ActionHandler } from "../Pipeline";
+import { TypeSimpleOutcome } from "../Store";
 
 export const TypeNorth = 'move-north';
 export const TypeEast = 'move-east';
@@ -68,6 +69,7 @@ export const MoveNorthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
+      type: TypeSimpleOutcome,
       description: `Moved north by ${(action as Action).payload.distance}`
     };
     return {
@@ -91,6 +93,7 @@ export const MoveSouthHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
+      type: TypeSimpleOutcome,
       description: `Moved south by ${(action as Action).payload.distance}`
     };
     return {
@@ -114,6 +117,7 @@ export const MoveEastHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
+      type: TypeSimpleOutcome,
       description: `Moved east by ${(action as Action).payload.distance}`
     };
     return {
@@ -137,6 +141,7 @@ export const MoveWestHandler: ActionHandler = {
       }
     });
     acc.outcomes[action.id] = {
+      type: TypeSimpleOutcome,
       description: `Moved west by ${(action as Action).payload.distance}`
     };
     return {
