@@ -70,21 +70,16 @@ const App: React.FC = () => {
   
   useEffect(() => {
     //    fetch('/sample.json')
-    fetch('/waypoints.geojson')
-    .then(response => response.json())
-    .then(data => {
-      console.clear()
-      const initialState = data;
-      // store this initial state
+      // store this initial statei
+    if (store && actions && actionsListener && pipeline) { 
       const handlers = registerHandlers()
       handlers.forEach(handler => store.addHandler(handler));
       store.addStateListener(stateListener);
       pipeline.addActionsListener(actionsListener);
-      store.setInitialState(initialState)
-      setState(initialState)
       setOutcomes({});
-    });
-  }, [actionsListener, pipeline, store]);
+      store.setInitialState('/uk-waypoints.geojson', actions)
+    }
+  }, [store, actions, actionsListener, pipeline]);
   
   if (!store) {
     return <div>Loading...</div>;

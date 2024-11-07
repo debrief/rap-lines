@@ -86,8 +86,14 @@ class Store {
     }
   }
   
-  setInitialState(initialState: FeatureCollection) {
-    this.initialState = initialState;
+  setInitialState(path: string, actions: BaseAction[]) {
+    console.log('about to fetch', path)
+    fetch(path)
+    .then(response => response.json())
+    .then(data => {
+      this.initialState = data;
+      this.updateState(actions)
+    })
   }
   
   addHandler(handler: ActionHandler) {
