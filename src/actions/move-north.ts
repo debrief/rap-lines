@@ -1,5 +1,5 @@
 import { Action, ActionHandler } from "../Pipeline";
-import { TypeSimpleOutcome, TypeSpatialOutcome } from "../Store";
+import { TypeSpatialOutcome } from "../Store";
 
 export const TypeNorth = 'move-north';
 export const TypeEast = 'move-east';
