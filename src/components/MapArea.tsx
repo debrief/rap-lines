@@ -76,6 +76,9 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
+      setTimeout(function () {
+        window.dispatchEvent(new Event("resize"));
+     }, 500);
       const handleMouseMove = (e: L.LeafletMouseEvent) => {
         setMousePosition({ lat: e.latlng.lat, lng: e.latlng.lng });
       };
