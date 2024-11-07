@@ -3,6 +3,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
 import { Outcomes, ShadedOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
+import './DetailView.css';
 
 interface DetailViewProps {
   outcomes: Outcomes;
@@ -11,7 +12,7 @@ interface DetailViewProps {
 
 const DetailView: React.FC<DetailViewProps> = ({ outcomes, visibleOutcomes }) => {
   return (
-    <div>
+    <div className='detail-view'>
       <h2>Detail View</h2>
       <List>
         {visibleOutcomes.map((visibleOutcome) => {
