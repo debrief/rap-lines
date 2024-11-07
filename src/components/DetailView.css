@@ -1,3 +1,8 @@
 .detail-view {
-  height: 50%;
+   height: 100%;
+}
+
+.detail-list {
+  /* max-height: '60%'; */
+  overflow-y: 'auto'
 }

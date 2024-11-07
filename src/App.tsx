@@ -105,7 +105,8 @@ const App: React.FC = () => {
     global: {
       tabEnableClose: false,
       tabEnableRenderOnDemand: false,
-      tabSetEnableMaximize: false
+      tabSetEnableMaximize: false,
+      tabEnableDrag: false
     },
     layout: {
       type: "row",
@@ -114,7 +115,7 @@ const App: React.FC = () => {
         {
           type: "row",
           id: "#40d1ca12-0ac9-4a2a-96a1-3cec31330d7a",
-          weight: 40,
+          width: 400,
           children: [
             {
               type: "tabset",
@@ -173,8 +174,8 @@ const App: React.FC = () => {
     } else if (component === "detail") {
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
     } else if (component === "map") {
-      return <div className="main-content">
-      <Box><Tools addAction={addAction} /></Box>
+      return <div  className="main-content">
+      <Tools addAction={addAction} />
       <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
       </div>
     } else {
