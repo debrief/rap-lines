@@ -5,9 +5,12 @@ import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
 import { buffer, lineString, featureCollection } from '@turf/turf';
+import { Outcomes, SpatialOutcome, TypeSpatialOutcome } from '../Store';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
+  visibleOutcomeIds: string[];
+  outcomes: Outcomes;
 }
 
 type MouseProps = {
@@ -49,7 +52,7 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomeIds, outcomes }) => {
   const mapRef = useRef<L.Map>(null);
   const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
@@ -85,6 +88,24 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
       };
     }
   }, [mapRef]);
+
+  const renderSpatialOutcomes = () => {
+    return visibleOutcomeIds.map(id => {
+      const outcome = outcomes[id];
+      if (outcome && outcome.type === TypeSpatialOutcome) {
+        const spatialOutcome = outcome as SpatialOutcome;
+        const beforeLine = convertPointsToLine(spatialOutcome.before);
+        const afterLine = convertPointsToLine(spatialOutcome.after);
+        return (
+          <React.Fragment key={id}>
+            <GeoJSON key={`${id}-before`} data={beforeLine} style={{ color: 'red' }} />
+            <GeoJSON key={`${id}-after`} data={afterLine} style={{ color: 'green' }} />
+          </React.Fragment>
+        );
+      }
+      return null;
+    });
+  };
   
   return (
     <div className="map-area" style={{ position: 'relative' }}>
@@ -93,6 +114,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state }) => {
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
         }
+        {renderSpatialOutcomes()}
       </MapContainer>
       <MousePosition position={mousePosition} />
     </div>

@@ -18,6 +18,8 @@ import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
 import './ActionItem.css';
 import { BaseAction, CompositeAction } from '../Pipeline';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface ActionItemProps {
   action: BaseAction;
@@ -27,6 +29,8 @@ interface ActionItemProps {
   setSelected: (id: string, selected: boolean) => void;
   child?: boolean;
   outcomes: Outcomes;
+  visibleOutcomeIds: string[];
+  setVisibleOutcomeIds: (visibleOutcomeIds: string[]) => void;
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -77,7 +81,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomeIds, setVisibleOutcomeIds }) => {
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -99,6 +103,15 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
       return 'SPATIAL OUTCOME';
     }
     return null;
+  };
+
+  const handleVisibilityToggle = (e: any) => {
+    e.stopPropagation();
+    if (visibleOutcomeIds.includes(action.id)) {
+      setVisibleOutcomeIds(visibleOutcomeIds.filter(id => id !== action.id));
+    } else {
+      setVisibleOutcomeIds([...visibleOutcomeIds, action.id]);
+    }
   };
 
   return (
@@ -133,11 +146,18 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
             </IconButton>
           </Tooltip>
         )}
+        {outcomes[action.id] && (
+          <Tooltip title="Show/hide this outcome">
+            <IconButton onClick={handleVisibilityToggle}>
+              {visibleOutcomeIds.includes(action.id) ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </Tooltip>
+        )}
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {expanded && (action as CompositeAction).items.map((item) => {
-        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} />
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} visibleOutcomeIds={visibleOutcomeIds} setVisibleOutcomeIds={setVisibleOutcomeIds} />
       })}
     </Card>
   );
