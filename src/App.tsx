@@ -10,6 +10,7 @@ import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 import { Box } from '@mui/material';
+import DetailView from './components/DetailView';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -104,7 +105,7 @@ const App: React.FC = () => {
         <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes} 
           visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
-        <div><h2>Detail View</h2></div>  
+        <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
       </div>
       <div className="main-content">
         <Box><Tools addAction={addAction} /></Box>
