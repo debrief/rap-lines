@@ -119,7 +119,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         </ExpandMore>}
         {outcomes[action.id] && (
           <Tooltip title={outcomes[action.id].description}>
-            <IconButton>
+            <IconButton style={{padding: 0, display: 'inline-block'}}>
             <InfoIcon titleAccess='Dumbo' />
             </IconButton>
           </Tooltip>
