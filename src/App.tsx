@@ -27,7 +27,7 @@ const App: React.FC = () => {
   const pipeline = useMemo(() => new Pipeline(), []);
 
   const [state, setState] = useState<FeatureCollection | null>(null);
-  const [outcomes, setOutcomes] = useState<{ [key: string]: any }>({});
+  const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
 
   const stateListener = (state: FeatureCollection | null, outcomes: Outcomes) => {

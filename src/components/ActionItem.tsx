@@ -1,5 +1,5 @@
 import React from 'react';
-import { TypeComposite } from '../Store';
+import { Outcomes, TypeComposite } from '../Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -26,7 +26,7 @@ interface ActionItemProps {
   selected: boolean;
   setSelected: (id: string, selected: boolean) => void;
   child?: boolean;
-  outcome?: { description: string }; // P1ced
+  outcomes: Outcomes;
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -77,7 +77,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcome }) => { // P1ced
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes }) => {
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -107,8 +107,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     >
       <CardContent style={{padding: '2px', display: 'inline'}}>
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
-        {outcome && ( // P9a32
-          <Tooltip title={outcome.description}>
+        {outcomes[action.id] && (
+          <Tooltip title={outcomes[action.id].description}>
             <IconButton>
             <InfoIcon />
             </IconButton>
@@ -128,7 +128,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {expanded && (action as CompositeAction).items.map((item) => {
-        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} selected={selected} setSelected={setSelected} />
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} />
       })}
     </Card>
   );
