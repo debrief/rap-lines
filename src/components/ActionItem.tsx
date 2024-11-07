@@ -107,13 +107,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     >
       <CardContent style={{padding: '2px', display: 'inline'}}>
         <span>{iconFor(action)} {action.label} {action.id.slice(-6)}</span>
-        {outcomes[action.id] && (
-          <Tooltip title={outcomes[action.id].description}>
-            <IconButton>
-            <InfoIcon />
-            </IconButton>
-          </Tooltip>
-        )}
       </CardContent>
       <CardActions style={{display: 'inline', float: 'right'}}>
       {isComposite && <ExpandMore
@@ -124,6 +117,13 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         >
           <ExpandMoreIcon />
         </ExpandMore>}
+        {outcomes[action.id] && (
+          <Tooltip title={outcomes[action.id].description}>
+            <IconButton>
+            <InfoIcon titleAccess='Dumbo' />
+            </IconButton>
+          </Tooltip>
+        )}
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
