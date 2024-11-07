@@ -27,6 +27,12 @@ export type Outcome = SimpleOutcome | SpatialOutcome;
 
 export type Outcomes = { [key: string]: Outcome }
 
+/** combine an outcome id with a color */
+export interface ShadedOutcome {
+  id: string
+  color: string
+}
+
 /** custom object, used for passing data down through `reduce` method
  * when processing an sequence of actions
  */

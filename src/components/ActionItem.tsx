@@ -1,5 +1,5 @@
-import React from 'react';
-import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome } from '../Store';
+import React, { useEffect } from 'react';
+import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome, ShadedOutcome, Outcome } from '../Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -29,8 +29,8 @@ interface ActionItemProps {
   setSelected: (id: string, selected: boolean) => void;
   child?: boolean;
   outcomes: Outcomes;
-  visibleOutcomeIds: string[];
-  setVisibleOutcomeIds: (visibleOutcomeIds: string[]) => void;
+  visibleOutcomes: ShadedOutcome[];
+  setVisibleOutcomes: (visibleOutcomeIds: ShadedOutcome[]) => void;
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -81,9 +81,31 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomeIds, setVisibleOutcomeIds }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomes, setVisibleOutcomes }) => {
 
   const [expanded, setExpanded] = React.useState(false);
+  const [color, setColor] = React.useState<string | null>(null);
+  const [thisOutcome, setThisOutcome] = React.useState<Outcome | null>(null);
+
+  useEffect(() => {
+    const thisShadedOutcome = visibleOutcomes.find(outcome => outcome.id === action.id);
+    if(thisShadedOutcome) {
+      setColor(thisShadedOutcome.color);
+    }
+  }, [visibleOutcomes, action.id]);
+
+  useEffect(() => {
+    const thisShadedOutcome = visibleOutcomes.find(outcome => outcome.id === action.id);
+    if(thisShadedOutcome) {
+      setColor(thisShadedOutcome.color);
+    } else {
+      setColor('')
+    }
+  }, [visibleOutcomes, action.id]);
+
+  useEffect(() => {
+    setThisOutcome(outcomes[action.id]);
+  }, [outcomes, action]);
 
   const handleExpandClick = (e: any) => {
     setExpanded(!expanded);
@@ -105,12 +127,30 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     return null;
   };
 
+  const hashCode = (str: string): number => {
+    if (!Number.isNaN(str)) {
+      const val = parseInt(str);
+      const incr = val + 10
+      const scaled = incr ** 8
+      const cutOff = 16000000
+      return scaled % cutOff
+    } else {
+      throw new Error('Action id is expected to contain a number');
+    }
+  };
+  
+  const intToRGB = (i: number): string => {
+      return "#"+((i)>>>0).toString(16).slice(-6);
+  };
+
   const handleVisibilityToggle = (e: any) => {
     e.stopPropagation();
-    if (visibleOutcomeIds.includes(action.id)) {
-      setVisibleOutcomeIds(visibleOutcomeIds.filter(id => id !== action.id));
+    if (visibleOutcomes.find((outcome) => outcome.id === action.id)) {
+      setVisibleOutcomes(visibleOutcomes.filter(outcome => outcome.id !== action.id));
     } else {
-      setVisibleOutcomeIds([...visibleOutcomeIds, action.id]);
+      // use reproducible method to generate color from id
+      const color = intToRGB(hashCode(action.id));
+      setVisibleOutcomes([...visibleOutcomes, { id: action.id, color }]);
     }
   };
 
@@ -139,17 +179,18 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         >
           <ExpandMoreIcon />
         </ExpandMore>}
-        {outcomes[action.id] && (
-          <Tooltip title={renderOutcome(outcomes[action.id])}>
+        {thisOutcome && (
+          <Tooltip title={renderOutcome(thisOutcome)}>
             <IconButton style={{padding: 0, display: 'inline-block'}}>
             <InfoIcon titleAccess='Dumbo' />
             </IconButton>
           </Tooltip>
         )}
-        {outcomes[action.id] && (
+        {thisOutcome && (
           <Tooltip title="Show/hide this outcome">
             <IconButton onClick={handleVisibilityToggle}>
-              {visibleOutcomeIds.includes(action.id) ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              {color ? <VisibilityIcon style={{color: color || 'default'
+              }} /> : <VisibilityOffIcon />}
             </IconButton>
           </Tooltip>
         )}
@@ -157,7 +198,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {expanded && (action as CompositeAction).items.map((item) => {
-        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} visibleOutcomeIds={visibleOutcomeIds} setVisibleOutcomeIds={setVisibleOutcomeIds} />
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
       })}
     </Card>
   );

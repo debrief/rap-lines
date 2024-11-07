@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
-import { Outcomes, TypeComposite } from '../Store';
+import { Outcomes, ShadedOutcome, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -18,8 +18,8 @@ type PipelineProps = {
   groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
   outcomes: Outcomes;
-  visibleOutcomeIds: string[];
-  setVisibleOutcomeIds: (visibleOutcomeIds: string[]) => void;
+  visibleOutcomes: ShadedOutcome[];
+  setVisibleOutcomes: (visibleOutcomeIds: ShadedOutcome[]) => void;
 }
 
 type DialogProps = {
@@ -30,7 +30,7 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction, outcomes, visibleOutcomeIds, setVisibleOutcomeIds
+  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -236,8 +236,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               selected={selectedIds.includes(action.id)}
               setSelected={setSelected}
               outcomes={outcomes}
-              visibleOutcomeIds={visibleOutcomeIds}
-              setVisibleOutcomeIds={setVisibleOutcomeIds}
+              visibleOutcomes={visibleOutcomes}
+              setVisibleOutcomes={setVisibleOutcomes}
             />
           ))}
 
