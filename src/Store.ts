@@ -28,6 +28,9 @@ export type Outcome = SimpleOutcome | SpatialOutcome;
 
 export type Outcomes = { [key: string]: Outcome }
 
+/** custom object, used for passing data down through `reduce` method
+ * when processing an sequence of actions
+ */
 export interface AccOutcomes {
   state: FeatureCollection
   outcomes: Outcomes
@@ -37,7 +40,7 @@ class Store {
   private currentState: FeatureCollection | null;
   private initialState: FeatureCollection | null;
   private handlers: ActionHandler[];
-  private stateListeners: ((state: FeatureCollection | null, outcomes: { [key: string]: Outcome }) => void)[];
+  private stateListeners: ((state: FeatureCollection | null, outcomes: Outcomes) => void)[];
   private index: number;
   private outcomes: Outcomes;
   
