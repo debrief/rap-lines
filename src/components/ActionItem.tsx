@@ -98,6 +98,8 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     const thisShadedOutcome = visibleOutcomes.find(outcome => outcome.id === action.id);
     if(thisShadedOutcome) {
       setColor(thisShadedOutcome.color);
+    } else {
+      setColor('')
     }
   }, [visibleOutcomes, action.id]);
 
