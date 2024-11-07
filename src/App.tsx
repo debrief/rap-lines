@@ -12,6 +12,9 @@ import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
 import 'flexlayout-react/style/light.css';  
 import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
 import DetailView from './components/DetailView';
+import { Modal, ListItem, ListItemButton, ListItemText, Button, List, ButtonGroup } from '@mui/material';
+import * as L from 'leaflet'
+import { PaddingRounded } from '@mui/icons-material';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -24,10 +27,13 @@ const registerHandlers = ():ActionHandler[] => {
   return res;
 }
 
-const sources = ['./uk-waypoints.geojson', './us-waypoints.geojson']
+const sources = ['./uk-waypoints.geojson', './us-waypoints.geojson', './uk2-waypoints.geojson', './us2-waypoints.geojson']
 
 const App: React.FC = () => {
-  const store = useMemo(() => new Store(), []);
+  const store = useMemo(() => {
+    console.log('creating store')
+    return new Store()
+  }, []);
   const pipeline = useMemo(() => new Pipeline(), []);
   
   const [state, setState] = useState<FeatureCollection | null>(null);
@@ -35,13 +41,32 @@ const App: React.FC = () => {
   const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
   const [visibleOutcomes, setVisibleOutcomes] = useState<ShadedOutcome[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedSource, setSelectedSource] = useState<string>('');
+
+  const [mapBounds, setMapBounds] = useState<L.LatLngBounds | undefined>(undefined);
   
   const stateListener =  useCallback((name: string, state: FeatureCollection | null, outcomes: Outcomes) => {
     setState(state);
     setOutcomes(outcomes);
     if (name !== sourceName) {
       setSourceName(name)
-    }
+      const bounds = state?.features.reduce((acc: L.LatLngBounds | undefined, feature) => {
+        if (feature.geometry.type === 'Point') {
+          const point = feature.geometry.coordinates as [number, number];
+          if (acc) {
+            return acc.extend(point);
+          } else {
+            return L.latLngBounds(point, point);
+          }  
+        }
+        return acc;
+      }, undefined)
+      console.log('calculated bounds', bounds?.getCenter())
+      if (bounds) {
+        setMapBounds(bounds)
+      }
+  }
   }, [sourceName])
   
   const actionsListener = useCallback((actions: BaseAction[]) => {
@@ -65,7 +90,6 @@ const App: React.FC = () => {
     pipeline?.ungroupAction(action);
   }, [pipeline])
   
-  
   const toggleActive = useCallback((action: BaseAction) => {
     pipeline.toggleActionActive(action);
   }, [pipeline]);
@@ -73,18 +97,46 @@ const App: React.FC = () => {
   const removeAction = useCallback((action: BaseAction) => {
     pipeline.removeAction(action);
   }, [pipeline]);
+
+  const handleEditSource = () => {
+    setSelectedSource('')
+    setIsModalOpen(true);
+  };
+
+  const handleSelectSource = (source: string) => {
+    setSelectedSource(source);
+  };
+
+  const handleConfirmSource = () => {
+    if (selectedSource) {
+      store.setInitialState(selectedSource, actions);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleCancelSource = () => {
+    setSelectedSource('');
+    setIsModalOpen(false);
+  };
   
   useEffect(() => {
-    if (store && actions && actionsListener && pipeline) { 
+    if (store && actionsListener && pipeline) { 
       const handlers = registerHandlers()
       handlers.forEach(handler => store.addHandler(handler));
       store.addStateListener(stateListener);
       pipeline.addActionsListener(actionsListener);
       setOutcomes({});
-      store.setInitialState(sources[0], actions)
     }
-  }, [store, actions, actionsListener, pipeline, stateListener]);
+  }, [store, actionsListener, pipeline, stateListener]);
   
+  useEffect(() => {
+    if (store) { 
+      console.log('initialising store')
+      store.setInitialState(sources[0], [])
+    }
+  }, [store]);
+  
+
   if (!store) {
     return <div>Loading...</div>;
   }
@@ -159,13 +211,13 @@ const App: React.FC = () => {
       case 'pipeline': 
         return <PipelineViewer sourceName={sourceName} toggleActive={toggleActive} deleteAction={removeAction}
         groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
-        visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
+        visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} onEditSource={handleEditSource} />
       case 'detail':
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
       case 'map':   
         return <div  className="main-content">
           <Tools addAction={addAction} />
-          <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
+          <MapArea mapBounds={mapBounds} state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
         </div>
       default:  
         return <div>Unknown component {component}</div>;
@@ -176,6 +228,24 @@ const App: React.FC = () => {
     <div className="app">
     <Layout model={model} factory={factory} 
     />
+    <Modal open={isModalOpen} onClose={handleCancelSource}>
+      <div className="modal-content">
+        <h2>Select Source</h2>
+        <List>
+          {sources.map((source, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton selected={source === selectedSource} onClick={() => handleSelectSource(source)}>
+                <ListItemText primary={source} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <ButtonGroup style={{float:'right', paddingRight: '5px'}}>
+          <Button onClick={handleCancelSource}>Cancel</Button>
+          <Button onClick={handleConfirmSource} disabled={!selectedSource}>OK</Button>
+        </ButtonGroup>
+      </div>
+    </Modal>
     </div>
   );
 }

@@ -11,6 +11,7 @@ interface MapAreaProps {
   state: FeatureCollection | null;
   visibleOutcomes: ShadedOutcome[];
   outcomes: Outcomes;
+  mapBounds: L.LatLngBounds | undefined;
 }
 
 type MouseProps = {
@@ -52,9 +53,9 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes, mapBounds }) => {
   const mapRef = useRef<L.Map>(null);
-  const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
+  const [bounds, setBounds] = useState<L.LatLngBounds | undefined>(undefined);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
   const [renderedState, setRenderedState] = useState<FeatureCollection | null>(null);
   
@@ -69,6 +70,13 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) =
     }
   }, [state, bounds, setBounds]);
   
+  useEffect(() => {
+    if (mapBounds) {
+      setBounds(mapBounds);
+    }
+  }, [mapBounds, setBounds]);
+  
+
   useEffect(() => {
     if (state) {
       setRenderedState(convertPointsToLine(state));
@@ -109,7 +117,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) =
   
   return (
     <div className="map-area">
-      <MapContainer className='map-container' center={defaultInitialCenter} zoom={10} ref={mapRef}>
+      <MapContainer className='map-container' bounds={bounds} center={defaultInitialCenter} zoom={10} ref={mapRef}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />

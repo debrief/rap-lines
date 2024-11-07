@@ -15,6 +15,7 @@ import { BaseAction } from '../Pipeline';
 type PipelineProps = {
   actions: BaseAction[];
   sourceName: string
+  onEditSource: () => void
   toggleActive: (action: BaseAction) => void;
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
@@ -32,7 +33,8 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName
+  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName,
+  onEditSource
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -220,8 +222,13 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     }
   };
 
-  const SourceItem = (sourceName: string): React.ReactElement => {
-    return <Card className='source'>{sourceName}</Card>
+  const SourceItem = (sourceName: string, onEditSource: () => void): React.ReactElement => {
+    return (
+      <Card className='source'>
+        {sourceName}
+        <Button onClick={onEditSource}>Edit</Button>
+      </Card>
+    )
   }
 
   const VerticalSeprator = (): React.ReactElement => {
@@ -292,7 +299,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
         </Tooltip>
       </ButtonGroup>
       <List sx={{ width: '100%', maxWidth: 360 }}>
-        {sourceName && SourceItem(sourceName)}
+        {sourceName && SourceItem(sourceName, onEditSource )}
         {actions.length > 0 && VerticalSeprator()}
         {actions.map((action) => (
             <ActionItem
