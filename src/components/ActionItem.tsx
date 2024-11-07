@@ -30,7 +30,7 @@ interface ActionItemProps {
   child?: boolean;
   outcomes: Outcomes;
   visibleOutcomes: ShadedOutcome[];
-  setVisibleOutcomes: (visibleOutcomeIds: ShadedOutcome[]) => void;
+  toggleVisibleOutcome: (id: string) => void
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -81,7 +81,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomes, setVisibleOutcomes }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomes, toggleVisibleOutcome }) => {
 
   const [expanded, setExpanded] = React.useState(false);
   const [color, setColor] = React.useState<string | null>(null);
@@ -127,31 +127,9 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     return null;
   };
 
-  const hashCode = (str: string): number => {
-    if (!Number.isNaN(str)) {
-      const val = parseInt(str);
-      const incr = val + 10
-      const scaled = incr ** 8
-      const cutOff = 16000000
-      return scaled % cutOff
-    } else {
-      throw new Error('Action id is expected to contain a number');
-    }
-  };
-  
-  const intToRGB = (i: number): string => {
-      return "#"+((i)>>>0).toString(16).slice(-6);
-  };
-
   const handleVisibilityToggle = (e: any) => {
     e.stopPropagation();
-    if (visibleOutcomes.find((outcome) => outcome.id === action.id)) {
-      setVisibleOutcomes(visibleOutcomes.filter(outcome => outcome.id !== action.id));
-    } else {
-      // use reproducible method to generate color from id
-      const color = intToRGB(hashCode(action.id));
-      setVisibleOutcomes([...visibleOutcomes, { id: action.id, color }]);
-    }
+    toggleVisibleOutcome(action.id);
   };
 
   return (
@@ -198,7 +176,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {expanded && (action as CompositeAction).items.map((item) => {
-        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} setSelected={setSelected} visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} toggleVisibleOutcome={toggleVisibleOutcome} setSelected={setSelected} visibleOutcomes={visibleOutcomes}  />
       })}
     </Card>
   );
