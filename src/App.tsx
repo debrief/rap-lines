@@ -46,38 +46,7 @@ const App: React.FC = () => {
       console.error('No store to listen to actions')
     }
   }, [store])
-  
-  const addAction = useCallback((action: Action | CompositeAction) => {
-    if (pipeline){
-      pipeline?.addAction(action);
-    }
-  }, [pipeline])
-  
-  const groupAction = useCallback((actions: BaseAction[], name: string) => {
-    if (pipeline){
-      pipeline?.groupActions(actions, name);
-    }
-  }, [pipeline])
-  
-  const unGroupAction = useCallback((action: BaseAction) => {
-    if (pipeline){
-      pipeline?.ungroupAction(action);
-    }
-  }, [pipeline])
-  
-  
-  const toggleActive = useCallback((action: BaseAction) => {
-    if (pipeline) {
-      pipeline.toggleActionActive(action);
-    }
-  }, [pipeline]);
-  
-  const removeAction = useCallback((action: BaseAction) => {
-    if (pipeline) {
-      pipeline.removeAction(action);
-    }
-  }, [pipeline]);
-  
+ 
   useEffect(() => {
     //    fetch('/sample.json')
     fetch('/waypoints.geojson')
@@ -167,14 +136,14 @@ const App: React.FC = () => {
   const factory = (node: TabNode): ReactNode => {
     const component = node.getComponent();
     if (component === "pipeline") {
-      return <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
-      groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes} 
+      return <PipelineViewer toggleActive={pipeline?.toggleActionActive} deleteAction={pipeline?.removeAction}
+      groupAction={pipeline?.groupActions} actions={actions} unGroupAction={pipeline?.ungroupAction} outcomes={outcomes} 
       visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
     } else if (component === "detail") {
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
     } else if (component === "map") {
       return <div  className="main-content">
-      <Tools addAction={addAction} />
+      <Tools addAction={pipeline?.addAction} />
       <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
       </div>
     } else {
