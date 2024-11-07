@@ -15,7 +15,6 @@ export const SummariseTrack: Action = {
   active: true // Added active property
 }
 
-
 export const SummariseTrackHandler: ActionHandler = {
   type: TypeSummarise,
   handle: (acc, action) => {
