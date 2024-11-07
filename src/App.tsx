@@ -29,7 +29,7 @@ const App: React.FC = () => {
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
-  const [visibleOutcomes, setVisibleOutcomes] = useState<string[]>([]);
+  const [visibleOutcomeIds, setVisibleOutcomeIds] = useState<string[]>([]);
 
   const stateListener = (state: FeatureCollection | null, outcomes: Outcomes) => {
     setState(state);
@@ -105,12 +105,12 @@ const App: React.FC = () => {
       <div className="sidebar">
         <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
           groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes} 
-          visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
+          visibleOutcomeIds={visibleOutcomeIds} setVisibleOutcomeIds={setVisibleOutcomeIds} />
         <div><h2>Detail View</h2></div>  
       </div>
       <div className="main-content">
         <Box><Tools addAction={addAction} /></Box>
-        <MapArea state={state} visibleOutcomes={visibleOutcomes} />
+        <MapArea state={state} visibleOutcomeIds={visibleOutcomeIds} outcomes={outcomes} />
       </div>
     </div>
   );

@@ -18,8 +18,8 @@ type PipelineProps = {
   groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
   outcomes: Outcomes;
-  visibleOutcomes: string[];
-  setVisibleOutcomes: (visibleOutcomes: string[]) => void;
+  visibleOutcomeIds: string[];
+  setVisibleOutcomeIds: (visibleOutcomeIds: string[]) => void;
 }
 
 type DialogProps = {
@@ -30,7 +30,7 @@ type DialogProps = {
 }
 
 const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes
+  groupAction, unGroupAction, outcomes, visibleOutcomeIds, setVisibleOutcomeIds
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -236,8 +236,8 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               selected={selectedIds.includes(action.id)}
               setSelected={setSelected}
               outcomes={outcomes}
-              visibleOutcomes={visibleOutcomes}
-              setVisibleOutcomes={setVisibleOutcomes}
+              visibleOutcomeIds={visibleOutcomeIds}
+              setVisibleOutcomeIds={setVisibleOutcomeIds}
             />
           ))}
 
