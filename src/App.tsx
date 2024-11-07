@@ -46,7 +46,28 @@ const App: React.FC = () => {
       console.error('No store to listen to actions')
     }
   }, [store])
- 
+  
+  const addAction = useCallback((action: Action | CompositeAction) => {
+    pipeline?.addAction(action);
+  }, [pipeline])
+  
+  const groupAction = useCallback((actions: BaseAction[], name: string) => {
+    pipeline?.groupActions(actions, name);
+  }, [pipeline])
+  
+  const unGroupAction = useCallback((action: BaseAction) => {
+    pipeline?.ungroupAction(action);
+  }, [pipeline])
+  
+  
+  const toggleActive = useCallback((action: BaseAction) => {
+    pipeline.toggleActionActive(action);
+  }, [pipeline]);
+  
+  const removeAction = useCallback((action: BaseAction) => {
+    pipeline.removeAction(action);
+  }, [pipeline]);
+  
   useEffect(() => {
     //    fetch('/sample.json')
     fetch('/waypoints.geojson')
@@ -135,28 +156,27 @@ const App: React.FC = () => {
   
   const factory = (node: TabNode): ReactNode => {
     const component = node.getComponent();
-    if (component === "pipeline") {
-      return <PipelineViewer toggleActive={pipeline?.toggleActionActive} deleteAction={pipeline?.removeAction}
-      groupAction={pipeline?.groupActions} actions={actions} unGroupAction={pipeline?.ungroupAction} outcomes={outcomes} 
-      visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
-    } else if (component === "detail") {
+    switch(component) {
+      case 'pipeline': 
+        return <PipelineViewer toggleActive={toggleActive} deleteAction={removeAction}
+        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
+        visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} />
+      case 'detail':
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
-    } else if (component === "map") {
-      return <div  className="main-content">
-      <Tools addAction={pipeline?.addAction} />
-      <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
-      </div>
-    } else {
-      return <div>Unknown component {component}</div>;
+      case 'map':   
+        return <div  className="main-content">
+          <Tools addAction={addAction} />
+          <MapArea state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
+        </div>
+      default:  
+        return <div>Unknown component {component}</div>;
     }
   };
-
+  
   return (
     <div className="app">
-      <Layout 
-        model={model} 
-        factory={factory} 
-      />
+    <Layout model={model} factory={factory} 
+    />
     </div>
   );
 }
