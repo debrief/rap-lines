@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
-import { TypeComposite } from '../Store';
+import { Outcomes, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -17,7 +17,7 @@ type PipelineProps = {
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
   unGroupAction: (action: BaseAction) => void;
-  outcomes: { [key: string]: { description: string } };
+  outcomes: Outcomes;
 }
 
 type DialogProps = {
