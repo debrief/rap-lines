@@ -5,6 +5,7 @@ import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north'
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';
 import { Button, ButtonGroup,  } from '@mui/material';
+import { ElevationPlot } from '../actions/plot-elevation';
 
 type OutlineProps = {
   addAction: (action: Action) => void
@@ -35,6 +36,7 @@ const Tools: React.FC<OutlineProps> = ({ addAction }) => {
       Info:
       <CustomGroup>
       <Button onClick={() => addAction(SummariseTrack)}>Centre Point</Button>
+      <Button onClick={() => addAction(ElevationPlot)}>Elevation Plot</Button>
       </CustomGroup>
     </div>
   );

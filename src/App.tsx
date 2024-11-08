@@ -14,6 +14,7 @@ import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './
 import DetailView from './components/DetailView';
 import { Modal, ListItem, ListItemButton, ListItemText, Button, List, ButtonGroup } from '@mui/material';
 import * as L from 'leaflet'
+import { ElevationPlotHandler } from './actions/plot-elevation';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -23,6 +24,7 @@ const registerHandlers = ():ActionHandler[] => {
   res.push(MoveWestHandler);
   res.push(ScaleUpHandler)
   res.push(SummariseTrackHandler)
+  res.push(ElevationPlotHandler)
   return res;
 }
 
