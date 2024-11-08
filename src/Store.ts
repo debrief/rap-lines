@@ -96,6 +96,10 @@ class Store {
       this.updateState(actions)
     })
   }
+
+  getInitialState(): FeatureCollection | null {
+    return this.initialState;
+  }
   
   addHandler(handler: ActionHandler) {
     this.handlers.push(handler);
