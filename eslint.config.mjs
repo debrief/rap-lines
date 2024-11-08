@@ -15,4 +15,19 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  { rules: {
+    "react/prop-types": 0,
+    "no-trailing-spaces": "on",
+    "no-use-before-define": "on",
+    "no-unused-vars": "on",
+    "dot-notation": "on",
+    "no-case-declarations": "off",
+    "react/display-name": "on",
+    "react/no-deprecated": "on",
+    "prefer-promise-reject-errors": "off",
+    "camelcase": "on",
+    "eqeqeq": "off",
+    "react/no-unsafe": 0 
+
+  } }
 ];
