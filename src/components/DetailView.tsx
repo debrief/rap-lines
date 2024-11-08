@@ -2,7 +2,7 @@ import React from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
-import { Outcome, Outcomes, ShadedOutcome, SimpleOutcome, TypeArray2dOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
+import { Array2dOutcome, Outcome, Outcomes, ShadedOutcome, SimpleOutcome, TypeArray2dOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
 import './DetailView.css';
 
 interface DetailViewProps {
@@ -17,6 +17,8 @@ const renderOutcome = (outcome: Outcome): React.ReactElement => {
     case TypeSpatialOutcome:
       return <ListItemText primary={'Spatial Outcome'} />
     case TypeArray2dOutcome:
+      const data = (outcome as Array2dOutcome).data;
+      console.log('2d data', data);
       return <ListItemText primary={'2D Outcome'} />
     default:
       return <ListItemText primary={'Unknown Outcome'} />
