@@ -40,6 +40,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
   const [dialogText, setDialogText] = useState<string>('');
   const textFieldRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     if (showDialog) {
@@ -54,6 +55,12 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
       }
     }
   }, [showDialog, textFieldRef]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [actions]);
 
   const setValue = (value: string | null) => {
     if (value !== null) {
@@ -298,7 +305,7 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
           </IconButton>
         </Tooltip>
       </ButtonGroup>
-      <List sx={{ width: '100%', maxWidth: 360 }}>
+      <List sx={{ width: '100%', maxWidth: 360 }} ref={listRef}>
         {sourceName && SourceItem(sourceName, onEditSource )}
         {actions.length > 0 && VerticalSeprator()}
         {actions.map((action) => (
@@ -314,7 +321,6 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               toggleVisibleOutcome={toggleVisibleOutcome}
             />
           ))}
-
       </List>
     </div>
   );
