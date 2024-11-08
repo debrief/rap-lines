@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, List, ListItem, ListItemIcon, ListItemText, Theme } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText, Theme } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
 import ChartIcon from '@mui/icons-material/ShowChart';

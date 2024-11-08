@@ -30,7 +30,6 @@ export const SpeedPlotHandler: ActionHandler = {
   type: TypeSpeedPlot,
   handle: (acc, action) => {
     // take a copy of the state object
-    const propAction = action as unknown as typeof ElevationPlot;
     if (acc.state.features.length > 0) {
       const res: number[][] = []
       let lastTime = 0

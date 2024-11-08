@@ -128,7 +128,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     } else {
       return '--outcome not handled--';
     }
-    return null;
   };
 
   const handleVisibilityToggle = (e: any) => {
