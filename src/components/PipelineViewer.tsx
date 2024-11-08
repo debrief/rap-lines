@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
 import { Outcomes, ShadedOutcome, TypeComposite } from '../Store';
 import ActionItem from './ActionItem';
-import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List } from '@mui/material';
+import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List, Card } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +14,8 @@ import { BaseAction } from '../Pipeline';
 
 type PipelineProps = {
   actions: BaseAction[];
+  sourceName: string
+  onEditSource: () => void
   toggleActive: (action: BaseAction) => void;
   deleteAction: (action: BaseAction) => void;
   groupAction: (actions: BaseAction[], name: string) => void;
@@ -30,8 +32,9 @@ type DialogProps = {
   icon? : React.ReactElement
 }
 
-const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
-  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes
+const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
+  groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName,
+  onEditSource
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -226,6 +229,19 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
     }
   };
 
+  const SourceItem = (sourceName: string, onEditSource: () => void): React.ReactElement => {
+    return (
+      <Card className='source'>
+        {sourceName}
+        <Button onClick={onEditSource}>Edit</Button>
+      </Card>
+    )
+  }
+
+  const VerticalSeprator = (): React.ReactElement => {
+    return <div className='vertical-separator'></div>
+  }
+
   return (
     <div className="pipeline-section">
       {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
@@ -242,54 +258,74 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
       </Dialog>}
       <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
-          <IconButton onClick={selectAll}>
-            <DoneAllIcon/>
-          </IconButton>
+        {
+          // note: IconButtons are wrapped in a span to avoid
+          // problem of wrapping a disabled IconButton
+        }
+          <span>
+            <IconButton onClick={selectAll}>
+              <DoneAllIcon/>
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Toggle outcome visibility for selected actions">
-          <IconButton
-            onClick={hideRevealSelected}
-            disabled={selectedIds.length === 0}>
-            <VisibilityIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={hideRevealSelected}
+              disabled={selectedIds.length === 0}>
+              <VisibilityIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Activate Selected">
-          <IconButton
-            onClick={activateSelected}
-            disabled={selectedIds.length === 0 || !allSelectedInactive}>
-            <CheckIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={activateSelected}
+              disabled={selectedIds.length === 0 || !allSelectedInactive}>
+              <CheckIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Deactivate Selected">
-          <IconButton
-            onClick={deactivateSelected}
-            disabled={selectedIds.length === 0 || !allSelectedActive}
-            ><CheckBoxOutlineBlankIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={deactivateSelected}
+              disabled={selectedIds.length === 0 || !allSelectedActive}>
+              <CheckBoxOutlineBlankIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Group Selected">
-          <IconButton
-            onClick={groupSelected}
-            disabled={!consecutiveSelected()}
-            ><CallMergeIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={groupSelected}
+              disabled={!consecutiveSelected()}>
+              <CallMergeIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Ungroup Selected">
-          <IconButton
-            onClick={unGroupSelected}
-            disabled={!groupIsSelected()}
-            ><CallSplitIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={unGroupSelected}
+              disabled={!groupIsSelected()}>
+              <CallSplitIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Delete Selected">
-          <IconButton
-            onClick={deleteSelected}
-            disabled={selectedIds.length === 0}>
-            <DeleteIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={deleteSelected}
+              disabled={selectedIds.length === 0}>
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </ButtonGroup>
       <List sx={{ width: '100%', maxWidth: 360 }} ref={listRef}>
+        {sourceName && SourceItem(sourceName, onEditSource )}
+        {actions.length > 0 && VerticalSeprator()}
         {actions.map((action) => (
             <ActionItem
               key={action.id}
@@ -303,10 +339,9 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
               toggleVisibleOutcome={toggleVisibleOutcome}
             />
           ))}
-
       </List>
     </div>
   );
 }
 
-export default Pipeline;
+export default PipelineViewer;

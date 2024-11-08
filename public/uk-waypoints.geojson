@@ -1,0 +1,29 @@
+{
+"type": "FeatureCollection",
+"name": "UK Route",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+  { "type": "Feature", "properties": { "ele": 44.586548, "time": "2001\/11\/28 21:05:28+00", "name": "5066", "desc": "5066", "sym": "Crossing", "type": "Crossing" }, "geometry": { "type": "Point", "coordinates": [ -2.119277, 52.438878 ] } },
+  { "type": "Feature", "properties": { "ele": 57.6072, "time": "2001\/06\/02 03:26:55+00", "name": "5067", "desc": "5067", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.119689, 52.439227 ] } },
+  { "type": "Feature", "properties": { "ele": 44.826904, "time": "2001\/11\/16 23:03:38+00", "name": "5096", "desc": "5096", "sym": "Dot", "type": "Dot" }, "geometry": { "type": "Point", "coordinates": [ -2.116146, 52.438917 ] } },
+  { "type": "Feature", "properties": { "ele": 82.9056, "time": "2001\/06\/02 03:26:59+00", "name": "5237", "desc": "5237", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.124474, 52.456979 ] } },
+  { "type": "Feature", "properties": { "ele": 66.696655, "time": "2001\/11\/28 21:05:28+00", "name": "5254", "desc": "5254", "sym": "Dot", "type": "Dot" }, "geometry": { "type": "Point", "coordinates": [ -2.12099, 52.454401 ] } },
+  { "type": "Feature", "properties": { "ele": 56.388, "time": "2001\/06\/02 03:27:02+00", "name": "5376", "desc": "5376", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.119399, 52.46565 ] } },
+  { "type": "Feature", "properties": { "ele": 56.388, "time": "2001\/06\/02 03:26:55+00", "name": "6006", "desc": "600698", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.114456, 52.439018 ] } },
+  { "type": "Feature", "properties": { "ele": 37.7952, "time": "2001\/06\/02 03:26:57+00", "name": "6084", "desc": "6084", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.104772, 52.437338 ] } },
+  { "type": "Feature", "properties": { "ele": 64.008, "time": "2001\/06\/02 03:26:55+00", "name": "6130", "desc": "6130", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.110975, 52.442196 ] } },
+  { "type": "Feature", "properties": { "ele": 64.008, "time": "2001\/06\/02 03:26:58+00", "name": "6131", "desc": "6131", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.111441, 52.442981 ] } },
+  { "type": "Feature", "properties": { "ele": 57.564209, "time": "2001\/11\/16 23:03:38+00", "name": "6280", "desc": "6280", "sym": "Dot", "type": "Dot" }, "geometry": { "type": "Point", "coordinates": [ -2.105413, 52.45143 ] } },
+  { "type": "Feature", "properties": { "ele": 66.696655, "time": "2001\/11\/16 23:03:38+00", "name": "6283", "desc": "6283", "sym": "Dot", "type": "Dot" }, "geometry": { "type": "Point", "coordinates": [ -2.105206, 52.453845 ] } },
+  { "type": "Feature", "properties": { "ele": 13.4112, "time": "2001\/06\/02 03:26:56+00", "name": "6979", "desc": "6979", "sym": "Dot", "type": "Intersection" }, "geometry": { "type": "Point", "coordinates": [ -2.106532, 52.432621 ] } },
+  { "type": "Feature", "properties": { "ele": 34.012085, "time": "2001\/11\/16 23:03:38+00", "name": "6997", "desc": "6997", "sym": "Dot", "type": "Dot" }, "geometry": { "type": "Point", "coordinates": [ -2.107883, 52.431033 ] } },
+  { "type": "Feature", "properties": { "ele": 56.0832, "time": "2001\/06\/02 03:26:57+00", "name": "6121DEAD", "desc": "Dead End", "sym": "Danger Area", "type": "Dead End" }, "geometry": { "type": "Point", "coordinates": [ -2.112675, 52.443109 ] } },
+  { "type": "Feature", "properties": { "ele": 57.3024, "time": "2001\/06\/02 03:27:02+00", "name": "GATE19", "desc": "Gate 19", "sym": "Truck Stop", "type": "Road" }, "geometry": { "type": "Point", "coordinates": [ -2.11924, 52.466353 ] } },
+  { "type": "Feature", "properties": { "ele": 49.3776, "time": "2001\/06\/02 03:27:03+00", "name": "GATE21", "desc": "Gate 21", "sym": "Truck Stop", "type": "Road" }, "geometry": { "type": "Point", "coordinates": [ -2.107697, 52.468655 ] } },
+  { "type": "Feature", "properties": { "ele": 81.0768, "time": "2001\/06\/02 03:27:03+00", "name": "GATE24", "desc": "Gate 24", "sym": "Truck Stop", "type": "Road" }, "geometry": { "type": "Point", "coordinates": [ -2.102973, 52.456718 ] } },
+  { "type": "Feature", "properties": { "ele": 67.9704, "time": "2001\/06\/02 03:27:01+00", "name": "5287WATER", "desc": "Reservoir", "sym": "Swimming Area", "type": "Reservoir" }, "geometry": { "type": "Point", "coordinates": [ -2.117481, 52.457734 ] } },
+  { "type": "Feature", "properties": { "ele": 64.533692, "time": "2001\/11\/07 23:53:41+00", "name": "5376STREAM", "desc": "Stream Crossing", "sym": "Bridge", "type": "Bridge" }, "geometry": { "type": "Point", "coordinates": [ -2.119328, 52.465913 ] } },
+  { "type": "Feature", "properties": { "ele": 61.649902, "time": "2001\/11\/28 21:05:28+00", "name": "5144SUMMIT", "desc": "Summit", "sym": "Summit", "type": "Summit" }, "geometry": { "type": "Point", "coordinates": [ -2.122845, 52.445359 ] } },
+  { "type": "Feature", "properties": { "ele": 67.3608, "time": "2001\/06\/02 00:18:16+00", "name": "5150TANK", "cmt": "WATER TANK", "desc": "Water Tank", "sym": "Museum", "type": "Water Tank" }, "geometry": { "type": "Point", "coordinates": [ -2.121676, 52.441727 ] } }
+]
+}

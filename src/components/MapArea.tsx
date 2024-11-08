@@ -4,13 +4,14 @@ import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
-import { buffer, lineString, featureCollection } from '@turf/turf';
+import { lineString, featureCollection } from '@turf/turf';
 import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../Store';
 
 interface MapAreaProps {
   state: FeatureCollection | null;
   visibleOutcomes: ShadedOutcome[];
   outcomes: Outcomes;
+  mapBounds: L.LatLngBounds | undefined;
 }
 
 type MouseProps = {
@@ -52,23 +53,21 @@ const convertPointsToLine = (points: FeatureCollection) => {
 
 const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
-const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) => {
+const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes, mapBounds }) => {
   const mapRef = useRef<L.Map>(null);
-  const [bounds, setBounds] = useState<L.LatLngBounds | null>(null);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
   const [renderedState, setRenderedState] = useState<FeatureCollection | null>(null);
   
   useEffect(() => {
-    if (mapRef.current !== null && !bounds && state) {
+    if (mapBounds) {
       const map = mapRef.current;
-      const bufferedState: FeatureCollection = buffer(state, 50, { units: 'kilometers' });
-      const bounds = new L.GeoJSON(bufferedState).getBounds();
-      setBounds(bounds.pad(5));
-      console.log('fitting bounds', state?.features[0].geometry, bounds.getNorthWest(), bounds.getSouthEast());
-      map.fitBounds(bounds);
+      if (map) {
+        map.fitBounds(mapBounds)
+      }
     }
-  }, [state, bounds, setBounds]);
+  }, [mapBounds]);
   
+
   useEffect(() => {
     if (state) {
       setRenderedState(convertPointsToLine(state));
@@ -81,10 +80,13 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes }) =
       if (outcome && outcome.type === TypeSpatialOutcome) {
         const spatialOutcome = outcome as SpatialOutcome;
         const afterLine = convertPointsToLine(spatialOutcome.after);
+        // we have to update the key each time to force a re-render,
+        // since if the id hasn't changed, leaflet won't redraw it
+        const prefix = new Date().getTime()
+        const key = `${prefix}-${shaded.id}-after`
+        const style = { color: shaded.color }
         return (
-          <React.Fragment key={shaded.id}>
-            <GeoJSON key={`${shaded.id}-after`} data={afterLine} style={{ color: shaded.color }} />
-          </React.Fragment>
+          <GeoJSON key={key} data={afterLine} style={style} />
         );
       }
       return null;

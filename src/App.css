@@ -10,6 +10,36 @@
   width: 90vw;
 }
 
+.modal-content {
+  background-color: #ddd;
+  opacity: 0.9;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  margin: auto;
+  height: 300px;
+  width: 300px;
+}
+
+.modal-content h2 {
+  margin-left: 30px;
+}
+
+.modal-content .Mui-selected {
+  background-color: #ddf !important;
+}
+
+.modal-content ul {
+  background-color: #fff;
+  overflow-y: scroll;
+  height: 140px;
+}
+
+.modal-content button {
+  background-color: #fff;
+}
+
+
 .flexlayout__layout {
   display: flex;
   align-items: center;
