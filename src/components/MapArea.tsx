@@ -55,26 +55,17 @@ const defaultInitialCenter: L.LatLngExpression = [42.5, -71];
 
 const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes, mapBounds }) => {
   const mapRef = useRef<L.Map>(null);
-  const [bounds, setBounds] = useState<L.LatLngBounds | undefined>(undefined);
   const [mousePosition, setMousePosition] = useState<{ lat: number; lng: number } | null>(null);
   const [renderedState, setRenderedState] = useState<FeatureCollection | null>(null);
   
   useEffect(() => {
-    if (mapRef.current !== null && !bounds && state) {
-      const map = mapRef.current;
-      const bufferedState: FeatureCollection = buffer(state, 50, { units: 'kilometers' });
-      const bounds = new L.GeoJSON(bufferedState).getBounds();
-      setBounds(bounds.pad(5));
-      console.log('fitting bounds', state?.features[0].geometry, bounds.getNorthWest(), bounds.getSouthEast());
-      map.fitBounds(bounds);
-    }
-  }, [state, bounds, setBounds]);
-  
-  useEffect(() => {
     if (mapBounds) {
-      setBounds(mapBounds);
+      const map = mapRef.current;
+      if (map) {
+        map.fitBounds(mapBounds)
+      }
     }
-  }, [mapBounds, setBounds]);
+  }, [mapBounds]);
   
 
   useEffect(() => {
@@ -117,7 +108,7 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes, map
   
   return (
     <div className="map-area">
-      <MapContainer className='map-container' bounds={bounds} center={defaultInitialCenter} zoom={10} ref={mapRef}>
+      <MapContainer className='map-container' center={defaultInitialCenter} zoom={10} ref={mapRef}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         { renderedState && 
           <GeoJSON key={JSON.stringify(renderedState)} data={renderedState} />
