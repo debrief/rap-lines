@@ -32,7 +32,7 @@ type DialogProps = {
   icon? : React.ReactElement
 }
 
-const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
+const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
   groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName,
   onEditSource
  }) => {
@@ -258,51 +258,69 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
       </Dialog>}
       <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
         <Tooltip title="Select/Deselect All">
-          <IconButton onClick={selectAll}>
-            <DoneAllIcon/>
-          </IconButton>
+        {
+          // note: IconButtons are wrapped in a span to avoid
+          // problem of wrapping a disabled IconButton
+        }
+          <span>
+            <IconButton onClick={selectAll}>
+              <DoneAllIcon/>
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Toggle outcome visibility for selected actions">
-          <IconButton
-            onClick={hideRevealSelected}
-            disabled={selectedIds.length === 0}>
-            <VisibilityIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={hideRevealSelected}
+              disabled={selectedIds.length === 0}>
+              <VisibilityIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Activate Selected">
-          <IconButton
-            onClick={activateSelected}
-            disabled={selectedIds.length === 0 || !allSelectedInactive}>
-            <CheckIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={activateSelected}
+              disabled={selectedIds.length === 0 || !allSelectedInactive}>
+              <CheckIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Deactivate Selected">
-          <IconButton
-            onClick={deactivateSelected}
-            disabled={selectedIds.length === 0 || !allSelectedActive}
-            ><CheckBoxOutlineBlankIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={deactivateSelected}
+              disabled={selectedIds.length === 0 || !allSelectedActive}>
+              <CheckBoxOutlineBlankIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Group Selected">
-          <IconButton
-            onClick={groupSelected}
-            disabled={!consecutiveSelected()}
-            ><CallMergeIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={groupSelected}
+              disabled={!consecutiveSelected()}>
+              <CallMergeIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Ungroup Selected">
-          <IconButton
-            onClick={unGroupSelected}
-            disabled={!groupIsSelected()}
-            ><CallSplitIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={unGroupSelected}
+              disabled={!groupIsSelected()}>
+              <CallSplitIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Delete Selected">
-          <IconButton
-            onClick={deleteSelected}
-            disabled={selectedIds.length === 0}>
-            <DeleteIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={deleteSelected}
+              disabled={selectedIds.length === 0}>
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </ButtonGroup>
       <List sx={{ width: '100%', maxWidth: 360 }} ref={listRef}>
@@ -326,4 +344,4 @@ const Pipeline: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction
   );
 }
 
-export default Pipeline;
+export default PipelineViewer;
