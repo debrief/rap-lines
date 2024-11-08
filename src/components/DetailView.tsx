@@ -42,6 +42,22 @@ const iconFor = (outcome: Outcome, color: string): React.ReactNode => {
   }
 }
 
+const TwoDChart = (props: React.PropsWithChildren<{data: number[][]}>): React.ReactElement => {
+  const values = props.data.map((row, index) => ({x:new Date(row[0]).getTime(), y: row[1], id: index}))
+  const valueFormatter = (value: ScatterValueType) => 
+    `Time:${new Date(value.x).toLocaleString()} Value:${value.y.toFixed(2)}`
+  const timeFormatter = (value: number) => new Date(value).toLocaleTimeString()
+  return <ScatterChart
+    {...settings}
+    series={[
+      { data: values, valueFormatter: valueFormatter }
+    ]}
+    xAxis={[{ valueFormatter: timeFormatter  }]}
+    width={200}
+    height={200}
+  />
+}
+
 
 const renderOutcome = (outcome: Outcome): React.ReactElement => {
   switch(outcome.type) {
@@ -50,19 +66,7 @@ const renderOutcome = (outcome: Outcome): React.ReactElement => {
     case TypeSpatialOutcome:
       return <ListItemText primary={'Spatial Outcome'} />
     case TypeArray2dOutcome:
-      const data2d = (outcome as Array2dOutcome).data;
-      const values = data2d.map((row, index) => ({x:new Date(row[0]).getTime(), y: row[1], id: index}))
-      const valueFormatter = (value: ScatterValueType) => `Time:${new Date(value.x).toLocaleString()} Value:${value.y.toFixed(2)}`
-      const axisFormatter = (value: number) => new Date(value).toLocaleTimeString()
-      return <ScatterChart
-        {...settings}
-        series={[
-          { data: values, valueFormatter: valueFormatter }
-        ]}
-        xAxis={[{ valueFormatter: axisFormatter  }]}
-        width={200}
-        height={200}
-      />
+      return <TwoDChart data={(outcome as Array2dOutcome).data} />
     default:
       return <ListItemText primary={'Unknown Outcome'} />
   }
