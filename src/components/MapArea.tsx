@@ -80,10 +80,13 @@ const MapArea: React.FC<MapAreaProps> = ({ state, visibleOutcomes, outcomes, map
       if (outcome && outcome.type === TypeSpatialOutcome) {
         const spatialOutcome = outcome as SpatialOutcome;
         const afterLine = convertPointsToLine(spatialOutcome.after);
+        // we have to update the key each time to force a re-render,
+        // since if the id hasn't changed, leaflet won't redraw it
+        const prefix = new Date().getTime()
+        const key = `${prefix}-${shaded.id}-after`
+        const style = { color: shaded.color }
         return (
-          <React.Fragment key={shaded.id}>
-            <GeoJSON key={`${shaded.id}-after`} data={afterLine} style={{ color: shaded.color }} />
-          </React.Fragment>
+          <GeoJSON key={key} data={afterLine} style={style} />
         );
       }
       return null;
