@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
-import { buffer, lineString, featureCollection } from '@turf/turf';
+import { lineString, featureCollection } from '@turf/turf';
 import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../Store';
 
 interface MapAreaProps {
