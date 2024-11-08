@@ -23,7 +23,7 @@ const renderOutcome = (outcome: Outcome): React.ReactElement => {
       return <SparkLineChart
         plotType="line"
         data={data2d.map(row => row[1])}
-        width={100}
+        width={200}
         height={100}
       />
     default:
