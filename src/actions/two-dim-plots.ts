@@ -41,19 +41,16 @@ export const SpeedPlotHandler: ActionHandler = {
           const thisTime = new Date(thisTimeStr).getTime()
           const thisPoint = (f.geometry as Point).coordinates
           if (lastPoint) {
-            // calculate delta
-            const timeDelta = (thisTime - lastTime)/1000
+            // calculate deltas
+            const timeDeltaSecs = (thisTime - lastTime)/1000
             const pointDelta = L.latLng(thisPoint[1], thisPoint[0]).distanceTo(L.latLng(lastPoint[1], lastPoint[0]))
-            console.log('delta for', lastPoint, thisPoint, pointDelta, timeDelta)
-            const speed = pointDelta / timeDelta
-            res.push([thisTimeStr, speed])
+            const speedMS = pointDelta / timeDeltaSecs
+            res.push([thisTimeStr, speedMS])
           }
           lastPoint = thisPoint
           lastTime = thisTime
         }
       })
-
-      console.log('res', res)
     
       acc.outcomes[action.id] = {
         type: TypeArray2dOutcome, 

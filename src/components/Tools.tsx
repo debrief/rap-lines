@@ -5,7 +5,7 @@ import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north'
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';
 import { Button, ButtonGroup,  } from '@mui/material';
-import { ElevationPlot, SpeedPlot } from '../actions/plot-elevation';
+import { ElevationPlot, SpeedPlot } from '../actions/two-dim-plots';
 
 type OutlineProps = {
   addAction: (action: Action) => void
