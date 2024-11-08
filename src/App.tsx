@@ -5,7 +5,7 @@ import MapArea from './components/MapArea';
 import './App.css';
 import Store, { Outcomes, ShadedOutcome } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
-import { FeatureCollection, Point } from 'geojson';
+import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
