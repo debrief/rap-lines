@@ -5,7 +5,7 @@ import MapArea from './components/MapArea';
 import './App.css';
 import Store, { Outcomes, ShadedOutcome } from './Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Point } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
@@ -14,7 +14,6 @@ import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './
 import DetailView from './components/DetailView';
 import { Modal, ListItem, ListItemButton, ListItemText, Button, List, ButtonGroup } from '@mui/material';
 import * as L from 'leaflet'
-import { PaddingRounded } from '@mui/icons-material';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -30,44 +29,47 @@ const registerHandlers = ():ActionHandler[] => {
 const sources = ['./uk-waypoints.geojson', './us-waypoints.geojson', './uk2-waypoints.geojson', './us2-waypoints.geojson']
 
 const App: React.FC = () => {
-  const store = useMemo(() => {
-    console.log('creating store')
-    return new Store()
-  }, []);
+  const store = useMemo(() => new Store(), []);
   const pipeline = useMemo(() => new Pipeline(), []);
   
   const [state, setState] = useState<FeatureCollection | null>(null);
   const [sourceName, setSourceName] = useState<string>('');
+  const [previousSourceName, setPreviousSourceName] = useState<string>('');
   const [outcomes, setOutcomes] = useState<Outcomes>({});
   const [actions, setActions] = useState<BaseAction[]>([]);
   const [visibleOutcomes, setVisibleOutcomes] = useState<ShadedOutcome[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedSource, setSelectedSource] = useState<string>('');
-
+  
   const [mapBounds, setMapBounds] = useState<L.LatLngBounds | undefined>(undefined);
   
-  const stateListener =  useCallback((name: string, state: FeatureCollection | null, outcomes: Outcomes) => {
+  const stateListener = (name: string, state: FeatureCollection | null, outcomes: Outcomes) => {
     setState(state);
     setOutcomes(outcomes);
-    if (name !== sourceName) {
-      setSourceName(name)
+    setSourceName(name);
+  }
+  
+  useEffect(() => {
+    if (sourceName !== previousSourceName) {
+      console.log('Source has changed', sourceName, previousSourceName)
+      setPreviousSourceName(sourceName)
       const bounds = state?.features.reduce((acc: L.LatLngBounds | undefined, feature) => {
         if (feature.geometry.type === 'Point') {
           const point = feature.geometry.coordinates as [number, number];
+          const switched = [point[1], point[0]] as L.LatLngExpression
           if (acc) {
-            return acc.extend(point);
+            return acc.extend(switched);
           } else {
-            return L.latLngBounds(point, point);
+            return L.latLngBounds(switched, switched);
           }  
         }
         return acc;
       }, undefined)
-      console.log('calculated bounds', bounds?.getCenter())
       if (bounds) {
-        setMapBounds(bounds)
+        setMapBounds(bounds.pad(0.4))
       }
-  }
-  }, [sourceName])
+    }
+  }, [sourceName, previousSourceName, state]);
   
   const actionsListener = useCallback((actions: BaseAction[]) => {
     if (store){
@@ -97,23 +99,23 @@ const App: React.FC = () => {
   const removeAction = useCallback((action: BaseAction) => {
     pipeline.removeAction(action);
   }, [pipeline]);
-
+  
   const handleEditSource = () => {
     setSelectedSource('')
     setIsModalOpen(true);
   };
-
+  
   const handleSelectSource = (source: string) => {
     setSelectedSource(source);
   };
-
+  
   const handleConfirmSource = () => {
     if (selectedSource) {
       store.setInitialState(selectedSource, actions);
     }
     setIsModalOpen(false);
   };
-
+  
   const handleCancelSource = () => {
     setSelectedSource('');
     setIsModalOpen(false);
@@ -123,20 +125,25 @@ const App: React.FC = () => {
     if (store && actionsListener && pipeline) { 
       const handlers = registerHandlers()
       handlers.forEach(handler => store.addHandler(handler));
+      console.log('registering state listener')
       store.addStateListener(stateListener);
       pipeline.addActionsListener(actionsListener);
       setOutcomes({});
     }
-  }, [store, actionsListener, pipeline, stateListener]);
+  }, [store, actionsListener, pipeline]);
   
   useEffect(() => {
-    if (store) { 
-      console.log('initialising store')
-      store.setInitialState(sources[0], [])
+    if (store) {
+      if (!store.getInitialState()) {
+        console.log('initialising store with', sources[0])
+        store.setInitialState(sources[0], [])
+      } else {        
+        console.log('store already initialised')
+      }
     }
   }, [store]);
   
-
+  
   if (!store) {
     return <div>Loading...</div>;
   }
@@ -209,43 +216,42 @@ const App: React.FC = () => {
     const component = node.getComponent();
     switch(component) {
       case 'pipeline': 
-        return <PipelineViewer sourceName={sourceName} toggleActive={toggleActive} deleteAction={removeAction}
-        groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
-        visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} onEditSource={handleEditSource} />
+      return <PipelineViewer sourceName={sourceName} toggleActive={toggleActive} deleteAction={removeAction}
+      groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
+      visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} onEditSource={handleEditSource} />
       case 'detail':
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
       case 'map':   
-        return <div  className="main-content">
-          <Tools addAction={addAction} />
-          <MapArea mapBounds={mapBounds} state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
-        </div>
+      return <div  className="main-content">
+      <Tools addAction={addAction} />
+      <MapArea mapBounds={mapBounds} state={state} visibleOutcomes={visibleOutcomes} outcomes={outcomes} />
+      </div>
       default:  
-        return <div>Unknown component {component}</div>;
+      return <div>Unknown component {component}</div>;
     }
   };
   
   return (
     <div className="app">
-    <Layout model={model} factory={factory} 
-    />
-    <Modal open={isModalOpen} onClose={handleCancelSource}>
-      <div className="modal-content">
+      <Layout model={model} factory={factory} />
+      <Modal open={isModalOpen} onClose={handleCancelSource}>
+        <div className="modal-content">
         <h2>Select Source</h2>
         <List>
-          {sources.map((source, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton selected={source === selectedSource} onClick={() => handleSelectSource(source)}>
-                <ListItemText primary={source} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+        {sources.map((source, index) => (
+          <ListItem key={index} disablePadding>
+          <ListItemButton selected={source === selectedSource} onClick={() => handleSelectSource(source)}>
+          <ListItemText primary={source} />
+          </ListItemButton>
+          </ListItem>
+        ))}
         </List>
         <ButtonGroup style={{float:'right', paddingRight: '5px'}}>
           <Button onClick={handleCancelSource}>Cancel</Button>
           <Button onClick={handleConfirmSource} disabled={!selectedSource}>OK</Button>
         </ButtonGroup>
-      </div>
-    </Modal>
+        </div>
+      </Modal>
     </div>
   );
 }
