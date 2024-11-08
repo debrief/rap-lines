@@ -106,7 +106,10 @@ class Store {
   }
   
   addStateListener(listener: (name: string, state: FeatureCollection | null, outcomes: Outcomes) => void) {
-    this.stateListeners.push(listener);
+    // check we don't hold it already
+    if (!this.stateListeners.includes(listener)) {
+      this.stateListeners.push(listener);
+    }
   }
   
   actionsListener(actions: BaseAction[]) {
