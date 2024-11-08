@@ -36,7 +36,7 @@ const DetailView: React.FC<DetailViewProps> = ({ outcomes, visibleOutcomes }) =>
                 <ListItemIcon>
                   {outcome.type === TypeSpatialOutcome ? <MapIcon style={style} /> : <TextIcon style={style}/>}
                 </ListItemIcon>
-                <ListItemText primary={renderOutcome(outcome)} />
+                {renderOutcome(outcome)}
             </ListItem>
           );
         })}
