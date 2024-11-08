@@ -1,9 +1,11 @@
 import React from 'react';
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
 import { Array2dOutcome, Outcome, Outcomes, ShadedOutcome, SimpleOutcome, TypeArray2dOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
 import './DetailView.css';
+import ScatterChart from '@mui/x-charts/ScatterChart';
+import { BarChart, SparkLineChart } from '@mui/x-charts';
 
 interface DetailViewProps {
   outcomes: Outcomes;
@@ -17,9 +19,13 @@ const renderOutcome = (outcome: Outcome): React.ReactElement => {
     case TypeSpatialOutcome:
       return <ListItemText primary={'Spatial Outcome'} />
     case TypeArray2dOutcome:
-      const data = (outcome as Array2dOutcome).data;
-      console.log('2d data', data);
-      return <ListItemText primary={'2D Outcome'} />
+      const data2d = (outcome as Array2dOutcome).data;
+      return <SparkLineChart
+        plotType="line"
+        data={data2d.map(row => row[1])}
+        width={100}
+        height={100}
+      />
     default:
       return <ListItemText primary={'Unknown Outcome'} />
   }
