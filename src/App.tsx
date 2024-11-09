@@ -102,6 +102,18 @@ const App: React.FC = () => {
   const removeAction = useCallback((action: BaseAction) => {
     pipeline.removeAction(action);
   }, [pipeline]);
+
+  const moveAction = useCallback((draggedId: string, targetId: string) => {
+    const draggedIndex = actions.findIndex(action => action.id === draggedId);
+    const targetIndex = actions.findIndex(action => action.id === targetId);
+    if (draggedIndex !== -1 && targetIndex !== -1) {
+      const updatedActions = [...actions];
+      const [draggedAction] = updatedActions.splice(draggedIndex, 1);
+      updatedActions.splice(targetIndex, 0, draggedAction);
+      setActions(updatedActions);
+      pipeline.moveAction(draggedAction as Action | CompositeAction, targetIndex);
+    }
+  }, [actions, pipeline]);
   
   const handleEditSource = () => {
     setSelectedSource('')
@@ -221,7 +233,7 @@ const App: React.FC = () => {
       case 'pipeline': 
       return <PipelineViewer sourceName={sourceName} toggleActive={toggleActive} deleteAction={removeAction}
       groupAction={groupAction} actions={actions} unGroupAction={unGroupAction} outcomes={outcomes}   
-      visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} onEditSource={handleEditSource} />
+      visibleOutcomes={visibleOutcomes} setVisibleOutcomes={setVisibleOutcomes} onEditSource={handleEditSource} moveAction={moveAction} />
       case 'detail':
       return <DetailView outcomes={outcomes} visibleOutcomes={visibleOutcomes} />
       case 'map':   

@@ -25,6 +25,7 @@ type PipelineProps = {
   outcomes: Outcomes;
   visibleOutcomes: ShadedOutcome[];
   setVisibleOutcomes: (visibleOutcomeIds: ShadedOutcome[]) => void;
+  moveAction: (draggedId: string, targetId: string) => void;
 }
 
 type DialogProps = {
@@ -36,7 +37,7 @@ type DialogProps = {
 
 const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, deleteAction, 
   groupAction, unGroupAction, outcomes, visibleOutcomes, setVisibleOutcomes, sourceName,
-  onEditSource
+  onEditSource, moveAction
  }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDialog, setShowDialog] = useState<DialogProps | null>(null);
@@ -243,21 +244,6 @@ const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, delete
   const VerticalSeprator = (): React.ReactElement => {
     return <div className='vertical-separator'></div>
   }
-
-  const moveAction = (draggedId: string, targetId: string) => {
-    const draggedIndex = actions.findIndex(action => action.id === draggedId);
-    const targetIndex = actions.findIndex(action => action.id === targetId);
-    if (draggedIndex !== -1 && targetIndex !== -1) {
-      const updatedActions = [...actions];
-      const [draggedAction] = updatedActions.splice(draggedIndex, 1);
-      updatedActions.splice(targetIndex, 0, draggedAction);
-      // Update the actions state with the new order
-      // This will trigger a re-render of the component
-      // and the new order will be reflected in the UI
-      // Note: This is a simplified example, you may need to update the state in your parent component
-      // and pass the updated actions as props to this component
-    }
-  };
 
   return (
     <DndProvider backend={HTML5Backend}>
