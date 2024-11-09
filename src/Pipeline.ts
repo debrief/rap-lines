@@ -118,7 +118,7 @@ class Pipeline {
       return;
     }
     this.actions.splice(currentIndex, 1);
-    this.actions.splice(newIndex, 0, (action as Action | CompositeAction));
+    this.actions.splice(newIndex, 0, action);
     this.actionsListeners.forEach(listener => listener(this.actions));
   }
 }

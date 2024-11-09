@@ -11,7 +11,7 @@ import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { BaseAction } from '../Pipeline';
-import { DndProvider } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 type PipelineProps = {

@@ -21,6 +21,7 @@ import { BaseAction, CompositeAction } from '../Pipeline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useDrag, useDrop } from 'react-dnd';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 interface ActionItemProps {
   action: BaseAction;
@@ -197,6 +198,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
             </IconButton>
           </Tooltip>
         )}
+        <DragHandleIcon />
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
