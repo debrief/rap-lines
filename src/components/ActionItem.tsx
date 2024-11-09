@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome, ShadedOutcome, Outcome } from '../Store';
+import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome, ShadedOutcome, Outcome, Array2dOutcome, TypeArray2dOutcome } from '../Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -118,13 +118,16 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
 
   const isComposite = action.type === TypeComposite;
 
-  const renderOutcome = (outcome: SimpleOutcome | SpatialOutcome) => {
+  const renderOutcome = (outcome: SimpleOutcome | SpatialOutcome | Array2dOutcome) => {
     if (outcome.type === TypeSimpleOutcome) {
       return outcome.description;
     } else if (outcome.type === TypeSpatialOutcome) {
       return 'SPATIAL OUTCOME';
+    } else if (outcome.type === TypeArray2dOutcome) {
+      return (outcome as Array2dOutcome).data.length + ' items';
+    } else {
+      return '--outcome not handled--';
     }
-    return null;
   };
 
   const handleVisibilityToggle = (e: any) => {

@@ -14,6 +14,7 @@ import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './
 import DetailView from './components/DetailView';
 import { Modal, ListItem, ListItemButton, ListItemText, Button, List, ButtonGroup } from '@mui/material';
 import * as L from 'leaflet'
+import { ElevationPlotHandler, SpeedPlotHandler } from './actions/two-dim-plots';
 
 const registerHandlers = ():ActionHandler[] => {
   const res: ActionHandler[] = [];
@@ -23,10 +24,12 @@ const registerHandlers = ():ActionHandler[] => {
   res.push(MoveWestHandler);
   res.push(ScaleUpHandler)
   res.push(SummariseTrackHandler)
+  res.push(ElevationPlotHandler)
+  res.push(SpeedPlotHandler)
   return res;
 }
 
-const sources = ['./uk-waypoints.geojson', './us-waypoints.geojson', './uk2-waypoints.geojson', './us2-waypoints.geojson']
+const sources = ['./track-points2.geojson', './track-points.geojson', './uk-waypoints.geojson', './us-waypoints.geojson']
 
 const App: React.FC = () => {
   const store = useMemo(() => new Store(), []);
