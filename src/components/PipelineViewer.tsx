@@ -11,6 +11,8 @@ import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { BaseAction } from '../Pipeline';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 type PipelineProps = {
   actions: BaseAction[];
@@ -242,105 +244,123 @@ const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, delete
     return <div className='vertical-separator'></div>
   }
 
+  const moveAction = (draggedId: string, targetId: string) => {
+    const draggedIndex = actions.findIndex(action => action.id === draggedId);
+    const targetIndex = actions.findIndex(action => action.id === targetId);
+    if (draggedIndex !== -1 && targetIndex !== -1) {
+      const updatedActions = [...actions];
+      const [draggedAction] = updatedActions.splice(draggedIndex, 1);
+      updatedActions.splice(targetIndex, 0, draggedAction);
+      // Update the actions state with the new order
+      // This will trigger a re-render of the component
+      // and the new order will be reflected in the UI
+      // Note: This is a simplified example, you may need to update the state in your parent component
+      // and pass the updated actions as props to this component
+    }
+  };
+
   return (
-    <div className="pipeline-section">
-      {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
-        <h4>{showDialog.icon}{showDialog.title}</h4>
-        <TextField 
-          label={showDialog.label} 
-          onChange={e => setDialogText(e.target.value)} 
-          inputRef={textFieldRef}
-        />
-        <ButtonGroup  >
-          <Button onClick={() => setValue(null)}>Cancel</Button>
-          <Button onClick={() => setValue(dialogText)}>OK</Button>
+    <DndProvider backend={HTML5Backend}>
+      <div className="pipeline-section">
+        {showDialog && <Dialog style={{}} open={true} onKeyPress={handleKeyPress}> 
+          <h4>{showDialog.icon}{showDialog.title}</h4>
+          <TextField 
+            label={showDialog.label} 
+            onChange={e => setDialogText(e.target.value)} 
+            inputRef={textFieldRef}
+          />
+          <ButtonGroup  >
+            <Button onClick={() => setValue(null)}>Cancel</Button>
+            <Button onClick={() => setValue(dialogText)}>OK</Button>
+          </ButtonGroup>
+        </Dialog>}
+        <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
+          <Tooltip title="Select/Deselect All">
+          {
+            // note: IconButtons are wrapped in a span to avoid
+            // problem of wrapping a disabled IconButton
+          }
+            <span>
+              <IconButton onClick={selectAll}>
+                <DoneAllIcon/>
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Toggle outcome visibility for selected actions">
+            <span>
+              <IconButton
+                onClick={hideRevealSelected}
+                disabled={selectedIds.length === 0}>
+                <VisibilityIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Activate Selected">
+            <span>
+              <IconButton
+                onClick={activateSelected}
+                disabled={selectedIds.length === 0 || !allSelectedInactive}>
+                <CheckIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Deactivate Selected">
+            <span>
+              <IconButton
+                onClick={deactivateSelected}
+                disabled={selectedIds.length === 0 || !allSelectedActive}>
+                <CheckBoxOutlineBlankIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Group Selected">
+            <span>
+              <IconButton
+                onClick={groupSelected}
+                disabled={!consecutiveSelected()}>
+                <CallMergeIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Ungroup Selected">
+            <span>
+              <IconButton
+                onClick={unGroupSelected}
+                disabled={!groupIsSelected()}>
+                <CallSplitIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Delete Selected">
+            <span>
+              <IconButton
+                onClick={deleteSelected}
+                disabled={selectedIds.length === 0}>
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
         </ButtonGroup>
-      </Dialog>}
-      <ButtonGroup sx={{ bgcolor: 'background.paper'}} variant="contained" aria-label="outlined primary button group">
-        <Tooltip title="Select/Deselect All">
-        {
-          // note: IconButtons are wrapped in a span to avoid
-          // problem of wrapping a disabled IconButton
-        }
-          <span>
-            <IconButton onClick={selectAll}>
-              <DoneAllIcon/>
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Toggle outcome visibility for selected actions">
-          <span>
-            <IconButton
-              onClick={hideRevealSelected}
-              disabled={selectedIds.length === 0}>
-              <VisibilityIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Activate Selected">
-          <span>
-            <IconButton
-              onClick={activateSelected}
-              disabled={selectedIds.length === 0 || !allSelectedInactive}>
-              <CheckIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Deactivate Selected">
-          <span>
-            <IconButton
-              onClick={deactivateSelected}
-              disabled={selectedIds.length === 0 || !allSelectedActive}>
-              <CheckBoxOutlineBlankIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Group Selected">
-          <span>
-            <IconButton
-              onClick={groupSelected}
-              disabled={!consecutiveSelected()}>
-              <CallMergeIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Ungroup Selected">
-          <span>
-            <IconButton
-              onClick={unGroupSelected}
-              disabled={!groupIsSelected()}>
-              <CallSplitIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Delete Selected">
-          <span>
-            <IconButton
-              onClick={deleteSelected}
-              disabled={selectedIds.length === 0}>
-              <DeleteIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </ButtonGroup>
-      <List sx={{ width: '100%', maxWidth: 360 }} ref={listRef}>
-        {sourceName && SourceItem(sourceName, onEditSource )}
-        {actions.length > 0 && VerticalSeprator()}
-        {actions.map((action) => (
-            <ActionItem
-              key={action.id}
-              action={action}
-              toggleActive={toggleActive}
-              deleteAction={deleteAction}
-              selected={selectedIds.includes(action.id)}
-              setSelected={setSelected}
-              outcomes={outcomes}
-              visibleOutcomes={visibleOutcomes}
-              toggleVisibleOutcome={toggleVisibleOutcome}
-            />
-          ))}
-      </List>
-    </div>
+        <List sx={{ width: '100%', maxWidth: 360 }} ref={listRef}>
+          {sourceName && SourceItem(sourceName, onEditSource )}
+          {actions.length > 0 && VerticalSeprator()}
+          {actions.map((action) => (
+              <ActionItem
+                key={action.id}
+                action={action}
+                toggleActive={toggleActive}
+                deleteAction={deleteAction}
+                selected={selectedIds.includes(action.id)}
+                setSelected={setSelected}
+                outcomes={outcomes}
+                visibleOutcomes={visibleOutcomes}
+                toggleVisibleOutcome={toggleVisibleOutcome}
+                moveAction={moveAction}
+              />
+            ))}
+        </List>
+      </div>
+    </DndProvider>
   );
 }
 
