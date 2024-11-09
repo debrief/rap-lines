@@ -111,7 +111,7 @@ class Pipeline {
     this.actionsListeners.forEach(listener => listener(this.actions));
   }
 
-  moveAction(action: BaseAction, newIndex: number) {
+  moveAction(action: Action | CompositeAction, newIndex: number) {
     const currentIndex = this.actions.findIndex(a => a === action);
     if (currentIndex === -1) {
       console.warn('Action not found in the pipeline', action);
