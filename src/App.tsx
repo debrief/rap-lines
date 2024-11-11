@@ -104,14 +104,12 @@ const App: React.FC = () => {
   }, [pipeline]);
 
   const moveAction = useCallback((draggedId: string, targetId: string) => {
-    const draggedIndex = actions.findIndex(action => action.id === draggedId);
+    const dragged = actions.find(action => action.id === draggedId);
     const targetIndex = actions.findIndex(action => action.id === targetId);
-    if (draggedIndex !== -1 && targetIndex !== -1) {
-      const updatedActions = [...actions];
-      const [draggedAction] = updatedActions.splice(draggedIndex, 1);
-      updatedActions.splice(targetIndex, 0, draggedAction);
-      setActions(updatedActions);
-      pipeline.moveAction(draggedAction as Action | CompositeAction, targetIndex);
+    if (dragged !== undefined && targetIndex !== -1) {
+      pipeline.moveAction(dragged as Action | CompositeAction, targetIndex);
+    } else {
+      console.log('failed to find dragged or target', draggedId, targetId)
     }
   }, [actions, pipeline]);
   
