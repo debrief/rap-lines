@@ -211,7 +211,9 @@ const PipelineViewer: React.FC<PipelineProps> = ({ actions, toggleActive, delete
     } else {
       // use reproducible method to generate color from id
       const color = intToRGB(hashCode(actionId));
-      setVisibleOutcomes([...visibleOutcomes, { id: actionId, color }]);
+      const items = ([...visibleOutcomes, { id: actionId, color }]);
+      items.sort((a, b) => a.id.localeCompare(b.id));
+      setVisibleOutcomes(items)
     }
   }
 
