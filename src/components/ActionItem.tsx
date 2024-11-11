@@ -20,6 +20,8 @@ import './ActionItem.css';
 import { BaseAction, CompositeAction } from '../Pipeline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useDrag, useDrop } from 'react-dnd';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 interface ActionItemProps {
   action: BaseAction;
@@ -30,7 +32,8 @@ interface ActionItemProps {
   child?: boolean;
   outcomes: Outcomes;
   visibleOutcomes: ShadedOutcome[];
-  toggleVisibleOutcome: (id: string) => void
+  toggleVisibleOutcome: (id: string) => void;
+  moveAction: (draggedId: string, targetId: string) => void;
 }
 
 const iconFor = (action: BaseAction): React.ReactElement => {
@@ -81,7 +84,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomes, toggleVisibleOutcome }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, deleteAction, selected, setSelected, outcomes, visibleOutcomes, toggleVisibleOutcome, moveAction }) => {
 
   const [expanded, setExpanded] = React.useState(false);
   const [color, setColor] = React.useState<string | null>(null);
@@ -135,15 +138,35 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     toggleVisibleOutcome(action.id);
   };
 
+  const [{ isDragging }, dragRef] = useDrag({
+    type: 'ACTION_ITEM',
+    item: { id: action.id },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    canDrag: () => !child, // Prevent dragging if it's a child action
+  });
+
+  const [, dropRef] = useDrop({
+    accept: 'ACTION_ITEM',
+    drop(draggedItem: { id: string }) {
+      if (draggedItem.id !== action.id) {
+        moveAction(draggedItem.id, action.id);
+      }
+    }
+  });
+
   return (
     <Card
+      ref={(node) => dragRef(dropRef(node))}
       variant='outlined'
       style={{
         margin: '5px',
         borderWidth: selected ? '2px' : '1px',
         backgroundColor: selected ? '#d3d3d3' : 'white',
         marginLeft: child ? '20px' : '0px',
-        width: '90%'
+        width: '90%',
+        opacity: isDragging ? 0.5 : 1,
       }}
       className="action-item"
       onClick={handleSelection}
@@ -175,11 +198,12 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
             </IconButton>
           </Tooltip>
         )}
+        <DragHandleIcon />
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
       {expanded && (action as CompositeAction).items.map((item) => {
-        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} toggleVisibleOutcome={toggleVisibleOutcome} setSelected={setSelected} visibleOutcomes={visibleOutcomes}  />
+        return <ActionItem child key={item.id} action={item} toggleActive={toggleActive} deleteAction={deleteAction} outcomes={outcomes} selected={selected} toggleVisibleOutcome={toggleVisibleOutcome} setSelected={setSelected} visibleOutcomes={visibleOutcomes} moveAction={moveAction} />
       })}
     </Card>
   );

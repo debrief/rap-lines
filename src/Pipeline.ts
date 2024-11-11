@@ -110,6 +110,17 @@ class Pipeline {
     // fire updates to action list listeners
     this.actionsListeners.forEach(listener => listener(this.actions));
   }
+
+  moveAction(action: Action | CompositeAction, newIndex: number) {
+    const currentIndex = this.actions.findIndex(a => a === action);
+    if (currentIndex === -1) {
+      console.warn('Action not found in the pipeline', action);
+      return;
+    }
+    this.actions.splice(currentIndex, 1);
+    this.actions.splice(newIndex, 0, action);
+    this.actionsListeners.forEach(listener => listener(this.actions));
+  }
 }
 
 export default Pipeline;
