@@ -138,13 +138,16 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
     toggleVisibleOutcome(action.id);
   };
 
-  const [{ isDragging }, dragRef] = useDrag({
+  const [{ isDragging }, dragRef, previewRef] = useDrag({
     type: 'ACTION_ITEM',
     item: { id: action.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    canDrag: () => !child, // Prevent dragging if it's a child action
+    canDrag: (monitor) => {
+      const element = monitor.getInitialSourceClientOffset();
+      return element && element.target === dragRef.current;
+    },
   });
 
   const [, dropRef] = useDrop({
@@ -158,7 +161,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
 
   return (
     <Card
-      ref={(node) => dragRef(dropRef(node))}
+      ref={dropRef}
       variant='outlined'
       style={{
         margin: '5px',
@@ -198,7 +201,9 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
             </IconButton>
           </Tooltip>
         )}
-        <DragHandleIcon />
+        <div ref={dragRef}>
+          <DragHandleIcon />
+        </div>
         { action.active ? <CheckIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />: <CheckBoxOutlineBlankIcon onClick={(e) => { e.stopPropagation(); toggleActive(action); }} />}
         <DeleteIcon onClick={(e) => { e.stopPropagation(); deleteAction(action); }}  />
       </CardActions>
