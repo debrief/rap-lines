@@ -149,11 +149,11 @@ const ActionItem: React.FC<ActionItemProps> = ({ action, child, toggleActive, de
 
   const [, dropRef] = useDrop({
     accept: 'ACTION_ITEM',
-    hover: (draggedItem: { id: string }) => {
+    drop(draggedItem: { id: string }) {
       if (draggedItem.id !== action.id) {
         moveAction(draggedItem.id, action.id);
       }
-    },
+    }
   });
 
   return (
