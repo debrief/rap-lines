@@ -1,6 +1,6 @@
 import React from 'react';
 import './Tools.css';
-import { Action } from '../Pipeline';
+import { Action } from '../classes/Pipeline';
 import { MoveNorth, MoveEast, MoveWest, MoveSouth } from '../actions/move-north';
 import { ScaleUp, ScaleDown } from '../actions/scale-track';
 import { SummariseTrack } from '../actions/summarise-track';

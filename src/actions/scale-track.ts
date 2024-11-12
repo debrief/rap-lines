@@ -1,6 +1,6 @@
-import { Action, ActionHandler } from "../Pipeline";
+import { Action, ActionHandler } from "../classes/Pipeline";
 import * as turf from '@turf/turf';
-import { TypeSpatialOutcome } from "../Store";
+import { TypeSpatialOutcome } from "../classes/Store";
 
 export const TypeScale = 'scale'
 

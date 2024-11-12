@@ -3,7 +3,7 @@ import { List, ListItem, ListItemIcon, ListItemText, Theme } from '@mui/material
 import MapIcon from '@mui/icons-material/Map';
 import TextIcon from '@mui/icons-material/TextFields';
 import ChartIcon from '@mui/icons-material/ShowChart';
-import { Array2dOutcome, Outcome, Outcomes, ShadedOutcome, SimpleOutcome, TypeArray2dOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../Store';
+import { Array2dOutcome, Outcome, Outcomes, ShadedOutcome, SimpleOutcome, TypeArray2dOutcome, TypeSimpleOutcome, TypeSpatialOutcome } from '../classes/Store';
 import './DetailView.css';
 import { ScatterChart, ScatterValueType } from '@mui/x-charts';
 

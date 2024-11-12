@@ -3,14 +3,14 @@ import PipelineViewer from './components/PipelineViewer';
 import Tools from './components/Tools';
 import MapArea from './components/MapArea';
 import './App.css';
-import Store, { Outcomes, ShadedOutcome } from './Store';
+import Store, { Outcomes, ShadedOutcome } from './classes/Store';
 import { MoveEastHandler, MoveNorthHandler, MoveSouthHandler, MoveWestHandler } from './actions/move-north';
 import { FeatureCollection } from 'geojson';
 import { ScaleUpHandler } from './actions/scale-track';
 import { SummariseTrackHandler } from './actions/summarise-track';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react'; // P9936
 import 'flexlayout-react/style/light.css';  
-import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './Pipeline';
+import Pipeline, { Action, ActionHandler, BaseAction, CompositeAction } from './classes/Pipeline';
 import DetailView from './components/DetailView';
 import { Modal, ListItem, ListItemButton, ListItemText, Button, List, ButtonGroup } from '@mui/material';
 import * as L from 'leaflet'

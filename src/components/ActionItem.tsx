@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome, ShadedOutcome, Outcome, Array2dOutcome, TypeArray2dOutcome } from '../Store';
+import { Outcomes, TypeComposite, TypeSimpleOutcome, TypeSpatialOutcome, SimpleOutcome, SpatialOutcome, ShadedOutcome, Outcome, Array2dOutcome, TypeArray2dOutcome } from '../classes/Store';
 import { Card, CardContent, CardActions, IconButtonProps, styled, IconButton, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -17,7 +17,7 @@ import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import { TypeScale } from '../actions/scale-track';
 import { TypeSummarise } from '../actions/summarise-track';
 import './ActionItem.css';
-import { BaseAction, CompositeAction } from '../Pipeline';
+import { BaseAction, CompositeAction } from '../classes/Pipeline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useDrag, useDrop } from 'react-dnd';
