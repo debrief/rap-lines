@@ -1,6 +1,6 @@
 import L from "leaflet";
-import { Action, ActionHandler } from "../Pipeline";
-import { TypeArray2dOutcome } from "../Store";
+import { Action, ActionHandler } from "../classes/Pipeline";
+import { TypeArray2dOutcome } from "../classes/Store";
 import { Point, Position } from "geojson";
 
 export const TypePropertyPlot = 'property-plot'

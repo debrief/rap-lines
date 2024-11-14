@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './PipelineViewer.css';
-import { Outcomes, ShadedOutcome, TypeComposite } from '../Store';
+import { Outcomes, ShadedOutcome, TypeComposite } from '../classes/Store';
 import ActionItem from './ActionItem';
 import { ButtonGroup, Tooltip, IconButton, Dialog, TextField, Button, List, Card } from '@mui/material';
 import CheckIcon from '@mui/icons-material/CheckBox';
@@ -10,7 +10,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CallMergeIcon from '@mui/icons-material/CallMerge';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { BaseAction } from '../Pipeline';
+import { BaseAction } from '../classes/Pipeline';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 

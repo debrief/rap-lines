@@ -5,7 +5,7 @@ import './MapArea.css';
 import { FeatureCollection, Point } from 'geojson';
 import * as L from 'leaflet'
 import { lineString, featureCollection } from '@turf/turf';
-import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../Store';
+import { Outcomes, ShadedOutcome, SpatialOutcome, TypeSpatialOutcome } from '../classes/Store';
 
 interface MapAreaProps {
   state: FeatureCollection | null;

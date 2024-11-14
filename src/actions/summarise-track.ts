@@ -1,6 +1,6 @@
 import L from "leaflet";
-import { Action, ActionHandler } from "../Pipeline";
-import { TypeSimpleOutcome } from "../Store";
+import { Action, ActionHandler } from "../classes/Pipeline";
+import { TypeSimpleOutcome } from "../classes/Store";
 
 export const TypeSummarise = 'summarise'
 
